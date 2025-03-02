@@ -9,10 +9,7 @@ import os
 import faiss
 from PIL import Image
 from io import BytesIO
-import gc
 from fastapi import HTTPException
-import pickle
-import time
 
 # Definições de diretórios e constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

@@ -15,3 +15,4 @@ psutil
 fastapi
 uvicorn
 pydantic
+tf-keras
