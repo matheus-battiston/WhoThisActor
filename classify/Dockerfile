@@ -20,9 +20,6 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar o arquivo embeddings_combinados.pkl baixado da Azure Blob para o diretório raiz do container
-COPY embeddings_combinados.pkl /app/embeddings_combinados.pkl
-
 # Copiar o restante dos arquivos da aplicação para o diretório de trabalho
 COPY . /app/
 

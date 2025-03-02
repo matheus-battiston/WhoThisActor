@@ -21,53 +21,15 @@ ATRIBUTO_IDENTIDADE = "identity"
 ATRIBUTO_DISTANCIA_MEDIA = "average_distance"
 CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=whothisactorstorage;AccountKey=sEWPmJWNNw5iJIZM9OROq8URi+lcw5XLTfBd5KsvHVMDLSGwDEIi0iocJjLw7WY0oCOUd2wIUp8d+AStYs2d5g==;EndpointSuffix=core.windows.net"
 CONTAINER_NAME = "containerblob"
-BLOB_NAME = "embeddings_combinados.pkl"
 URL_NAO_FORNECIDA = "URL da imagem não fornecida"
-EMBEDDINGS_FILE_PATH = "embeddings_combinados.pkl"
 
-def load_embeddings_from_file():
-    try:
-        with open(EMBEDDINGS_FILE_PATH, "rb") as f:
-            embeddings, labels = pickle.load(f)
-        return embeddings, labels
-    except Exception as e:
-        print(f"Erro ao carregar os embeddings do arquivo: {e}")
-        return {}, {}
 
 def get_blob_name_from_url(blob_url):
     parsed_url = urlparse(blob_url)
     return parsed_url.path.split('/')[-1]
 
-def build_faiss_index():
 
-    # Carregar os embeddings do arquivo
-    embeddings, labels = load_embeddings_from_file()    
-    faiss_indices = {}
-    
-    
-    for label, emb_list in embeddings.items():
-        if not emb_list:
-            continue
-
-        
-        emb_array = np.array(emb_list, dtype=np.float32)        
-        faiss.normalize_L2(emb_array)
-
-        n_neighbors = 16  
-        index = faiss.IndexHNSWFlat(emb_array.shape[1], n_neighbors)
-    
-        index.add(emb_array)
-        faiss_indices[label] = index
-
-    del embeddings
-    del labels
-    gc.collect()
-
-    return faiss_indices
-
-faiss_indices = build_faiss_index()
-
-def recognize_face_with_faiss(image, faiss_indices, top_n=5):
+def recognize_face_with_faiss(image, top_n=5):
     try:
         image = make_square(image)
         
@@ -78,11 +40,21 @@ def recognize_face_with_faiss(image, faiss_indices, top_n=5):
 
         closest_images = []
 
-        for label, index in faiss_indices.items():
-            distances, indices = index.search(img_embedding, top_n)
+        index_dir = "faiss_indexes"
+        if not os.path.exists(index_dir):
+            print(f"Pasta {index_dir} não encontrada.")
+            return []
 
-            for i in range(len(indices[0])):
-                closest_images.append((label, indices[0][i], distances[0][i]))
+        for filename in os.listdir(index_dir):
+            if filename.endswith("_index.idx"):
+                label = filename.replace("_index.idx", "")
+                index_path = os.path.join(index_dir, filename)
+
+                index = faiss.read_index(index_path)
+                distances, indices = index.search(img_embedding, top_n)
+
+                for i in range(len(indices[0])):
+                    closest_images.append((label, indices[0][i], distances[0][i]))
 
         closest_images.sort(key=lambda x: x[2])
 
@@ -111,7 +83,7 @@ async def classify_image_service(req: str):
     try:
         imageDownload = EmbeddingService(CONNECTION_STRING, CONTAINER_NAME, get_blob_name_from_url(image_url))
         imagemBaixada = imageDownload.load_image_from_blob()
-        imageDownload.delete_blob()
+        # imageDownload.delete_blob()
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Erro ao processar a imagem: {str(e)}")
 
@@ -123,7 +95,7 @@ async def classify_image_service(req: str):
         raise HTTPException(status_code=404, detail=ROSTO_NAO_DETECTADO)
 
     top_n = 5
-    top_results = recognize_face_with_faiss(face_image, faiss_indices, top_n)
+    top_results = recognize_face_with_faiss(face_image, top_n)
 
     result = [
         {ATRIBUTO_IDENTIDADE: identity, ATRIBUTO_DISTANCIA_MEDIA: float(distance)} 

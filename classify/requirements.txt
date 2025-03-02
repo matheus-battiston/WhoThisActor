@@ -2,18 +2,15 @@
 # The Python Worker is managed by Azure Functions platform
 # Manually managing azure-functions-worker may cause unexpected issues
 
-azure-functions
-tensorflow==2.13.0
+deepface
 opencv-python-headless
 numpy
-retina-face
 scipy
 pillow
 python-multipart
 azure-storage-blob
 retrying
 faiss-cpu
-deepface
 psutil
 fastapi
 uvicorn
