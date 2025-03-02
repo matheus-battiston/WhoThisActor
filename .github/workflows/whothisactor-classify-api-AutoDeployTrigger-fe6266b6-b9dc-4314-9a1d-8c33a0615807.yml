@@ -26,18 +26,18 @@ jobs:
           tenant-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Decode connection string
+      - name: Decode connection string and save to a file
         run: |
-          CONNECTION_STRING=$(echo "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" | base64 --decode)
-          echo "CONNECTION_STRING=$CONNECTION_STRING" >> $GITHUB_ENV
+          echo "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" | base64 --decode > connection_string.txt
 
       - name: Download Blob
         run: |
+          CONNECTION_STRING=$(cat connection_string.txt)
           az storage blob download \
             --container-name containerblob \
             --name embeddings_combinados.pkl \
             --file embeddings_combinados.pkl \
-            --connection-string ${{ env.CONNECTION_STRING }}
+            --connection-string "$CONNECTION_STRING"
 
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
