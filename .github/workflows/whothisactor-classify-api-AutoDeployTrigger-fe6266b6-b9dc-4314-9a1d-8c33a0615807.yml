@@ -26,16 +26,15 @@ jobs:
           tenant-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Set up connection string
+      - name: Decode connection string
         run: |
-          CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
-          CONNECTION_STRING=$(echo "$CONNECTION_STRING" | sed 's/|/;/g')
+          CONNECTION_STRING=$(echo "${{ secrets.AZURE_STORAGE_CONNECTION_STRING_BASE64 }}" | base64 --decode)
           echo "CONNECTION_STRING=$CONNECTION_STRING" >> $GITHUB_ENV
 
       - name: Download Blob
         run: |
           az storage blob download \
-            --container-name <source-container-name> \
+            --container-name containerblob \
             --name embeddings_combinados.pkl \
             --file embeddings_combinados.pkl \
             --connection-string ${{ env.CONNECTION_STRING }}
