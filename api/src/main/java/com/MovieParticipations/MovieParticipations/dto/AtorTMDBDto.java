@@ -1,0 +1,15 @@
+package com.MovieParticipations.MovieParticipations.dto;
+
+import lombok.*;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+public class AtorTMDBDto {
+    String name;
+    String profile_path;
+    String character;
+    String known_for_department;
+}

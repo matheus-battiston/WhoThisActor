@@ -1,0 +1,22 @@
+.input-personagem {
+  margin-top: 20px;
+}
+
+.lista-personagens {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+  overflow: auto;
+}
+
+.container-elenco {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+  background-color: rgb(15, 9, 94);
+  height: 100svh; /* Usando svh para a altura */
+  width: 100vw;
+  flex-direction: column;
+}

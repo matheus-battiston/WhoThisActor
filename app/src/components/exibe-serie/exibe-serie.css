@@ -1,0 +1,23 @@
+.titulo-producao {
+  font-size: 26px;
+  font-weight: bold; /* Adicionando negrito para dar destaque ao título */
+  color: white;
+}
+
+.linha-serie {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.poster-serie {
+  width: auto;
+  height: 200px; /* Tamanho obrigatório da imagem */
+  border-radius: 8px;
+  margin-right: 20px; /* Ajuste o valor conforme necessário */
+}
+
+.texto-producao {
+  max-width: 100%; /* Limitar a largura do texto para evitar que ultrapasse */
+  flex-shrink: 1; /* Impedir que o texto cresça além do limite */
+}

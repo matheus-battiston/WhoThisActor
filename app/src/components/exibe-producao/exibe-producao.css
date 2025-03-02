@@ -1,0 +1,41 @@
+.containerExibeProducao {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 300px;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.titleProducao {
+  font-size: 20px;
+  font-weight: bold; /* Adicionando negrito para dar destaque ao título */
+  color: white;
+  word-wrap: break-word; /* Permite quebra de linha no título se necessário */
+}
+
+.personagem {
+  font-size: 16px;
+  color: #555; /* Cor mais suave para o nome do personagem */
+  word-wrap: break-word; /* Permite quebra de linha no nome do personagem se necessário */
+  color: white;
+}
+
+.linha {
+  display: flex;
+  align-items: center;
+  max-width: 95%;
+}
+
+.image {
+  margin-right: 10px; /* Espaço entre a imagem e o texto */
+  width: 100px;
+  height: 150px; /* Tamanho obrigatório da imagem */
+  border-radius: 8px;
+}
+
+.producaoTexto {
+  max-width: 100%; /* Limitar a largura do texto para evitar que ultrapasse */
+  flex-shrink: 1; /* Impedir que o texto cresça além do limite */
+  margin-right: 20px;
+}

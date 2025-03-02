@@ -1,0 +1,21 @@
+.containerProducoes {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+  background-color: rgb(15, 9, 94);
+  height: 100svh; /* Usando svh para a altura */
+  width: 100vw;
+  flex-direction: column;
+}
+
+.loading {
+  color: white;
+  font-size: 24px;
+}
+
+.atorInfoContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

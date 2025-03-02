@@ -1,0 +1,39 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.actuate.autoconfigure.metrics.SystemMetricsAutoConfiguration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 510349587466-9kofcs4en9vaao1f56itfpn0oltfmvqk.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+
+  datasource:
+    url: jdbc:postgresql://whothisactor-db.postgres.database.azure.com:5432/postgres?user=matheusbattiston&password=${DBPASSWORD}&sslmode=require
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: validate
+        jdbc:
+          batch_size: 50
+          order_inserts: true
+          order_updates: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        id:
+          new_generator_mappings: false
+#        generate_statistics: true
+
+tmdb:
+  api:
+    key: ${TMDBAPIKEY}
+server:
+  error:
+    include-message: always
+#
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE

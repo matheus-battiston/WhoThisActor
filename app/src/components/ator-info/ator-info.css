@@ -1,0 +1,23 @@
+.titleAtor {
+  font-size: 20px;
+  font-weight: bold; /* Adicionando negrito para dar destaque ao título */
+  color: white;
+}
+
+.linhaAtor {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+.producaoTexto {
+  max-width: 100%; /* Limitar a largura do texto para evitar que ultrapasse */
+  flex-shrink: 1; /* Impedir que o texto cresça além do limite */
+}
+
+.image-ator {
+  width: auto;
+  height: 125px; /* Tamanho obrigatório da imagem */
+  width: 83.5px;
+  border-radius: 8px;
+  margin-right: 20px; /* Ajuste o valor conforme necessário */
+}

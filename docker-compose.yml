@@ -1,0 +1,49 @@
+networks:
+  app-network: # Definição da network compartilhada
+    driver: bridge
+
+services:
+  api:
+    build:
+      context: ./api
+      args:
+        CONNECTIONSTRING: ${CONNECTIONSTRING}
+        SENHAKEYSTORE: ${SENHAKEYSTORE}
+        TMDBAPIKEY: ${TMDBAPIKEY}
+        DBPASSWORD: ${DBPASSWORD}
+        CLASSIFYADDRESS: ${CLASSIFYADDRESS}
+    container_name: api-service
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: ./app
+      args:
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        APP_ADDRESS: ${APP_ADDRESS}
+    container_name: app-service
+    volumes:
+      - ./app:/app # Mapeando seu diretório local onde o projeto React está
+      - /app/node_modules # Isolando os node_modules dentro do container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+  classify:
+    build:
+      context: ./classify
+      args:
+        CONNECTIONSTRING: ${CONNECTIONSTRING}
+    container_name: classify-service
+    ports:
+      - "8000:8000"
+    depends_on:
+      - api
+    networks:
+      - app-network

@@ -1,0 +1,7 @@
+.producoesList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: auto;
+  align-items: center;
+}

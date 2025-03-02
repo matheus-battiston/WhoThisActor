@@ -1,0 +1,46 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useGetProducoesPorNome } from "../../api/hooks/useGetProducoesPorNome/useGetProducoesPorNome.hook";
+import AtorInfo from "../../components/ator-info/ator-info.component";
+import "./exibir-producoes.css"; // Estilos CSS
+import Loading from "../../components/loading/loading.component";
+import { useSwipeable } from "react-swipeable";
+import Tab from "../../components/tab/tab.component";
+import ListProducoes from "../../components/list-producoes/list-producoes.component";
+
+export function ExibirProducoesScreen() {
+  const { producoes, getProducoesPorNomeFunc } = useGetProducoesPorNome();
+  const { name } = useParams(); // Obtendo o parâmetro "name" da URL
+  const [tab, setTab] = useState("TV");
+
+  const handleSwipe = useSwipeable({
+    onSwipedLeft: () => setTab("TV"),
+    onSwipedRight: () => setTab("FILME"),
+    trackMouse: true, // Permite arrastar com o mouse também
+  });
+
+  useEffect(() => {
+    getProducoesPorNomeFunc(name);
+  }, [name, getProducoesPorNomeFunc]);
+
+  return (
+    <div className="container">
+      {producoes === null ? (
+        <Loading />
+      ) : (
+        <div className="containerProducoes">
+          <div className="atorInfoContainer">
+            <AtorInfo nome={producoes.nome} imagem={producoes.urlFoto} />
+          </div>
+          <Tab setTab={setTab} estado={tab} tabs={["FILME", "TV"]} />
+          <ListProducoes
+            producoes={producoes}
+            handleSwipe={handleSwipe}
+            tab={tab}
+          />
+        </div>
+
+      )}
+    </div>
+  );
+}
