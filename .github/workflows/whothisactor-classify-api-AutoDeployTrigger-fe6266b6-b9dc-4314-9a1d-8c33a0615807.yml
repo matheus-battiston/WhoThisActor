@@ -26,9 +26,10 @@ jobs:
           tenant-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Decode connection string
+      - name: Set up connection string
         run: |
-          CONNECTION_STRING=$(echo "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" | base64 --decode)
+          CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+          CONNECTION_STRING=$(echo "$CONNECTION_STRING" | sed 's/|/;/g')
           echo "CONNECTION_STRING=$CONNECTION_STRING" >> $GITHUB_ENV
 
       - name: Download Blob
