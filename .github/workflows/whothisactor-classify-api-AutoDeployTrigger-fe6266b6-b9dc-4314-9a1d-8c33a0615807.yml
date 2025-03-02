@@ -38,6 +38,9 @@ jobs:
             --name embeddings_combinados.pkl \
             --file embeddings_combinados.pkl \
             --connection-string "$CONNECTION_STRING"
+            
+          # Mover o arquivo para a pasta correta
+          mv embeddings_combinados.pkl classify/embeddings_combinados.pkl
 
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
