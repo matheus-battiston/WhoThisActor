@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROSTO_NAO_DETECTADO = "Nenhum rosto detectado"
 ATRIBUTO_IDENTIDADE = "identity"
 ATRIBUTO_DISTANCIA_MEDIA = "average_distance"
-CONNECTION_STRING = os.getenv('CONNECTIONSTRING')
+CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=whothisactorstorage;AccountKey=sEWPmJWNNw5iJIZM9OROq8URi+lcw5XLTfBd5KsvHVMDLSGwDEIi0iocJjLw7WY0oCOUd2wIUp8d+AStYs2d5g==;EndpointSuffix=core.windows.net"
 CONTAINER_NAME = "containerblob"
 BLOB_NAME = "embeddings_combinados.pkl"
 URL_NAO_FORNECIDA = "URL da imagem não fornecida"
@@ -64,6 +64,9 @@ def build_faiss_index():
     gc.collect()
 
     return faiss_indices
+
+faiss_indices = build_faiss_index()
+
 def recognize_face_with_faiss(image, faiss_indices, top_n=5):
     try:
         image = make_square(image)
@@ -100,7 +103,6 @@ def recognize_face_with_faiss(image, faiss_indices, top_n=5):
         return []
 
 async def classify_image_service(req: str):
-    faiss_indices = build_faiss_index()
     try:
         image_url = req
     except Exception:
