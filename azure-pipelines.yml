@@ -1,7 +1,3 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
   branches:
     include:
@@ -10,6 +6,15 @@ trigger:
     include:
       - api/*
 
+# Novo trigger para a pasta classify
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - classify/*
+
 resources:
   - repo: self
 
@@ -17,11 +22,13 @@ variables:
   tag: "$(Build.BuildId)"
 
 stages:
-  - stage: Build
-    displayName: Build image
+  - stage: BuildApi
+    displayName: Build API image
+    # Condição para não rodar o stage BuildApi se o trigger for para classify
+    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'main'), not(contains(variables['Build.TriggeredBy'], 'classify')))
     jobs:
-      - job: Build
-        displayName: Build
+      - job: BuildApi
+        displayName: Build API
         pool:
           name: "Azure Pipelines"
         steps:
@@ -51,5 +58,44 @@ stages:
             inputs:
               containerRegistry: "whothisactor"
               repository: "whoThisActorApi"
+              command: "push"
+              tags: "latest"
+
+  - stage: BuildClassify
+    displayName: Build Classify image
+    # Condição para não rodar o stage BuildClassify se o trigger for para api
+    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'main'), not(contains(variables['Build.TriggeredBy'], 'api')))
+    jobs:
+      - job: BuildClassify
+        displayName: Build Classify
+        pool:
+          name: "Azure Pipelines"
+        steps:
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: "serviceconnection"
+              KeyVaultName: "WhoThisActorVault"
+              SecretsFilter: "*"
+              RunAsPreJob: true
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: "whothisactor"
+              repository: "whothisactor-classify-api"
+              command: "build"
+              Dockerfile: "classify/Dockerfile"
+              tags: "latest"
+              arguments: >
+                --platform linux/amd64 
+                --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
+                --build-arg SENHAKEYSTORE=$(SENHAKEYSTORE)
+                --build-arg TMDBAPIKEY=$(TMDBAPIKEY)
+                --build-arg DBPASSWORD=$(DBPASSWORD)
+                --build-arg CLASSIFYADDRESS=$(CLASSIFYADDRESS)
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: "whothisactor"
+              repository: "whothisactor-classify-api"
               command: "push"
               tags: "latest"
