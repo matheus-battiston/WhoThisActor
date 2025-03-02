@@ -28,7 +28,7 @@ jobs:
 
       - name: Decode connection string
         run: |
-          CONNECTION_STRING=$(echo "${{ secrets.AZURE_STORAGE_CONNECTION_STRING_BASE64 }}" | base64 --decode)
+          CONNECTION_STRING=$(echo "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" | base64 --decode)
           echo "CONNECTION_STRING=$CONNECTION_STRING" >> $GITHUB_ENV
 
       - name: Download Blob
