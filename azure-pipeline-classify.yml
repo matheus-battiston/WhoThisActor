@@ -6,39 +6,40 @@ trigger:
     include:
       - classify/*
 
-      - stage: BuildClassify
-          displayName: Build Classify image
-          jobs:
-            - job: BuildClassify
-              displayName: Build Classify
-              pool:
-                name: "Azure Pipelines"
-              steps:
-                - task: AzureKeyVault@2
-                  inputs:
-                    azureSubscription: "serviceconnection"
-                    KeyVaultName: "WhoThisActorVault"
-                    SecretsFilter: "*"
-                    RunAsPreJob: true
+stages:
+  - stage: BuildClassify
+    displayName: Build Classify image
+    jobs:
+      - job: BuildClassify
+        displayName: Build Classify
+        pool:
+          name: "Azure Pipelines"
+        steps:
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: "serviceconnection"
+              KeyVaultName: "WhoThisActorVault"
+              SecretsFilter: "*"
+              RunAsPreJob: true
 
-                - task: Docker@2
-                  inputs:
-                    containerRegistry: "whothisactor"
-                    repository: "whothisactor-classify-api"
-                    command: "build"
-                    Dockerfile: "classify/Dockerfile"
-                    tags: "latest"
-                    arguments: >
-                      --platform linux/amd64 
-                      --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
-                      --build-arg SENHAKEYSTORE=$(SENHAKEYSTORE)
-                      --build-arg TMDBAPIKEY=$(TMDBAPIKEY)
-                      --build-arg DBPASSWORD=$(DBPASSWORD)
-                      --build-arg CLASSIFYADDRESS=$(CLASSIFYADDRESS)
+          - task: Docker@2
+            inputs:
+              containerRegistry: "whothisactor"
+              repository: "whothisactor-classify-api"
+              command: "build"
+              Dockerfile: "classify/Dockerfile"
+              tags: "latest"
+              arguments: >
+                --platform linux/amd64 
+                --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
+                --build-arg SENHAKEYSTORE=$(SENHAKEYSTORE)
+                --build-arg TMDBAPIKEY=$(TMDBAPIKEY)
+                --build-arg DBPASSWORD=$(DBPASSWORD)
+                --build-arg CLASSIFYADDRESS=$(CLASSIFYADDRESS)
 
-                - task: Docker@2
-                  inputs:
-                    containerRegistry: "whothisactor"
-                    repository: "whothisactor-classify-api"
-                    command: "push"
-                    tags: "latest"
+          - task: Docker@2
+            inputs:
+              containerRegistry: "whothisactor"
+              repository: "whothisactor-classify-api"
+              command: "push"
+              tags: "latest"
