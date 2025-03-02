@@ -1,0 +1,16 @@
+# Ignorar arquivos temporários e do sistema
+*.pyc
+*.pyo
+__pycache__
+*.git
+*.gitignore
+*.dockerignore
+*.env
+*.log
+node_modules
+.env
+*.db
+*.sqlite3
+
+# Ignorar diretórios desnecessários
+tests

@@ -43,7 +43,5 @@ services:
     container_name: classify-service
     ports:
       - "8000:8000"
-    depends_on:
-      - api
     networks:
       - app-network
