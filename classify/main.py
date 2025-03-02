@@ -11,3 +11,7 @@ class Imagem(BaseModel):
 async def create_item(item: Imagem):
     result = await classify_image_service(item.image_url)
     return result
+
+@app.get("/wakeup")
+async def wake_up():
+    return {"status": "Service is up and running!"}
