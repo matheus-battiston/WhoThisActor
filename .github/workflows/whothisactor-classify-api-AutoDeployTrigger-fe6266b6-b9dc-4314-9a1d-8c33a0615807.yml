@@ -32,7 +32,7 @@ jobs:
             -c containerblob \
             -n embeddings_combinados.pkl \
             -f embeddings_combinados.pkl \
-            --connection-string ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+            --connection-string ${{ secrets.CONNECTIONSTRING }}
 
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
