@@ -27,13 +27,14 @@ jobs:
           subscription-id: ${{ secrets.WHOTHISACTORCLASSIFYAPI_AZURE_SUBSCRIPTION_ID }}
 
       - name: Build and push container image to registry
-        uses: azure/docker-login@v1
+        uses: azure/container-apps-deploy-action@v2
         with:
-          login-server: whothisactor.azurecr.io
-          username: ${{ secrets.WHOTHISACTORCLASSIFYAPI_REGISTRY_USERNAME }}
-          password: ${{ secrets.WHOTHISACTORCLASSIFYAPI_REGISTRY_PASSWORD }}
-
-      - name: Build and push image
-        run: |
-          docker build -t whothisactor.azurecr.io/whothisactor-classify-api:${{ github.sha }} --build-arg CONNECTIONSTRING=${{ secrets.CONNECTIONSTRING }} classify
-          docker push whothisactor.azurecr.io/whothisactor-classify-api:${{ github.sha }}
+          appSourcePath: ${{ github.workspace }}/classify
+          registryUrl: whothisactor.azurecr.io
+          registryUsername: ${{ secrets.WHOTHISACTORCLASSIFYAPI_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.WHOTHISACTORCLASSIFYAPI_REGISTRY_PASSWORD }}
+          containerAppName: whothisactor-classify-api
+          resourceGroup: WhoThisActorGroup
+          imageToBuild: whothisactor.azurecr.io/whothisactor-classify-api:${{ github.sha }}
+          buildArguments: |
+            CONNECTIONSTRING=${{ secrets.CONNECTIONSTRING }}
