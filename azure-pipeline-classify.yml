@@ -17,25 +17,21 @@ stages:
         steps:
           - task: AzureKeyVault@2
             inputs:
-              azureSubscription: "serviceconnection"
+              azureSubscription: "vault connection"
               KeyVaultName: "WhoThisActorSecrets"
               SecretsFilter: "*"
               RunAsPreJob: true
 
           - task: Docker@2
             inputs:
-              containerRegistry: "whothisactor"
-              repository: "whothisactor-classify-api"
-              command: "build"
-              Dockerfile: "classify/Dockerfile"
-              tags: "latest"
-              arguments: >
-                --platform linux/amd64 
-                --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
+              containerRegistry: 'whothisactorRegistry'
+              repository: 'whothisactor-classify'
+              command: 'build'
+              Dockerfile: 'api/Dockerfile'
+              arguments: '--platform linux/amd64 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
 
           - task: Docker@2
             inputs:
-              containerRegistry: "whothisactor"
-              repository: "whothisactor-classify-api"
-              command: "push"
-              tags: "latest"
+              containerRegistry: 'whothisactorRegistry'
+              repository: 'whothisactor-classify'
+              command: 'push'
