@@ -40,15 +40,7 @@ stages:
               containerRegistry: 'whothisactorRegistry'
               repository: 'whothisactor-api'
               command: 'push'
-          - task: AzureRmWebAppDeployment@5
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
-              appType: 'webAppContainer'
-              WebAppName: 'whothisactor-api'
-              DockerNamespace: 'whothisactorcontainers.azurecr.io'
-              DockerRepository: 'whothisactor-api'
-              DockerImageTag: 'latest'
+          
   - stage: Deploy
     displayName: Deploy API
     jobs:
@@ -64,4 +56,5 @@ stages:
               appType: 'webAppContainer'
               WebAppName: 'whothisactor-api'
               DockerNamespace: 'whothisactorcontainers.azurecr.io'
-              DockerRepository: 'whothisactor-api'          
+              DockerRepository: 'whothisactor-api'
+              DockerImageTag: '$(Build.BuildId)'
