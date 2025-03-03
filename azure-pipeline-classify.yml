@@ -21,14 +21,13 @@ stages:
               KeyVaultName: "WhoThisActorSecrets"
               SecretsFilter: "*"
               RunAsPreJob: true
-
           - task: Docker@2
             inputs:
               containerRegistry: 'whothisactorRegistry'
               repository: 'whothisactor-classify'
               command: 'build'
-              Dockerfile: 'api/Dockerfile'
-              arguments: '--platform linux/amd64 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
+              Dockerfile: 'classify/Dockerfile'
+              arguments: '--platform linux/amd64 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)'
 
           - task: Docker@2
             inputs:
