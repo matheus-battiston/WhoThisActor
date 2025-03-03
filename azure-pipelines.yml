@@ -29,22 +29,13 @@ stages:
               RunAsPreJob: true
           - task: Docker@2
             inputs:
-              containerRegistry: "whothisactor"
-              repository: "whoThisActorApi"
-              command: "build"
-              Dockerfile: "api/Dockerfile"
-              tags: "latest"
-              arguments: >
-                --platform linux/amd64 
-                --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
-                --build-arg SENHAKEYSTORE=$(SENHAKEYSTORE)
-                --build-arg TMDBAPIKEY=$(TMDBAPIKEY)
-                --build-arg DBPASSWORD=$(DBPASSWORD)
-                --build-arg CLASSIFYADDRESS=$(CLASSIFYADDRESS)
-
+              containerRegistry: 'whothisactor'
+              repository: 'whothisactor-api'
+              command: 'build'
+              Dockerfile: 'api/Dockerfile'
+              arguments: '--platform linux/amd64 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING) --build-arg SENHAKEYSTORE=$(SENHAKEYSTORE) --build-arg TMDBAPIKEY=$(TMDBAPIKEY) --build-arg DBPASSWORD=$(DBPASSWORD) --build-arg CLASSIFYADDRESS=$(CLASSIFYADDRESS)'
           - task: Docker@2
             inputs:
-              containerRegistry: "whothisactor"
-              repository: "whoThisActorApi"
-              command: "push"
-              tags: "latest"
+              containerRegistry: 'whothisactor'
+              repository: 'Lwhothisactor-api'
+              command: 'push'
