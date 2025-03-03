@@ -23,7 +23,7 @@ stages:
         steps:
           - task: AzureKeyVault@2
             inputs:
-              azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
+              azureSubscription: 'vault connection'
               KeyVaultName: 'WhoThisActorSecrets'
               SecretsFilter: '*'
               RunAsPreJob: true
