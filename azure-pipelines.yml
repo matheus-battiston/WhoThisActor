@@ -46,7 +46,7 @@ stages:
               azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
               appType: 'webAppContainer'
               WebAppName: 'whothisactor-api'
-              DockerNamespace: 'whothisactorRegistry.azurecr.io'
+              DockerNamespace: 'whothisactorcontainers.azurecr.io'
               DockerRepository: 'whothisactor-api'
               DockerImageTag: 'latest'
           
