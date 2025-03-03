@@ -12,7 +12,7 @@ spring:
             scope: profile, email
 
   datasource:
-    url: jdbc:postgresql://whothisactor-db.postgres.database.azure.com:5432/postgres?user=matheusbattiston&password=${DBPASSWORD}&sslmode=require
+    url: jdbc:postgresql://whothisactorapi-db.postgres.database.azure.com:5432/postgres?user=matheus&password=${DBPASSWORD}&sslmode=require
   jpa:
     properties:
       hibernate:
@@ -25,10 +25,6 @@ spring:
         id:
           new_generator_mappings: false
 #        generate_statistics: true
-
-tmdb:
-  api:
-    key: ${TMDBAPIKEY}
 server:
   error:
     include-message: always

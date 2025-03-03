@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @Setter
 public class BuscarIdSeriePorNomeDTO {
-    List<SerieTMDBDto> series;
+    List<SerieTMDBDto> results;
 }

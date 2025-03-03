@@ -11,5 +11,5 @@ import java.util.List;
 @Setter
 @Builder
 public class BuscarIdFilmePorNomeDTO {
-    List<FilmeTMDBDto> filmes;
+    List<FilmeTMDBDto> results;
 }

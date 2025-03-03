@@ -19,7 +19,7 @@ public class RequisicaoApiService {
     private static final String PARAMETRO_CREDITOS_COMBINADOS = "/combined_credits";
     private static final String BARRA = "/";
 
-    @Value("${tmdb.api.key}")
+    @Value("${TMDBAPIKEY}")
     private String apiKey;
     public JsonObject persquisarIdPorNome(String nomeAtor) {
         String nomeCodificado = URLEncoder.encode(nomeAtor, StandardCharsets.UTF_8);

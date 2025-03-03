@@ -4,20 +4,14 @@ trigger:
       - main
   paths:
     include:
-      - api/*
-
-resources:
-  - repo: self
-
-variables:
-  tag: "$(Build.BuildId)"
+      - classify/*
 
 stages:
-  - stage: BuildApi
-    displayName: Build API image
+  - stage: BuildClassify
+    displayName: Build Classify image
     jobs:
-      - job: BuildApi
-        displayName: Build API
+      - job: BuildClassify
+        displayName: Build Classify
         pool:
           name: "Azure Pipelines"
         steps:
@@ -31,21 +25,17 @@ stages:
           - task: Docker@2
             inputs:
               containerRegistry: "whothisactor"
-              repository: "whoThisActorApi"
+              repository: "whothisactor-classify-api"
               command: "build"
-              Dockerfile: "api/Dockerfile"
+              Dockerfile: "classify/Dockerfile"
               tags: "latest"
               arguments: >
                 --platform linux/amd64 
                 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)
-                --build-arg SENHAKEYSTORE=$(SENHAKEYSTORE)
-                --build-arg TMDBAPIKEY=$(TMDBAPIKEY)
-                --build-arg DBPASSWORD=$(DBPASSWORD)
-                --build-arg CLASSIFYADDRESS=$(CLASSIFYADDRESS)
 
           - task: Docker@2
             inputs:
               containerRegistry: "whothisactor"
-              repository: "whoThisActorApi"
+              repository: "whothisactor-classify-api"
               command: "push"
               tags: "latest"

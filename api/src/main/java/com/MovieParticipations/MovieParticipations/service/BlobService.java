@@ -17,7 +17,7 @@ public class BlobService {
 
     @Value("${CONNECTIONSTRING}")
     private String connectionString;
-    private static final String containerName = "containerblob";
+    private static final String containerName = "blobs";
 
     public SasResponse gerarSas(){
         BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()

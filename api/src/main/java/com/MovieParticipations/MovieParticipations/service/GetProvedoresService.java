@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 public class GetProvedoresService {
-    @Value("${tmdb.api.key}")
+    @Value("$${TMDBAPIKEY}")
     private String apiKey;
 
     private static final String URL_BASE = "https://api.themoviedb.org/3";

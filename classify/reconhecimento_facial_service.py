@@ -16,9 +16,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROSTO_NAO_DETECTADO = "Nenhum rosto detectado"
 ATRIBUTO_IDENTIDADE = "identity"
 ATRIBUTO_DISTANCIA_MEDIA = "average_distance"
-CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=whothisactorstorage;AccountKey=sEWPmJWNNw5iJIZM9OROq8URi+lcw5XLTfBd5KsvHVMDLSGwDEIi0iocJjLw7WY0oCOUd2wIUp8d+AStYs2d5g==;EndpointSuffix=core.windows.net"
-CONTAINER_NAME = "containerblob"
+CONTAINER_NAME = "blobs"
 URL_NAO_FORNECIDA = "URL da imagem não fornecida"
+CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=whothisactorblobstorage;AccountKey=OFlwXfhQgnLNt8rhf3tAQ2a/0j1D06LtL/VFm4UGGSdvLcDAA0v8DbeNwcWROuvDLEl9kYSIr+NX+ASts08AHw==;EndpointSuffix=core.windows.net"
 
 
 def get_blob_name_from_url(blob_url):

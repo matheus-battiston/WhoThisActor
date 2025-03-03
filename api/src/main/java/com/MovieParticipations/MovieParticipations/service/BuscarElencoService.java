@@ -15,7 +15,7 @@ import static org.springframework.http.HttpMethod.GET;
 
 @Service
 public class BuscarElencoService {
-    @Value("${tmdb.api.key}")
+    @Value("${TMDBAPIKEY}")
     private String apiKey;
 
     private static final String URL_BASE = "https://api.themoviedb.org/3";

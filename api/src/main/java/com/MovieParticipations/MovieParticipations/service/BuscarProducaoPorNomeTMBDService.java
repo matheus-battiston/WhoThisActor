@@ -23,7 +23,7 @@ import static org.springframework.http.HttpMethod.GET;
 
 @Service
 public class BuscarProducaoPorNomeTMBDService {
-    @Value("${tmdb.api.key}")
+    @Value(value = "${TMDBAPIKEY}")
     private String apiKey;
     private static final String SERIE_NAO_ENCONTRADA = "Serie nao foi encontrada, verifique o nome";
     private static final String TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search";
@@ -53,11 +53,11 @@ public class BuscarProducaoPorNomeTMBDService {
                 url, GET, HttpEntity.EMPTY, BuscarIdSeriePorNomeDTO.class
         ).getBody();
 
-        if (response.getSeries() != null && !response.getSeries().isEmpty()) {
-            response.getSeries().sort((serie1, serie2) ->
+        if (response.getResults() != null && !response.getResults().isEmpty()) {
+            response.getResults().sort((serie1, serie2) ->
                     Double.compare(serie2.getPopularity(), serie1.getPopularity())
             );
-            return TMDBDtoMapper.toTMDBDtoFromSerie(response.getSeries().get(0), tipo);
+            return TMDBDtoMapper.toTMDBDtoFromSerie(response.getResults().get(0), tipo);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, SERIE_NAO_ENCONTRADA);
         }
@@ -68,11 +68,11 @@ public class BuscarProducaoPorNomeTMBDService {
                 url, GET, HttpEntity.EMPTY, BuscarIdFilmePorNomeDTO.class
         ).getBody();
 
-        if (response.getFilmes() != null && !response.getFilmes().isEmpty()) {
-            response.getFilmes().sort((filme1, filme2) ->
+        if (response.getResults() != null && !response.getResults().isEmpty()) {
+            response.getResults().sort((filme1, filme2) ->
                     Double.compare(filme2.getPopularity(), filme1.getPopularity())
             );
-            return TMDBDtoMapper.toTMDBDtoFromFilme(response.getFilmes().get(0), tipo);
+            return TMDBDtoMapper.toTMDBDtoFromFilme(response.getResults().get(0), tipo);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, SERIE_NAO_ENCONTRADA);
         }
