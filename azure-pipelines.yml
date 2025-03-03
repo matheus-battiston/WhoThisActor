@@ -37,5 +37,5 @@ stages:
           - task: Docker@2
             inputs:
               containerRegistry: 'whothisactor'
-              repository: 'Lwhothisactor-api'
+              repository: 'whothisactor-api'
               command: 'push'
