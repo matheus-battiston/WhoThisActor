@@ -34,3 +34,11 @@ stages:
               containerRegistry: 'whothisactorRegistry'
               repository: 'whothisactor-classify'
               command: 'push'
+          - task: AzureRmWebAppDeployment@5
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
+              appType: 'webAppContainer'
+              WebAppName: 'whothisactor-classify'
+              DockerNamespace: 'whothisactorRegistry'
+              DockerRepository: 'whothisactor-classify'
