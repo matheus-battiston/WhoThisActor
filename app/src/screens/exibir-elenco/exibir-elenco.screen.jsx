@@ -16,6 +16,7 @@ export function ExibirElencoScreen() {
   const { pessoas, getElencoFunc } = useGetElenco();
   const { serie, getSerieInfoFunc } = useGetSerieInfo();
   const [loading, setLoading] = useState(true);
+  const PLACEHOLDER = "Alex Dunphy";
 
   useEffect(() => {
     getElencoFunc(name, personagemNome, tipo);
@@ -47,7 +48,7 @@ export function ExibirElencoScreen() {
             <InputSearch
               onChange={changePersonagem}
               texto={"Pesquise seu personagem"}
-              placeholder={"Alex Dunphy"}
+              placeholder={PLACEHOLDER}
             />
           </div>
           <div className="lista-personagens">

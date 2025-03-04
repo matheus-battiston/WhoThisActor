@@ -19,7 +19,7 @@ export function useGenerateSas() {
           callback(null, respostaApi);
         }
       } catch (error) {
-        dispatch(setError("Erro ao enviar a imagem ao servidor"));
+        dispatch(setError("Erro ao se comunicar com o servidor"));
         navigate("/");
         if (callback) {
           callback(error, null);

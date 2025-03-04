@@ -41,6 +41,7 @@ export function HomeScreen() {
           <PesquisaElenco
             handleSubmit={handleSubmitElenco}
             onChange={changeSerie}
+            tab={tipo}
           />
           <Tab
             setTab={setTipo}
