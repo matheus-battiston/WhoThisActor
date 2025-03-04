@@ -11,12 +11,10 @@ const ListProducoes = ({ producoes, handleSwipe, tab }) => {
 
   const producoesFiltradas = tab === "FILME" ? filmes : series;
 
-  console.log(producoesFiltradas);
-
   return (
-    <div {...handleSwipe} className="producoesList">
+    <div {...handleSwipe} className="producoes-list">
       {producoesFiltradas.map((item, index) => (
-        <ExibeProducao key={index} producao={item} />
+        <ExibeProducao key={index} producao={item} tipo={tab} />
       ))}
     </div>
   );

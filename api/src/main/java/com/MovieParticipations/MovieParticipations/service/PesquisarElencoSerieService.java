@@ -7,6 +7,7 @@ import com.MovieParticipations.MovieParticipations.repository.AtorRepository;
 import com.MovieParticipations.MovieParticipations.repository.SerieAtorRepository;
 import com.MovieParticipations.MovieParticipations.repository.SerieRepository;
 import com.MovieParticipations.MovieParticipations.validator.ExisteSerieNoDBValidator;
+import com.azure.core.annotation.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,6 @@ public class PesquisarElencoSerieService {
     @Autowired
     SerieRepository serieRepository;
     @Autowired
-    BuscarProducaoPorNomeTMBDService buscarProducaoPorNomeTMBDService;
-    @Autowired
     BuscarElencoService buscarElencoService;
     @Autowired
     AtorRepository atorRepository;
@@ -30,9 +29,11 @@ public class PesquisarElencoSerieService {
     @Autowired
     AdicionarSerieService adicionarSerieService;
     @Autowired
+    ExisteSerieNoDBValidator existeSerieNoDBValidator;
+    @Autowired
     GetSerieIdService getSerieIdService;
     @Autowired
-    ExisteSerieNoDBValidator existeSerieNoDBValidator;
+    BuscarProducaoPorNomeTMBDService buscarProducaoPorNomeTMBDService;
 
 
     public List<OpcaoPesquisaElencResponseo>  pesquisarElenco(TipoMidia tipo, String nomeSerie, String filtroNome) {
@@ -42,6 +43,7 @@ public class PesquisarElencoSerieService {
         if (filtroNome == null || filtroNome.isEmpty()) {
             filtroNome = "";
         }
+
         if (!existeSerieNoDBValidator.ExisteSerieComNome(nomeSerie, tipo)) {
             nomeOficial = adicionarSerieService.adicionarSerieComNome(nomeSerie, tipo);
         }

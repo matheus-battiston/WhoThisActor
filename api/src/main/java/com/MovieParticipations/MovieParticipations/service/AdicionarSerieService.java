@@ -46,7 +46,7 @@ public class AdicionarSerieService {
         if (existeSerieNoDBValidator.ExisteSerieComNome(serieEntity.getTitulo(), tipoMidia))
             return serieEntity.getTitulo();
 
-        List<AtorTMDBDto> atores = buscarElencoService.pesquisarElencoSerie(dto.getId(), tipoMidia);
+        List<AtorTMDBDto> atores = buscarElencoService.pesquisarElenco(dto.getId(), tipoMidia);
 
         List<String> nomes = atores.stream().map(AtorTMDBDto::getName).toList();
         List<Ator> atoresNoBanco = atorRepository.findAtorByNomeIn(nomes);

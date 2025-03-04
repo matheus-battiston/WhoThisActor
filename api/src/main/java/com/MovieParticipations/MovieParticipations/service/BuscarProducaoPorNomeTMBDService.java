@@ -1,13 +1,8 @@
 package com.MovieParticipations.MovieParticipations.service;
 
 import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
-import com.MovieParticipations.MovieParticipations.dto.BuscarIdFilmePorNomeDTO;
-import com.MovieParticipations.MovieParticipations.dto.BuscarIdSeriePorNomeDTO;
-import com.MovieParticipations.MovieParticipations.dto.CastResponseDto;
-import com.MovieParticipations.MovieParticipations.dto.TMDBDto;
+import com.MovieParticipations.MovieParticipations.dto.*;
 import com.MovieParticipations.MovieParticipations.mapper.TMDBDtoMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -15,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
 
@@ -42,40 +34,74 @@ public class BuscarProducaoPorNomeTMBDService {
                 .queryParam("query", nome)
                 .queryParam("api_key", apiKey)
                 .toUriString();
-
         if (tipo.equals(TipoMidia.TV))
-            return buscarSerie(url, tipo);
+            return buscarSerie(url, tipo, nome);
          else
-             return buscarFilme(url, tipo);
+             return buscarFilme(url, tipo, nome);
         }
 
-    private TMDBDto buscarSerie(String url, TipoMidia tipo){
-        BuscarIdSeriePorNomeDTO response = restTemplate.exchange(
-                url, GET, HttpEntity.EMPTY, BuscarIdSeriePorNomeDTO.class
-        ).getBody();
-
-        if (response.getResults() != null && !response.getResults().isEmpty()) {
-            response.getResults().sort((serie1, serie2) ->
-                    Double.compare(serie2.getPopularity(), serie1.getPopularity())
-            );
-            return TMDBDtoMapper.toTMDBDtoFromSerie(response.getResults().get(0), tipo);
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, SERIE_NAO_ENCONTRADA);
-        }
-    }
-
-    private TMDBDto buscarFilme(String url, TipoMidia tipo){
+    private TMDBDto buscarFilme(String url, TipoMidia tipo, String nome){
         BuscarIdFilmePorNomeDTO response = restTemplate.exchange(
                 url, GET, HttpEntity.EMPTY, BuscarIdFilmePorNomeDTO.class
         ).getBody();
 
         if (response.getResults() != null && !response.getResults().isEmpty()) {
-            response.getResults().sort((filme1, filme2) ->
-                    Double.compare(filme2.getPopularity(), filme1.getPopularity())
-            );
-            return TMDBDtoMapper.toTMDBDtoFromFilme(response.getResults().get(0), tipo);
+            FilmeTMDBDto nomeIgual = temNomeExatoFilme(response, nome);
+            if (nomeIgual != null)
+                return TMDBDtoMapper.toTMDBDtoFromFilme(nomeIgual, tipo);
+            else
+                return TMDBDtoMapper.toTMDBDtoFromFilme(getNomeFilmeParecidoPorPopularidade(response), tipo);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, FILME_NAO_ENCONTRADO);
         }
+    }
+
+    private TMDBDto buscarSerie(String url, TipoMidia tipo, String nome){
+        BuscarIdSeriePorNomeDTO response = restTemplate.exchange(
+                url, GET, HttpEntity.EMPTY, BuscarIdSeriePorNomeDTO.class
+        ).getBody();
+
+        if (response.getResults() != null && !response.getResults().isEmpty()) {
+            SerieTMDBDto nomeIgual = temNomeExatoSerie(response, nome);
+            if (nomeIgual != null)
+                return TMDBDtoMapper.toTMDBDtoFromSerie(nomeIgual, tipo);
+            else
+                return TMDBDtoMapper.toTMDBDtoFromSerie(getNomeSerieParecidoPorPopularidade(response), tipo);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, SERIE_NAO_ENCONTRADA);
+        }
+    }
+
+    private boolean nomeExato(String pesquisaUsuario, String nomeOficial){
+        return pesquisaUsuario.equalsIgnoreCase(nomeOficial);
+    }
+
+    private FilmeTMDBDto temNomeExatoFilme(BuscarIdFilmePorNomeDTO response, String nome){
+        return response.getResults().stream()
+                .filter(serie -> nomeExato(nome, serie.getTitle()))
+                .toList()
+                .get(0);
+    }
+
+    private SerieTMDBDto temNomeExatoSerie(BuscarIdSeriePorNomeDTO response, String nome){
+        return response.getResults().stream()
+                .filter(serie -> nomeExato(nome, serie.getName()))
+                .toList()
+                .get(0);
+    }
+
+
+    private FilmeTMDBDto getNomeFilmeParecidoPorPopularidade(BuscarIdFilmePorNomeDTO response){
+        response.getResults().sort((filme1, filme2) ->
+                Double.compare(filme2.getPopularity(), filme1.getPopularity())
+        );
+        return response.getResults().get(0);
+    }
+
+    private SerieTMDBDto getNomeSerieParecidoPorPopularidade(BuscarIdSeriePorNomeDTO response){
+        response.getResults().sort((filme1, filme2) ->
+                Double.compare(filme2.getPopularity(), filme1.getPopularity())
+        );
+        return response.getResults().get(0);
     }
 }

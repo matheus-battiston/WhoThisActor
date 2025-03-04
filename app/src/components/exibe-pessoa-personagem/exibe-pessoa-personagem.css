@@ -10,6 +10,10 @@
   margin-bottom: 20px;
 }
 
+.linha-ator:hover {
+  cursor: pointer;
+}
+
 .nome-ator {
   font-size: 20px;
   color: white;

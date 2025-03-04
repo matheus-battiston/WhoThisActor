@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { URL_BASE_IMAGEM_TMDB } from "../../constants/imageTmdb";
 import "./exibe-pessoa-personagem.css";
 import padrao from "../../assets/images/image-not-found.jpg";
+import { useNavigate } from "react-router-dom";
 
 export function ExibePessoaPersonagem({
   linkImagem,
@@ -9,6 +10,12 @@ export function ExibePessoaPersonagem({
   nomePersonagem,
 }) {
   const [foto, setFoto] = useState(null);
+  const navigate = useNavigate();
+
+  function verAtor() {
+    navigate(`/exibirProducoes/${encodeURIComponent(nomeAtor)}`);
+  }
+
   useEffect(() => {
     if (linkImagem) {
       setFoto(URL_BASE_IMAGEM_TMDB + linkImagem);
@@ -18,7 +25,7 @@ export function ExibePessoaPersonagem({
   }, [linkImagem]);
 
   return (
-    <div className="linha-ator">
+    <div className="linha-ator" onClick={verAtor}>
       <img
         src={foto}
         alt={""}

@@ -52,7 +52,6 @@ export function ExibirElencoScreen() {
             />
           </div>
           <div className="lista-personagens">
-            {" "}
             {pessoas.map((item, index) => (
               <ExibePessoaPersonagem
                 key={index}

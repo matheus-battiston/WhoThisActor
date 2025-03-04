@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class CastResponseDto {
-    private List<AtorTMDBDto> cast;
+public class CastResponseDtoMovie {
+    private List<AtorTMDBMovieDto> cast;
 
 }

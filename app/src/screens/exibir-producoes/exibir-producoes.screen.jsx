@@ -11,7 +11,7 @@ import ListProducoes from "../../components/list-producoes/list-producoes.compon
 export function ExibirProducoesScreen() {
   const { producoes, getProducoesPorNomeFunc } = useGetProducoesPorNome();
   const { name } = useParams();
-  const [tab, setTab] = useState("TV");
+  const [tab, setTab] = useState("FILME");
 
   const handleSwipe = useSwipeable({
     onSwipedLeft: () => setTab("TV"),
