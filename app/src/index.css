@@ -3,11 +3,7 @@ body {
   height: 100svh;
   margin: 0;
   padding: 0;
-  background-color: rgb(
-    15,
-    9,
-    94
-  ); /* Garantindo que o fundo seja sempre aplicado */
+  background-color: rgb(15, 9, 94);
 }
 body {
   margin: 0;

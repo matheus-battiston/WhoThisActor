@@ -18,17 +18,6 @@ export function ExibirElencoScreen() {
   const { pessoas, getElencoFunc } = useGetElenco();
   const { serie, getSerieInfoFunc } = useGetSerieInfo();
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { hasError } = useSelector((state) => state.error);
-
-  useEffect(() => {
-    if (hasError) {
-      dispatch(clearError());
-      navigate("/");
-    }
-  }, [hasError, dispatch, navigate]);
 
   useEffect(() => {
     getElencoFunc(name, personagemNome, tipo);

@@ -25,7 +25,8 @@ import static org.springframework.http.HttpMethod.GET;
 public class BuscarProducaoPorNomeTMBDService {
     @Value(value = "${TMDBAPIKEY}")
     private String apiKey;
-    private static final String SERIE_NAO_ENCONTRADA = "Serie nao foi encontrada, verifique o nome";
+    private static final String SERIE_NAO_ENCONTRADA = "Serie nao foi encontrada, verifique o nome e tente novamente";
+    private static final String FILME_NAO_ENCONTRADO = "Filme nao foi encontrado, verifique o nome e tente novamente";
     private static final String TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search";
     private static final String MOVIE = "/movie";
     private static final String TV = "/tv";
@@ -74,7 +75,7 @@ public class BuscarProducaoPorNomeTMBDService {
             );
             return TMDBDtoMapper.toTMDBDtoFromFilme(response.getResults().get(0), tipo);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, SERIE_NAO_ENCONTRADA);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, FILME_NAO_ENCONTRADO);
         }
     }
 }

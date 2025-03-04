@@ -120,6 +120,7 @@ const CameraComponent = () => {
         id="cameraInput"
       />
       <BotaoComponent
+        big={true}
         onPress={() => document.getElementById("cameraInput").click()}
         texto={"Tirar foto"}
       />

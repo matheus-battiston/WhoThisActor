@@ -2,10 +2,12 @@ import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { setError } from "../../../redux/store";
 import { getElenco } from "../../calls/getElenco.api";
+import { useNavigate } from "react-router-dom"; // Importando useNavigate
 
 export function useGetElenco() {
   const [pessoas, setPessoas] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Utilizando useCallback para memorizar a função
   const getElencoFunc = useCallback(
@@ -15,6 +17,7 @@ export function useGetElenco() {
         setPessoas(respostaApi);
       } catch (error) {
         dispatch(setError(error.response.data || "Erro desconhecido"));
+        navigate("/");
       }
     },
     [dispatch]

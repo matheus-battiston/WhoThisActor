@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../../components/logo/logo.component";
 import { useNavigate } from "react-router-dom"; // Importando useNavigate
 import "./home-screen.css";
@@ -7,6 +7,8 @@ import { useNomeSerie } from "../../api/hooks/useNomeSerie/useNomeSerie.hook";
 import PesquisaAtor from "../../components/pesquisa-ator/pesquisa-ator.component";
 import Tab from "../../components/tab/tab.component";
 import PesquisaElenco from "../../components/pesquisa-elenco/pesquisa-elenco.component";
+import Erro from "../../components/erro/erro.component";
+import { useSelector } from "react-redux";
 
 export function HomeScreen() {
   const navigate = useNavigate(); // Inicializando useNavigate
@@ -14,6 +16,9 @@ export function HomeScreen() {
   const { changeSerie, serieNome } = useNomeSerie();
   const [tab, setTab] = useState("PESSOA");
   const [tipo, setTipo] = useState("TV");
+  const { hasError } = useSelector((state) => state.error);
+
+  useEffect(() => {}, [hasError]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,6 +32,7 @@ export function HomeScreen() {
 
   return (
     <div className="container">
+      {hasError ? <Erro /> : <></>}
       <Logo />
       {tab === "PESSOA" ? (
         <PesquisaAtor handleSubmit={handleSubmit} onChange={mudanca} />
