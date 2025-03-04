@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./exibe-producao.css";
 import { URL_BASE_IMAGEM_TMDB } from "../../constants/imageTmdb";
 import { useNavigate } from "react-router-dom";
