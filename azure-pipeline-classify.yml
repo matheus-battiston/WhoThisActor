@@ -27,28 +27,28 @@ stages:
               repository: "whothisactor-classify"
               command: "build"
               Dockerfile: "classify/Dockerfile"
-              tags: 'who'
+              tags: "who"
               arguments: "--platform linux/amd64 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)"
           - task: Docker@2
             inputs:
               containerRegistry: "whothisactorRegistry"
               repository: "whothisactor-classify"
-              tags: 'who'
+              tags: "who"
               command: "push"
-  - stage: Deploy
-    displayName: Deploy CLASSIFY
-    jobs:
-      - job: DeployClassify
-        displayName: DeployClassify
-        pool:
-          name: "Azure Pipelines"
-        steps:
-          - task: AzureRmWebAppDeployment@5
-            inputs:
-              ConnectionType: "AzureRM"
-              azureSubscription: "Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)"
-              appType: "webAppContainer"
-              WebAppName: "whothisactor-classify"
-              DockerNamespace: "whothisactorcontainers.azurecr.io"
-              DockerRepository: "whothisactor-classify"
-              DockerImageTag: "who"
+  # - stage: Deploy
+  #   displayName: Deploy CLASSIFY
+  #   jobs:
+  #     - job: DeployClassify
+  #       displayName: DeployClassify
+  #       pool:
+  #         name: "Azure Pipelines"
+  #       steps:
+  #         - task: AzureRmWebAppDeployment@5
+  #           inputs:
+  #             ConnectionType: "AzureRM"
+  #             azureSubscription: "Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)"
+  #             appType: "webAppContainer"
+  #             WebAppName: "whothisactor-classify"
+  #             DockerNamespace: "whothisactorcontainers.azurecr.io"
+  #             DockerRepository: "whothisactor-classify"
+  #             DockerImageTag: "who"

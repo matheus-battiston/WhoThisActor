@@ -10,6 +10,7 @@ import faiss
 from PIL import Image
 from io import BytesIO
 from fastapi import HTTPException
+import time
 
 # Definições de diretórios e constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,8 +29,10 @@ def get_blob_name_from_url(blob_url):
 
 def recognize_face_with_faiss(image, top_n=5):
     try:
+        start_total = time.time()  # Início da medição total
+
         image = make_square(image)
-        
+
         embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False)[0]["embedding"]
         img_embedding = np.array([embedding], dtype=np.float32)
 
@@ -42,6 +45,8 @@ def recognize_face_with_faiss(image, top_n=5):
             print(f"Pasta {index_dir} não encontrada.")
             return []
 
+        start_index_search = time.time()  # Início da busca nos índices
+
         for filename in os.listdir(index_dir):
             if filename.endswith("_index.idx"):
                 label = filename.replace("_index.idx", "")
@@ -53,7 +58,12 @@ def recognize_face_with_faiss(image, top_n=5):
                 for i in range(len(indices[0])):
                     closest_images.append((label, indices[0][i], distances[0][i]))
 
+        end_index_search = time.time()  # Fim da busca nos índices
+        duration_index_search = end_index_search - start_index_search
+
         closest_images.sort(key=lambda x: x[2])
+
+        start_filtering = time.time()  # Início da filtragem dos top_n
 
         resposta = []
         labels_added = set()
@@ -65,7 +75,18 @@ def recognize_face_with_faiss(image, top_n=5):
                 labels_added.add(label)
 
             if len(resposta) >= top_n:
-                break        
+                break    
+
+        end_filtering = time.time()  # Fim da filtragem dos top_n
+        duration_filtering = end_filtering - start_filtering
+
+        end_total = time.time()  # Fim da medição total
+        duration_total = end_total - start_total
+
+        print(f"Tempo total: {duration_total:.4f} segundos")
+        print(f"Tempo de busca nos índices: {duration_index_search:.4f} segundos")
+        print(f"Tempo de filtragem dos top_n: {duration_filtering:.4f} segundos")
+
         return resposta
     except Exception as e:
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
