@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../components/logo/logo.component";
-import { useNavigate } from "react-router-dom"; // Importando useNavigate
+import { useNavigate } from "react-router-dom";
 import "./home-screen.css";
 import { useNomeAtor } from "../../api/hooks/useNomeAtor/useNomeAtor.hook";
 import { useNomeSerie } from "../../api/hooks/useNomeSerie/useNomeSerie.hook";
@@ -11,7 +11,7 @@ import Erro from "../../components/erro/erro.component";
 import { useSelector } from "react-redux";
 
 export function HomeScreen() {
-  const navigate = useNavigate(); // Inicializando useNavigate
+  const navigate = useNavigate();
   const { mudanca, input } = useNomeAtor();
   const { changeSerie, serieNome } = useNomeSerie();
   const [tab, setTab] = useState("PESSOA");

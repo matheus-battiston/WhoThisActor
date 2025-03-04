@@ -2,7 +2,7 @@ import { useState } from "react";
 import { enviarImagemBlob } from "../../calls/enviarImagemBlob.api";
 import { useDispatch } from "react-redux";
 import { setError } from "../../../redux/store";
-import { useNavigate } from "react-router-dom"; // Importando useNavigate
+import { useNavigate } from "react-router-dom";
 
 export function useEnviarImagemBlob() {
   const [blob, setBlob] = useState(null);

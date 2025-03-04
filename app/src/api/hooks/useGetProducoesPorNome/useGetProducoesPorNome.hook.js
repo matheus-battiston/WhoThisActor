@@ -2,14 +2,13 @@ import { useState, useCallback } from "react";
 import { getProducoesporNome } from "../../calls/getProducoesPorNome.api";
 import { useDispatch } from "react-redux";
 import { setError } from "../../../redux/store";
-import { useNavigate } from "react-router-dom"; // Importando useNavigate
+import { useNavigate } from "react-router-dom";
 
 export function useGetProducoesPorNome() {
   const [producoes, setProducoes] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Utilizando useCallback para memorizar a função
   const getProducoesPorNomeFunc = useCallback(
     async (nome) => {
       try {
@@ -21,8 +20,8 @@ export function useGetProducoesPorNome() {
         navigate("/");
       }
     },
-    [dispatch]
-  ); // O useCallback depende do dispatch, então o incluímos aqui.
+    [dispatch, navigate]
+  );
 
   return { producoes, getProducoesPorNomeFunc };
 }

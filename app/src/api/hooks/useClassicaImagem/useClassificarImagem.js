@@ -2,7 +2,7 @@ import { useState } from "react";
 import { classificar } from "../../calls/classificar.api";
 import { useDispatch } from "react-redux";
 import { setError } from "../../../redux/store";
-import { useNavigate } from "react-router-dom"; // Importando useNavigate
+import { useNavigate } from "react-router-dom";
 
 export function useClassificarImagem() {
   const [atores, setAtores] = useState(null);

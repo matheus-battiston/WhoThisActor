@@ -1,5 +1,5 @@
 import React from "react";
-import "./exibe-producao.css"; // Estilos CSS
+import "./exibe-producao.css";
 import { URL_BASE_IMAGEM_TMDB } from "../../constants/imageTmdb";
 
 export default function ExibeProducao({ producao, onImageLoad }) {
@@ -15,7 +15,7 @@ export default function ExibeProducao({ producao, onImageLoad }) {
           src={criaLink(producao.posterLink)}
           alt={producao.nomeProducao}
           className="image"
-          onLoad={onImageLoad} // Chama a função quando a imagem carrega
+          onLoad={onImageLoad}
         />
         <div className="producaoTexto">
           <h2 className="titleProducao">{producao.nomeProducao}</h2>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetProducoesPorNome } from "../../api/hooks/useGetProducoesPorNome/useGetProducoesPorNome.hook";
 import AtorInfo from "../../components/ator-info/ator-info.component";
-import "./exibir-producoes.css"; // Estilos CSS
+import "./exibir-producoes.css";
 import Loading from "../../components/loading/loading.component";
 import { useSwipeable } from "react-swipeable";
 import Tab from "../../components/tab/tab.component";
@@ -10,13 +10,13 @@ import ListProducoes from "../../components/list-producoes/list-producoes.compon
 
 export function ExibirProducoesScreen() {
   const { producoes, getProducoesPorNomeFunc } = useGetProducoesPorNome();
-  const { name } = useParams(); // Obtendo o parâmetro "name" da URL
+  const { name } = useParams();
   const [tab, setTab] = useState("TV");
 
   const handleSwipe = useSwipeable({
     onSwipedLeft: () => setTab("TV"),
     onSwipedRight: () => setTab("FILME"),
-    trackMouse: true, // Permite arrastar com o mouse também
+    trackMouse: true,
   });
 
   useEffect(() => {
@@ -39,7 +39,6 @@ export function ExibirProducoesScreen() {
             tab={tab}
           />
         </div>
-
       )}
     </div>
   );

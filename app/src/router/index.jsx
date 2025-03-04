@@ -13,15 +13,15 @@ export const router = createBrowserRouter([
     element: <HomeScreen />,
   },
   {
-    path: "/exibirProducoes/:name", // Rota com o parâmetro dinâmico
+    path: "/exibirProducoes/:name",
     element: <ExibirProducoesScreen />,
   },
   {
-    path: "/opcoesAtores", // Rota com o parâmetro dinâmico
+    path: "/opcoesAtores",
     element: <PrivateRoute Screen={OpcoesAtoresScreen} />,
   },
   {
-    path: "/exibirElenco/:name/:tipo", // Rota com o parâmetro dinâmico
+    path: "/exibirElenco/:name/:tipo",
     element: <ExibirElencoScreen />,
   },
 ]);

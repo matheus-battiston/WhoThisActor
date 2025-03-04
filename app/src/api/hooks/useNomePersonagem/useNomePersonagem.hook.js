@@ -1,15 +1,15 @@
 import { useState } from "react";
 
 export function useNomePersonagem() {
-  const [formInput, setFormInput] = useState(""); // Agora formInputs é uma string
+  const [formInput, setFormInput] = useState("");
 
   function handleChange(event) {
     const { value } = event.target;
-    setFormInput(value); // Agora armazena o valor como string
+    setFormInput(value);
   }
 
   return {
     changePersonagem: handleChange,
-    personagemNome: formInput, // dadosDosInputs é agora uma string
+    personagemNome: formInput,
   };
 }

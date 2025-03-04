@@ -1,15 +1,11 @@
 import React from "react";
 import logoImage from "../../assets/images/WhoThisActorLogo.png";
-import "./logo.css"; // Importando o arquivo CSS
+import "./logo.css";
 
 const Logo = () => {
   return (
     <div className="logo-container">
-      <img
-        src={logoImage} // Usando a importação correta da imagem
-        alt="Logo"
-        className="logo-image"
-      />
+      <img src={logoImage} alt="Logo" className="logo-image" />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import "./pesquisa.css"; // Importando o arquivo de estilo
+import "./pesquisa.css";
 
 const InputSearch = ({ onChange, texto, placeholder }) => {
   return (

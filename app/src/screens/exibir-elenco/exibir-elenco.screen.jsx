@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useGetElenco } from "../../api/hooks/useGetElenco/useGetElenco.hook";
 import { useNomePersonagem } from "../../api/hooks/useNomePersonagem/useNomePersonagem.hook";
 import { useGetSerieInfo } from "../../api/hooks/useGetSerieInfo/useGetSerieInfo.hook";
@@ -9,8 +9,6 @@ import { URL_BASE_IMAGEM_TMDB } from "../../constants/imageTmdb";
 import InputSearch from "../../components/pesquisa/pesquisa.component";
 import "./exibir-elenco.css";
 import ExibePessoaPersonagem from "../../components/exibe-pessoa-personagem/exibe-pessoa-personagem.component";
-import { clearError } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
 
 export function ExibirElencoScreen() {
   const { changePersonagem, personagemNome } = useNomePersonagem();

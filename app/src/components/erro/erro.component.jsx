@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearError } from "../../redux/store"; // Ajuste o caminho conforme necessário
+import { clearError } from "../../redux/store";
 
 import "./erro.css";
 import BotaoComponent from "../botao/botao.component";
 
 export default function Erro() {
   const dispatch = useDispatch();
-  const { message } = useSelector((state) => state.error); // Acessa o erro no Redux
+  const { message } = useSelector((state) => state.error);
 
   function onClose() {
     dispatch(clearError());

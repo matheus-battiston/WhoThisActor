@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./ator-info.css"; // Estilo CSS
+import "./ator-info.css";
 import padrao from "../../assets/images/image-not-found.jpg";
 
 export default function AtorInfo({ nome, imagem }) {
