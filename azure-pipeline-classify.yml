@@ -35,6 +35,14 @@ stages:
               repository: "whothisactor-classify"
               tags: "who"
               command: "push"
+  - stage: Deploy
+    displayName: Deploy Classify
+    jobs:
+      - job: DeployClassify
+        displayName: DeployClassify
+        pool:
+          name: "Azure Pipelines"
+        steps:
           - task: AzureContainerApps@1
             inputs:
               azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
