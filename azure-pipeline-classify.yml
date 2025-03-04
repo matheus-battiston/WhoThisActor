@@ -48,4 +48,4 @@ stages:
               azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
               containerAppName: 'classify'
               resourceGroup: 'WhoThisActorStudent'
-              imageToDeploy: 'Whothisactorcontainers.azurecr.io/whothisactor-classify:who'
+              imageToDeploy: 'WhoThisActorContainers.azurecr.io/whothisactor-classify:who'
