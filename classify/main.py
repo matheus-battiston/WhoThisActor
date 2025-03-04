@@ -14,4 +14,4 @@ async def create_item(item: Imagem):
 
 @app.get("/wakeup")
 async def wake_up():
-    return {"status": "Service is up and running!"}
+    return {"status": "Service is up and running! v2"}
