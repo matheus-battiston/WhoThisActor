@@ -7,6 +7,7 @@ import Loading from "../../components/loading/loading.component";
 import { useSwipeable } from "react-swipeable";
 import Tab from "../../components/tab/tab.component";
 import ListProducoes from "../../components/list-producoes/list-producoes.component";
+import Cabecalho from "../../components/cabecalho/cabecalho.component";
 
 export function ExibirProducoesScreen() {
   const { producoes, getProducoesPorNomeFunc } = useGetProducoesPorNome();
@@ -28,8 +29,9 @@ export function ExibirProducoesScreen() {
       {producoes === null ? (
         <Loading />
       ) : (
-        <div className="containerProducoes">
-          <div className="atorInfoContainer">
+        <div className="container-producoes">
+          <Cabecalho />
+          <div className="ator-info-container">
             <AtorInfo nome={producoes.nome} imagem={producoes.urlFoto} />
           </div>
           <Tab setTab={setTab} estado={tab} tabs={["FILME", "TV"]} />

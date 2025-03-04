@@ -9,6 +9,7 @@ import { URL_BASE_IMAGEM_TMDB } from "../../constants/imageTmdb";
 import InputSearch from "../../components/pesquisa/pesquisa.component";
 import "./exibir-elenco.css";
 import ExibePessoaPersonagem from "../../components/exibe-pessoa-personagem/exibe-pessoa-personagem.component";
+import Cabecalho from "../../components/cabecalho/cabecalho.component";
 
 export function ExibirElencoScreen() {
   const { changePersonagem, personagemNome } = useNomePersonagem();
@@ -40,6 +41,7 @@ export function ExibirElencoScreen() {
         <Loading />
       ) : (
         <div className="container-elenco">
+          <Cabecalho />
           <SerieInfo
             imagem={URL_BASE_IMAGEM_TMDB + serie.imagem}
             nome={serie.nome}

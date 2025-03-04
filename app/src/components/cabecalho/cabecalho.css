@@ -1,0 +1,25 @@
+.cabecalho {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed; /* Fixa o botão na tela */
+  z-index: 1000;
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.titulo {
+  color: white;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+.logo-image-cabecalho {
+  height: 40px;
+  width: auto;
+}
+
+.logo-image-cabecalho:hover {
+  cursor: pointer;
+}
