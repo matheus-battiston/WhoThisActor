@@ -27,12 +27,13 @@ stages:
               repository: "whothisactor-classify"
               command: "build"
               Dockerfile: "classify/Dockerfile"
+              tags: 'who'
               arguments: "--platform linux/amd64 --build-arg CONNECTIONSTRING=$(CONNECTIONSTRING)"
-
           - task: Docker@2
             inputs:
               containerRegistry: "whothisactorRegistry"
               repository: "whothisactor-classify"
+              tags: 'who'
               command: "push"
   - stage: Deploy
     displayName: Deploy CLASSIFY
@@ -50,4 +51,4 @@ stages:
               WebAppName: "whothisactor-classify"
               DockerNamespace: "whothisactorcontainers.azurecr.io"
               DockerRepository: "whothisactor-classify"
-              DockerImageTag: "$(Build.BuildId)"
+              DockerImageTag: "who"
