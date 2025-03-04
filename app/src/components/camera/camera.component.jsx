@@ -89,11 +89,11 @@ const CameraComponent = () => {
       }
 
       const fileName = `imagem_${Date.now()}.jpg`; // Nome dinâmico para o arquivo
-      const blobUrl = `https://whothisactorstorage.blob.core.windows.net/containerblob/${fileName}?${sas.sastoken}`;
+      const blobUrl = `https://whothisactorstorage.blob.core.windows.net/blobs/${fileName}?${sas.sastoken}`;
 
       enviarImagemBlobFunc(blobUrl, binaryData);
 
-      const url = `https://whothisactorstorage.blob.core.windows.net/containerblob/${fileName}`;
+      const url = `https://whothisactorstorage.blob.core.windows.net/blobs/${fileName}`;
       classificarAtor(url);
     } catch (error) {
       console.error("Erro ao enviar a imagem:", error);
