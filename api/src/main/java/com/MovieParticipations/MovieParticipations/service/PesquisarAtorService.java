@@ -61,8 +61,7 @@ public class PesquisarAtorService {
                 if (ator.has(PARAMETRO_URL_IMAGE) && !ator.get(PARAMETRO_URL_IMAGE).isJsonNull()) {
                     urlImage = ator.get(PARAMETRO_URL_IMAGE).getAsString();
                 } else {
-                    // Defina um valor padrão ou trate o caso de parâmetro nulo
-                    urlImage = "";  // ou null, ou algum valor de fallback
+                    urlImage = "";
                 }
                 return toResponse(id, nomeAtor, urlImage);
             } else
@@ -102,13 +101,11 @@ public class PesquisarAtorService {
     private JsonObject getAtor(JsonArray results) {
 
         if (results != null && !results.isEmpty()) {
-            // Lista para armazenar os atores filtrados
             ArrayList<JsonObject> filteredActors = new ArrayList<>();
 
-            // Filtrar os atores que têm "known_for_department" igual a "Acting"
             for (int i = 0; i < results.size(); i++) {
                 JsonObject ator = results.get(i).getAsJsonObject();
-                if (ator.has(DEPARTAMENTO) && ator.get(DEPARTAMENTO).getAsString().equals(CONHECIDO_DEPARTAMENTO)) {
+                if (ator.has(DEPARTAMENTO) && (!ator.get(DEPARTAMENTO).isJsonNull()) && ator.get(DEPARTAMENTO).getAsString().equals(CONHECIDO_DEPARTAMENTO)) {
                     filteredActors.add(ator);
                 }
             }
