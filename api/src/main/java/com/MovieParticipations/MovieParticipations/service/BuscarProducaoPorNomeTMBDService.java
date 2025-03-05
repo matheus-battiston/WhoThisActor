@@ -79,15 +79,15 @@ public class BuscarProducaoPorNomeTMBDService {
     private FilmeTMDBDto temNomeExatoFilme(BuscarIdFilmePorNomeDTO response, String nome){
         return response.getResults().stream()
                 .filter(serie -> nomeExato(nome, serie.getTitle()))
-                .toList()
-                .get(0);
+                .findFirst()
+                .orElse(null); // Retorna null se não encontrar nenhum filme com o nome exato
     }
 
     private SerieTMDBDto temNomeExatoSerie(BuscarIdSeriePorNomeDTO response, String nome){
         return response.getResults().stream()
                 .filter(serie -> nomeExato(nome, serie.getName()))
-                .toList()
-                .get(0);
+                .findFirst()
+                .orElse(null); // Retorna null se não encontrar nenhuma série com o nome exato
     }
 
 
