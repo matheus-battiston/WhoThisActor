@@ -23,9 +23,9 @@ public class RequisicaoApiClassificacaoService {
         String body = ClassificacaoApiExternaMapper.toResponse(urlImagem);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON); // Garante que está enviando JSON
+        headers.setContentType(APPLICATION_JSON);
 
-        HttpEntity<String> request = new HttpEntity<>(body, headers); // Cria a requisição com headers
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         try {
             String response = restTemplate.postForObject(CLASSIFYADDRESS, request, String.class);

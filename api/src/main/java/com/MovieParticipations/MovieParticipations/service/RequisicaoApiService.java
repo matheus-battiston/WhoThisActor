@@ -1,13 +1,18 @@
 package com.MovieParticipations.MovieParticipations.service;
 
+import com.MovieParticipations.MovieParticipations.dto.ListaProducoesTMDBDto;
+import com.MovieParticipations.MovieParticipations.dto.PesquisaIdPorNomeDTO;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+
+import static org.springframework.http.HttpMethod.GET;
 
 @Service
 public class RequisicaoApiService {
@@ -21,32 +26,17 @@ public class RequisicaoApiService {
 
     @Value("${TMDBAPIKEY}")
     private String apiKey;
-    public JsonObject persquisarIdPorNome(String nomeAtor) {
+    public PesquisaIdPorNomeDTO persquisarIdPorNome(String nomeAtor) {
         String nomeCodificado = URLEncoder.encode(nomeAtor, StandardCharsets.UTF_8);
         String url = URL_PESQUISA_POR_NOME + PARAMETRO_API_KEY + apiKey + QUERY + nomeCodificado;
         RestTemplate restTemplate = new RestTemplate();
-
-        try {
-            String response = restTemplate.getForObject(url, String.class);
-            return JsonParser.parseString(response).getAsJsonObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        return restTemplate.exchange(url, GET, HttpEntity.EMPTY, PesquisaIdPorNomeDTO.class).getBody();
     }
 
-    public JsonObject pesquisarFilmesDoAtorPorId(int id) {
+    public ListaProducoesTMDBDto pesquisarFilmesDoAtorPorId(int id) {
         String url = URL_PESQUISA_CREDITOS_COMBINADOS_POR_ID +
                 BARRA + id + PARAMETRO_CREDITOS_COMBINADOS + PARAMETRO_API_KEY + apiKey;
         RestTemplate restTemplate = new RestTemplate();
-
-        try {
-            String response = restTemplate.getForObject(url, String.class);
-            return JsonParser.parseString(response).getAsJsonObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return restTemplate.exchange(url, GET, HttpEntity.EMPTY, ListaProducoesTMDBDto.class).getBody();
     }
 }

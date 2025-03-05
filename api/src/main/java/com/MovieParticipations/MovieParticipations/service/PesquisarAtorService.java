@@ -3,6 +3,10 @@ package com.MovieParticipations.MovieParticipations.service;
 import com.MovieParticipations.MovieParticipations.controller.response.AtorEProducoesResponse;
 import com.MovieParticipations.MovieParticipations.controller.response.PesquisaPorNomeResponse;
 import com.MovieParticipations.MovieParticipations.controller.response.ProducaoResponse;
+import com.MovieParticipations.MovieParticipations.dto.AtorTMDBDtoPesquisaId;
+import com.MovieParticipations.MovieParticipations.dto.ListaProducoesTMDBDto;
+import com.MovieParticipations.MovieParticipations.dto.PesquisaIdPorNomeDTO;
+import com.MovieParticipations.MovieParticipations.dto.ProducaoTMDBDto;
 import com.MovieParticipations.MovieParticipations.mapper.AtorEProducoesMapper;
 import com.MovieParticipations.MovieParticipations.mapper.FilmeMapper;
 import com.MovieParticipations.MovieParticipations.validator.ChecarNomePersonagem;
@@ -14,25 +18,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoProducao.TV;
 import static com.MovieParticipations.MovieParticipations.mapper.PesquisaMapper.toResponse;
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 
 @Service
 public class PesquisarAtorService {
     private static final String URL_BASE_IMAGEM = "https://image.tmdb.org/t/p/w200";
-    private static final String PARAMETRO_RESULTADOS = "results";
-    private static final String PARAMETRO_CAST = "cast";
-    private static final String PARAMETRO_ID = "id";
     private static final String ATOR_NAO_ENCONTRADO = "Ator nao foi encontrado";
-    private static final String PARAMETRO_URL_IMAGE = "profile_path";
     private static final String CONHECIDO_DEPARTAMENTO = "Acting";
-    private static final String DEPARTAMENTO = "known_for_department";
     private static final int TAMANHO_LISTA = 30;
 
     @Autowired
@@ -50,70 +50,42 @@ public class PesquisarAtorService {
 
     public PesquisaPorNomeResponse pesquisarIdPorNome(String nomeAtor) {
 
-        JsonArray results = requisicaoApiService.persquisarIdPorNome(nomeAtor).getAsJsonArray(PARAMETRO_RESULTADOS);
-        int id;
-        String urlImage;
-
-        if (results != null && !results.isEmpty()) {
-            JsonObject ator = getAtor(results);
-            if (ator != null) {
-                id = ator.get(PARAMETRO_ID).getAsInt();
-                if (ator.has(PARAMETRO_URL_IMAGE) && !ator.get(PARAMETRO_URL_IMAGE).isJsonNull()) {
-                    urlImage = ator.get(PARAMETRO_URL_IMAGE).getAsString();
-                } else {
-                    urlImage = "";
-                }
-                return toResponse(id, nomeAtor, urlImage);
-            } else
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ATOR_NAO_ENCONTRADO);
-        } else
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ATOR_NAO_ENCONTRADO);
+        PesquisaIdPorNomeDTO response = requisicaoApiService.persquisarIdPorNome(nomeAtor);
+        if (response.getResults() != null && !response.getResults().isEmpty()) {
+            AtorTMDBDtoPesquisaId ator = getAtor(response.getResults());
+            if (ator != null) return toResponse(ator);
+            else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ATOR_NAO_ENCONTRADO);
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ATOR_NAO_ENCONTRADO);
     }
 
     public List<ProducaoResponse> pesquisarFilmesDeAtorPorId(int id, String nome) {
-        JsonArray results = requisicaoApiService.pesquisarFilmesDoAtorPorId(id).getAsJsonArray(PARAMETRO_CAST);
-        List<ProducaoResponse> filmes = new ArrayList<>();
-        List<ProducaoResponse> tv = new ArrayList<>();
+        ListaProducoesTMDBDto response = requisicaoApiService.pesquisarFilmesDoAtorPorId(id);
 
-        if (results != null && !results.isEmpty()) {
-            for (JsonElement elemento : results) {
-                JsonObject filmeApi = elemento.getAsJsonObject();
-                ProducaoResponse filme;
-                filme = FilmeMapper.toResponse(filmeApi);
-                if (filme.getNomeProducao() != null && !checarNomePersonagem.checarSeAutoAtuacao(filme.getNomePersonagem(), nome))
-                    if (filme.getTipoProducao().equals(TV))
-                        tv.add(filme);
-                    else
-                        filmes.add(filme);
-            }
-        }
-        return Stream.concat(ordenarELimitar(filmes).stream(), ordenarELimitar(tv).stream())
+        return Optional.ofNullable(response.getCast())
+                .orElse(emptyList())
+                .stream()
+                .map(FilmeMapper::toResponse)
+                .filter(producao -> producao.getNomeProducao() != null &&
+                        !checarNomePersonagem.checarSeAutoAtuacao(producao.getNomePersonagem(), nome))
+                .collect(partitioningBy(producao -> producao.getTipoProducao().equals(TV)))
+                .values()
+                .stream()
+                .flatMap(lista -> ordenarELimitar(lista).stream())
                 .collect(toList());
     }
 
     private List<ProducaoResponse> ordenarELimitar(List<ProducaoResponse> listaDeProducoes) {
         return listaDeProducoes.stream()
-                .sorted(Comparator.comparing(ProducaoResponse::getPopularidade).reversed())  // Ordena por popularidade de forma decrescente
+                .sorted(Comparator.comparing(ProducaoResponse::getPopularidade).reversed())
                 .limit(TAMANHO_LISTA)
                 .collect(toList());
     }
 
-    private JsonObject getAtor(JsonArray results) {
-
-        if (results != null && !results.isEmpty()) {
-            ArrayList<JsonObject> filteredActors = new ArrayList<>();
-
-            for (int i = 0; i < results.size(); i++) {
-                JsonObject ator = results.get(i).getAsJsonObject();
-                if (ator.has(DEPARTAMENTO) && (!ator.get(DEPARTAMENTO).isJsonNull()) && ator.get(DEPARTAMENTO).getAsString().equals(CONHECIDO_DEPARTAMENTO)) {
-                    filteredActors.add(ator);
-                }
-            }
-            if (!filteredActors.isEmpty()) {
-                filteredActors.sort((ator1, ator2) -> Double.compare(ator2.get("popularity").getAsDouble(), ator1.get("popularity").getAsDouble()));
-                return filteredActors.get(0);
-            }
-        }
-        return null;  // Retorna null se não encontrar nenhum ator com a condição
+    private AtorTMDBDtoPesquisaId getAtor(List<AtorTMDBDtoPesquisaId> response) {
+        return response == null ? null :
+                response.stream()
+                        .filter(ator -> CONHECIDO_DEPARTAMENTO.equals(ator.getKnown_for_department()))
+                        .max(Comparator.comparingDouble(AtorTMDBDtoPesquisaId::getPopularity))
+                        .orElse(null);
     }
 }

@@ -39,7 +39,7 @@ public class PesquisarElencoSerieService {
     public List<OpcaoPesquisaElencResponseo>  pesquisarElenco(TipoMidia tipo, String nomeSerie, String filtroNome) {
 
         String nomeOficial = nomeSerie;
-        Pageable pageable = PageRequest.of(0, 20); // (pagina, tamanho)
+        Pageable pageable = PageRequest.of(0, 20);
         if (filtroNome == null || filtroNome.isEmpty()) {
             filtroNome = "";
         }

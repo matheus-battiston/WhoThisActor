@@ -1,13 +1,14 @@
 package com.MovieParticipations.MovieParticipations.mapper;
 
 import com.MovieParticipations.MovieParticipations.controller.response.PesquisaPorNomeResponse;
+import com.MovieParticipations.MovieParticipations.dto.AtorTMDBDtoPesquisaId;
 
 public class PesquisaMapper {
-    public static PesquisaPorNomeResponse toResponse(int id, String nome, String urlImage){
+    public static PesquisaPorNomeResponse toResponse(AtorTMDBDtoPesquisaId ator){
         return PesquisaPorNomeResponse.builder()
-                .nome(nome)
-                .id(id)
-                .urlImagem(urlImage)
+                .urlImagem(ator.getProfile_path())
+                .nome(ator.getName())
+                .id(ator.getId().intValue())
                 .build();
     }
 }
