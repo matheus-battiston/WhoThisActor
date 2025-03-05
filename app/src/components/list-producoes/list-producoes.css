@@ -1,7 +1,8 @@
 .producoes-list {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   width: 100%;
+  flex-wrap: wrap;
   overflow: auto;
   align-items: center;
   margin-top: 10px;

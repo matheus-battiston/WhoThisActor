@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./cabecalho.css";
-import logoImage from "../../assets/images/favicon.ico";
+import logoImage from "../../assets/images/WhoThisActorLogoNoText.png";
 
 export default function Cabecalho() {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ export default function Cabecalho() {
         className="logo-image-cabecalho"
         onClick={Home}
       />
-      <h1 className="titulo">Who This Actor</h1>
     </div>
   );
 }

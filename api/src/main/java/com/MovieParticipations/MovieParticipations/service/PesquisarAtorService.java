@@ -45,7 +45,7 @@ public class PesquisarAtorService {
         PesquisaPorNomeResponse response = pesquisarIdPorNome(nomeAtor);
         List<ProducaoResponse> listaDeProducoes = pesquisarFilmesDeAtorPorId(response.getId(), response.getNome());
 
-        return AtorEProducoesMapper.toResponse(listaDeProducoes, nomeAtor, URL_BASE_IMAGEM + response.getUrlImagem());
+        return AtorEProducoesMapper.toResponse(listaDeProducoes, response.getNome(), URL_BASE_IMAGEM + response.getUrlImagem());
     }
 
     public PesquisaPorNomeResponse pesquisarIdPorNome(String nomeAtor) {

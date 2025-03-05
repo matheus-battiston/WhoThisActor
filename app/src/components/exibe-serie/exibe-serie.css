@@ -2,22 +2,32 @@
   font-size: 26px;
   font-weight: bold; /* Adicionando negrito para dar destaque ao título */
   color: white;
+  text-align: center;
+  margin: 0; /* Remove margens indesejadas */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .linha-serie {
   display: flex;
   align-items: center;
   max-width: 100%;
+  margin-left: 20px;
+  margin-right: 10px;
 }
 
 .poster-serie {
   width: auto;
-  height: 200px; /* Tamanho obrigatório da imagem */
+  height: 200px;
   border-radius: 8px;
-  margin-right: 20px; /* Ajuste o valor conforme necessário */
+  margin-right: 20px;
 }
 
 .texto-producao {
-  max-width: 100%; /* Limitar a largura do texto para evitar que ultrapasse */
-  flex-shrink: 1; /* Impedir que o texto cresça além do limite */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
 }

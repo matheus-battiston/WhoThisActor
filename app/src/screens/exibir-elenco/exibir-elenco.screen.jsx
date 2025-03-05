@@ -42,16 +42,18 @@ export function ExibirElencoScreen() {
       ) : (
         <div className="container-elenco">
           <Cabecalho />
-          <SerieInfo
-            imagem={URL_BASE_IMAGEM_TMDB + serie.imagem}
-            nome={serie.nome}
-          />
-          <div className="input-personagem">
-            <InputSearch
-              onChange={changePersonagem}
-              texto={"Pesquise seu personagem"}
-              placeholder={PLACEHOLDER}
+          <div className="serie-info-input">
+            <SerieInfo
+              imagem={URL_BASE_IMAGEM_TMDB + serie.imagem}
+              nome={serie.nome}
             />
+            <div className="input-personagem">
+              <InputSearch
+                onChange={changePersonagem}
+                texto={"Pesquise seu personagem"}
+                placeholder={PLACEHOLDER}
+              />
+            </div>{" "}
           </div>
           <div className="lista-personagens">
             {pessoas.map((item, index) => (
