@@ -12,22 +12,20 @@ alignment_modes = [True, False]
 
 def detect_face_retina(image):
     try:
-        # Face detection and alignment
         face_objs = DeepFace.extract_faces(
             img_path=np.array(image),
-            detector_backend="mtcnn",  # RetinaFace
+            detector_backend="retinaface",
             align=alignment_modes[0],
         )
 
-        if face_objs:  # Se detectou pelo menos um rosto
+        if face_objs:
             first_face = face_objs[0]
-            face_array = first_face["face"]  # O recorte da face
-            bbox = first_face["facial_area"]  # Coordenadas do rosto
-            confidence = first_face["confidence"]  # Confiança
+            face_array = first_face["face"]
+            bbox = first_face["facial_area"]
+            confidence = first_face["confidence"] 
 
             print(f"Confiança da detecção: {confidence:.2f}")
 
-            # Converter de float64 para uint8
             face_bgr = cv2.cvtColor((face_array * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
             return face_bgr
         else:

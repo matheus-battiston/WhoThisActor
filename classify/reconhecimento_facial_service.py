@@ -29,23 +29,20 @@ def get_blob_name_from_url(blob_url):
 
 def recognize_face_with_faiss(image, top_n=5):
     try:
-        start_total = time.time()  # Início da medição total
-
         image = make_square(image)
 
-        embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False)[0]["embedding"]
+        embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False, detector_backend= "skip",)[0]["embedding"]
         img_embedding = np.array([embedding], dtype=np.float32)
 
         faiss.normalize_L2(img_embedding)
 
         closest_images = []
+        closest_media = {}
 
         index_dir = "faiss_indexes"
         if not os.path.exists(index_dir):
             print(f"Pasta {index_dir} não encontrada.")
             return []
-
-        start_index_search = time.time()  # Início da busca nos índices
 
         for filename in os.listdir(index_dir):
             if filename.endswith("_index.idx"):
@@ -53,17 +50,16 @@ def recognize_face_with_faiss(image, top_n=5):
                 index_path = os.path.join(index_dir, filename)
 
                 index = faiss.read_index(index_path)
-                distances, indices = index.search(img_embedding, top_n)
+                distances, indices = index.search(img_embedding, 5)
+                distancia = 0
 
                 for i in range(len(indices[0])):
+                    distancia += distances[0][1]
                     closest_images.append((label, indices[0][i], distances[0][i]))
-
-        end_index_search = time.time()  # Fim da busca nos índices
-        duration_index_search = end_index_search - start_index_search
+                closest_media[label] = distancia/len(indices[0])
 
         closest_images.sort(key=lambda x: x[2])
 
-        start_filtering = time.time()  # Início da filtragem dos top_n
 
         resposta = []
         labels_added = set()
@@ -77,17 +73,20 @@ def recognize_face_with_faiss(image, top_n=5):
             if len(resposta) >= top_n:
                 break    
 
-        end_filtering = time.time()  # Fim da filtragem dos top_n
-        duration_filtering = end_filtering - start_filtering
+        distancia_referencia = resposta[0][2]  
+        filtrados = [ator for ator in resposta if abs(ator[2] - distancia_referencia) <= 0.10]
 
-        end_total = time.time()  # Fim da medição total
-        duration_total = end_total - start_total
+        if (len(filtrados) == 1):
+            return filtrados
+        else:
+            resultados = []
+            for label, indice, distancia in filtrados:
+                if isinstance(closest_media.get(label), np.float32) and not np.isnan(closest_media[label]) and not np.isinf(closest_media[label]):
+                    resultados.append((label, indice, closest_media[label])) 
+            
+            resultados.sort(key=lambda x: x[2])
+            return [ator for ator in resultados if ator[2] <= 1.0]
 
-        print(f"Tempo total: {duration_total:.4f} segundos")
-        print(f"Tempo de busca nos índices: {duration_index_search:.4f} segundos")
-        print(f"Tempo de filtragem dos top_n: {duration_filtering:.4f} segundos")
-
-        return resposta
     except Exception as e:
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
         return []
@@ -112,11 +111,11 @@ async def classify_image_service(req: str):
     if face_image is None:
         raise HTTPException(status_code=404, detail=ROSTO_NAO_DETECTADO)
 
-    top_n = 5
+    top_n = 10
     top_results = recognize_face_with_faiss(face_image, top_n)
 
     result = [
         {ATRIBUTO_IDENTIDADE: identity, ATRIBUTO_DISTANCIA_MEDIA: float(distance)} 
-        for identity, _, distance in top_results
+        for identity,_, distance in top_results
     ]
     return result

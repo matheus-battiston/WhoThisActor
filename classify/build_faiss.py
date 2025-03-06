@@ -36,7 +36,6 @@ def build_faiss_index():
         index.add(emb_array)
         faiss_indices[label] = index
         
-        # Salvar o índice de cada classe em um arquivo separado
         faiss.write_index(index, os.path.join(INDEXES_DIR, f"{label}_index.idx"))
 
 build_faiss_index()
