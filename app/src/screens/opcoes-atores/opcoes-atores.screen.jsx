@@ -5,6 +5,7 @@ import "./opcoes-atores.css";
 import { useClassificarImagem } from "../../api/hooks/useClassicaImagem/useClassificarImagem";
 import AtorInfo from "../../components/ator-info/ator-info.component";
 import Loading from "../../components/loading/loading.component";
+import { useCallback } from "react";
 
 export function OpcoesAtoresScreen() {
   const url = useSelector((state) => state.url.url);
@@ -13,11 +14,21 @@ export function OpcoesAtoresScreen() {
   const [loading, setLoading] = useState(true);
   const [loadingApi, setLoadingApi] = useState(false);
 
+  const navigateToItemDetails = useCallback(
+    (name) => {
+      navigate(`/exibirProducoes/${name}`);
+    },
+    [navigate]
+  );
+
   useEffect(() => {
     if (atores) {
+      if (atores.length === 1) {
+        navigateToItemDetails(atores[0].identity);
+      }
       setLoading(false);
     }
-  }, [atores]);
+  }, [atores, navigateToItemDetails]);
 
   useEffect(() => {
     if (url && !loadingApi) {
@@ -28,10 +39,6 @@ export function OpcoesAtoresScreen() {
 
   const handlePress = (item) => {
     navigateToItemDetails(item.identity);
-  };
-
-  const navigateToItemDetails = (name) => {
-    navigate(`/exibirProducoes/${name}`);
   };
 
   return (

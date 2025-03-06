@@ -35,7 +35,8 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copiar o restante dos arquivos da aplicação para o diretório de trabalho
-COPY . /app/
+COPY src/ /app/
+# COPY weights/ /root/.deepface/weights
 
 # Expor a porta 8000
 EXPOSE 8000
