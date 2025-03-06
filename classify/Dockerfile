@@ -36,7 +36,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copiar o restante dos arquivos da aplicação para o diretório de trabalho
 COPY src/ /app/
-COPY weights/ /root/.deepface/weights
+# COPY weights/ /root/.deepface/weights
 
 # Expor a porta 8000
 EXPOSE 8000
