@@ -15,6 +15,8 @@ stages:
         pool:
           name: "Azure Pipelines"
         steps:
+          - checkout: self
+            lfs: true
           - task: AzureKeyVault@2
             inputs:
               azureSubscription: "vault connection"
@@ -45,7 +47,7 @@ stages:
         steps:
           - task: AzureContainerApps@1
             inputs:
-              azureSubscription: 'Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)'
-              containerAppName: 'classify'
-              resourceGroup: 'WhoThisActorStudent'
-              imageToDeploy: 'whothisactorcontainers.azurecr.io/whothisactor-classify:who'
+              azureSubscription: "Azure for Students(ef7f1a56-77e4-4ff0-81f5-ecf53df6ab4b)"
+              containerAppName: "classify"
+              resourceGroup: "WhoThisActorStudent"
+              imageToDeploy: "whothisactorcontainers.azurecr.io/whothisactor-classify:who"
