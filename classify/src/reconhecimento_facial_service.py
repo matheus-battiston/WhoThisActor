@@ -10,7 +10,8 @@ import faiss
 from PIL import Image
 from io import BytesIO
 from fastapi import HTTPException
-import time
+
+import pickle
 
 # Definições de diretórios e constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +22,30 @@ CONTAINER_NAME = "blobs"
 URL_NAO_FORNECIDA = "URL da imagem não fornecida"
 CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=whothisactorblobstorage;AccountKey=OFlwXfhQgnLNt8rhf3tAQ2a/0j1D06LtL/VFm4UGGSdvLcDAA0v8DbeNwcWROuvDLEl9kYSIr+NX+ASts08AHw==;EndpointSuffix=core.windows.net"
 
+def euclidean_distance(a, b):
+    return np.linalg.norm(a - b)
+
+def recognize_face_with_centroids(embedding, labels):
+    try:
+        with open('centroids.pkl', 'rb') as f:
+            centroids = pickle.load(f)
+
+        distances_to_centroids = {}
+        centroids_filtered = {label: centroid for label, centroid in centroids.items() if label in labels}
+        
+        for label, centroid in centroids_filtered.items():
+            distance = euclidean_distance(embedding, centroid)
+            distances_to_centroids[label] = distance
+
+        sorted_distances = sorted(distances_to_centroids.items(), key=lambda x: x[1])
+
+        top_5_labels = sorted_distances[:5]
+
+        return top_5_labels
+        
+    except Exception as e:
+        print(f"Erro ao reconhecer rosto com Faiss: {e}")
+        return []
 
 def get_blob_name_from_url(blob_url):
     parsed_url = urlparse(blob_url)
@@ -36,8 +61,7 @@ def recognize_face_with_faiss(image, top_n=5):
 
         faiss.normalize_L2(img_embedding)
 
-        closest_images = []
-        closest_media = {}
+        closest_images = {}
 
         index_dir = "faiss_indexes"
         if not os.path.exists(index_dir):
@@ -50,42 +74,19 @@ def recognize_face_with_faiss(image, top_n=5):
                 index_path = os.path.join(index_dir, filename)
 
                 index = faiss.read_index(index_path)
-                distances, indices = index.search(img_embedding, 5)
-                distancia = 0
+                distances, indices = index.search(img_embedding, 1)
+                closest_images[label] = distances[0][0]
 
-                for i in range(len(indices[0])):
-                    distancia += distances[0][1]
-                    closest_images.append((label, indices[0][i], distances[0][i]))
-                closest_media[label] = distancia/len(indices[0])
+        menores = dict(sorted(closest_images.items(), key=lambda item: item[1])[:5])
 
-        closest_images.sort(key=lambda x: x[2])
+        distancia_referencia = next(iter(menores.values()))  
+        filtrados = {k: v for k, v in menores.items() if abs(v - distancia_referencia) <= 0.10}
 
-
-        resposta = []
-        labels_added = set()
-
-        for item in closest_images:
-            label, index, distance = item
-            if label not in labels_added:
-                resposta.append(item)
-                labels_added.add(label)
-
-            if len(resposta) >= top_n:
-                break    
-
-        distancia_referencia = resposta[0][2]  
-        filtrados = [ator for ator in resposta if abs(ator[2] - distancia_referencia) <= 0.10]
 
         if (len(filtrados) == 1):
-            return filtrados
+            return [next(iter(filtrados.items()))]
         else:
-            resultados = []
-            for label, indice, distancia in filtrados:
-                if isinstance(closest_media.get(label), np.float32) and not np.isnan(closest_media[label]) and not np.isinf(closest_media[label]):
-                    resultados.append((label, indice, closest_media[label])) 
-            
-            resultados.sort(key=lambda x: x[2])
-            return [ator for ator in resultados if ator[2] <= 1.0]
+            return recognize_face_with_centroids(img_embedding, list(filtrados.keys()))
 
     except Exception as e:
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
@@ -116,6 +117,6 @@ async def classify_image_service(req: str):
 
     result = [
         {ATRIBUTO_IDENTIDADE: identity, ATRIBUTO_DISTANCIA_MEDIA: float(distance)} 
-        for identity,_, distance in top_results
+        for identity, distance in top_results
     ]
     return result
