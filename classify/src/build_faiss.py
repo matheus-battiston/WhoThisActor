@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-EMBEDDINGS_FILES = ["embed512v3.pkl", "embed512v4.pkl"]  # Adicione os arquivos aqui
+EMBEDDINGS_FILES = ["embeddings/embed512v3.pkl", "embeddings/embed512v4.pkl"]  # Adicione os arquivos aqui
 INDEXES_DIR = os.path.join(BASE_DIR, "faiss_indexes")
 os.makedirs(INDEXES_DIR, exist_ok=True)
 
