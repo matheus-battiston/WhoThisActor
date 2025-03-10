@@ -17,6 +17,8 @@ def load_and_merge_embeddings():
             with open(file_path, "rb") as f:
                 embeddings, _ = pickle.load(f)
                 for label, emb_list in embeddings.items():
+                    if ("Jenna Dewan" in label):
+                        label = "Jenna Dewan"
                     if label in combined_embeddings:
                         combined_embeddings[label].extend(emb_list)
                     else:
@@ -76,8 +78,8 @@ def print_embeddings_info():
     print(maior, menor)
 
 # Executando as funções
-# embeddings = load_and_merge_embeddings()
-# centroids = calculate_centroids(embeddings)
-# save_centroids(centroids)
+embeddings = load_and_merge_embeddings()
+centroids = calculate_centroids(embeddings)
+save_centroids(centroids)
 # build_faiss_index()
 print_embeddings_info()

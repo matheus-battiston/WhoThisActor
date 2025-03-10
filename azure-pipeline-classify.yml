@@ -16,7 +16,6 @@ stages:
           name: "Azure Pipelines"
         steps:
           - checkout: self
-            fetchDepth: 0
             lfs: true
           - task: AzureKeyVault@2
             inputs:
