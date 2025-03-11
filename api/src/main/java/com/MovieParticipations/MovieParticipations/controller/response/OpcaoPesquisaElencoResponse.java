@@ -7,8 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class OpcaoPesquisaElencResponseo {
+public class OpcaoPesquisaElencoResponse {
     String nome;
     String urlImagem;
     String nomePersonagem;
+    Double popularity;
 }

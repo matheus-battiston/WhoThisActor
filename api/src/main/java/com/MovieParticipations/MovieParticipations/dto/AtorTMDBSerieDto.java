@@ -15,4 +15,5 @@ public class AtorTMDBSerieDto {
     String profile_path;
     String known_for_department;
     List<RolesDto> roles;
+    Double popularity;
 }

@@ -12,6 +12,7 @@ public class AtorTMDBDtoMapper {
                 .known_for_department(atorTMDBSerieDto.getKnown_for_department())
                 .name(atorTMDBSerieDto.getName())
                 .profile_path(atorTMDBSerieDto.getProfile_path())
+                .popularity(atorTMDBSerieDto.getPopularity())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class AtorTMDBDtoMapper {
                 .name(atorTMDBMovieDto.getName())
                 .known_for_department(atorTMDBMovieDto.getKnown_for_department())
                 .character(atorTMDBMovieDto.getCharacter())
+                .popularity(atorTMDBMovieDto.getPopularity())
                 .build();
     }
 }

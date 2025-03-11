@@ -57,7 +57,8 @@ CREATE SEQUENCE ator_seq START 1 INCREMENT BY 50;
 CREATE TABLE ator (
                       id BIGINT DEFAULT nextval('ator_seq') NOT NULL,
                       nome VARCHAR(255) NOT NULL,
-                      imagem VARCHAR(255)
+                      imagem VARCHAR(255),
+                      popularity NUMERIC(5,3)
 );
 
 ALTER TABLE ator ADD CONSTRAINT pk_ator PRIMARY KEY (id);

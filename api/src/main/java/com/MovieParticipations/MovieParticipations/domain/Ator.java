@@ -26,6 +26,5 @@ public class Ator {
     @ManyToMany(mappedBy = "atores")
     private List<Serie> series = new ArrayList<>();
     private String imagem;
-
-    // Getters, Setters, Construtores
+    private Double popularity;
 }

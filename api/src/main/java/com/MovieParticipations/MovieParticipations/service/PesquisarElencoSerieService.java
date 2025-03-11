@@ -1,13 +1,12 @@
 package com.MovieParticipations.MovieParticipations.service;
 
 
-import com.MovieParticipations.MovieParticipations.controller.response.OpcaoPesquisaElencResponseo;
+import com.MovieParticipations.MovieParticipations.controller.response.OpcaoPesquisaElencoResponse;
 import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
 import com.MovieParticipations.MovieParticipations.repository.AtorRepository;
 import com.MovieParticipations.MovieParticipations.repository.SerieAtorRepository;
 import com.MovieParticipations.MovieParticipations.repository.SerieRepository;
 import com.MovieParticipations.MovieParticipations.validator.ExisteSerieNoDBValidator;
-import com.azure.core.annotation.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,7 @@ public class PesquisarElencoSerieService {
     BuscarProducaoPorNomeTMBDService buscarProducaoPorNomeTMBDService;
 
 
-    public List<OpcaoPesquisaElencResponseo>  pesquisarElenco(TipoMidia tipo, String nomeSerie, String filtroNome) {
+    public List<OpcaoPesquisaElencoResponse>  pesquisarElenco(TipoMidia tipo, String nomeSerie, String filtroNome) {
 
         String nomeOficial = nomeSerie;
         Pageable pageable = PageRequest.of(0, 20);

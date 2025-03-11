@@ -38,6 +38,7 @@ public class BuscarElencoService {
         RestTemplate restTemplate = new RestTemplate();
         String url = criarUrl(id, MOVIE);
 
+        System.out.println(url);
         CastResponseDtoMovie response = restTemplate.exchange(
                 url,
                 GET,
@@ -71,7 +72,6 @@ public class BuscarElencoService {
                 HttpEntity.EMPTY,
                 CastResponseDtoSerie.class
         ).getBody();
-
 
         List<AtorTMDBDto> castList = response.getCast() != null ? response.getCast().stream()
                 .map(AtorTMDBDtoMapper::toDtoFromSerie)

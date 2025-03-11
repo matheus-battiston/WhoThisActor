@@ -11,5 +11,6 @@ public class AtorTMDBMovieDto {
     String profile_path;
     String character;
     String known_for_department;
+    Double popularity;
 }
 

@@ -1,6 +1,6 @@
 package com.MovieParticipations.MovieParticipations.controller;
 
-import com.MovieParticipations.MovieParticipations.controller.response.OpcaoPesquisaElencResponseo;
+import com.MovieParticipations.MovieParticipations.controller.response.OpcaoPesquisaElencoResponse;
 import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
 import com.MovieParticipations.MovieParticipations.service.PesquisarElencoSerieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class PesquisarElencoSerieController {
     PesquisarElencoSerieService pesquisarElencoSerieService;
 
     @GetMapping()
-    public List<OpcaoPesquisaElencResponseo> pesquisarElenco(@RequestParam TipoMidia tipoMidia, @RequestParam String nomeDaSerie, @RequestParam String nomeDoPersonagem){
+    public List<OpcaoPesquisaElencoResponse> pesquisarElenco(@RequestParam TipoMidia tipoMidia, @RequestParam String nomeDaSerie, @RequestParam String nomeDoPersonagem){
         return pesquisarElencoSerieService.pesquisarElenco(tipoMidia, nomeDaSerie, nomeDoPersonagem);
     }
 }
