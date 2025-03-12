@@ -13,7 +13,6 @@ from fastapi import HTTPException
 
 import pickle
 
-# Definições de diretórios e constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROSTO_NAO_DETECTADO = "Nenhum rosto detectado"
 ATRIBUTO_IDENTIDADE = "identity"
@@ -55,39 +54,37 @@ def get_blob_name_from_url(blob_url):
 def recognize_face_with_faiss(image, top_n=5):
     try:
         image = make_square(image)
-
-        embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False, detector_backend= "skip",)[0]["embedding"]
+        
+        embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False, detector_backend="skip")[0]["embedding"]
         img_embedding = np.array([embedding], dtype=np.float32)
-
+        
         faiss.normalize_L2(img_embedding)
-
-        closest_images = {}
-
-        index_dir = "faiss_indexes"
-        if not os.path.exists(index_dir):
-            print(f"Pasta {index_dir} não encontrada.")
+    
+        index_path = "faiss_index.bin"
+        labels_path = "faiss_labels.pkl"
+        
+        if not os.path.exists(index_path) or not os.path.exists(labels_path):
+            print("Índice FAISS ou labels não encontrados.")
             return []
-
-        for filename in os.listdir(index_dir):
-            if filename.endswith("_index.idx"):
-                label = filename.replace("_index.idx", "")
-                index_path = os.path.join(index_dir, filename)
-
-                index = faiss.read_index(index_path)
-                distances, indices = index.search(img_embedding, 1)
-                closest_images[label] = distances[0][0]
-
-        menores = dict(sorted(closest_images.items(), key=lambda item: item[1])[:5])
-
-        distancia_referencia = next(iter(menores.values()))  
-        filtrados = {k: v for k, v in menores.items() if abs(v - distancia_referencia) <= 0.10}
-
-
-        if (len(filtrados) == 1):
+        
+        index = faiss.read_index(index_path)
+        
+        with open(labels_path, "rb") as f:
+            labels = pickle.load(f)
+        
+        distances, indices = index.search(img_embedding, top_n)
+        closest_results = {labels[i]: distances[0][idx] for idx, i in enumerate(indices[0])}
+        
+        sorted_results = dict(sorted(closest_results.items(), key=lambda item: item[1]))
+        
+        distancia_referencia = next(iter(sorted_results.values()))
+        filtrados = {k: v for k, v in sorted_results.items() if abs(v - distancia_referencia) <= 0.10}
+        
+        if len(filtrados) == 1:
             return [next(iter(filtrados.items()))]
         else:
             return recognize_face_with_centroids(img_embedding, list(filtrados.keys()))
-
+    
     except Exception as e:
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
         return []
