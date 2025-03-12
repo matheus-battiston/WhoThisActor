@@ -103,7 +103,7 @@ async def classify_image_service(req: str):
     try:
         imageDownload = EmbeddingService(CONNECTION_STRING, CONTAINER_NAME, get_blob_name_from_url(image_url))
         imagemBaixada = imageDownload.load_image_from_blob()
-        # imageDownload.delete_blob()
+        imageDownload.delete_blob()
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Erro ao processar a imagem: {str(e)}")
 
