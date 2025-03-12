@@ -71,10 +71,15 @@ def recognize_face_with_faiss(image, top_n=5):
         
         with open(labels_path, "rb") as f:
             labels = pickle.load(f)
-        
+
         distances, indices = index.search(img_embedding, top_n)
-        closest_results = {labels[i]: distances[0][idx] for idx, i in enumerate(indices[0])}
-        
+
+        closest_results = {}
+        for idx, i in enumerate(indices[0]):  
+            classe = labels[i]  
+            if classe not in closest_results or distances[0][idx] < closest_results[classe]:  
+                closest_results[classe] = distances[0][idx]  
+                
         sorted_results = dict(sorted(closest_results.items(), key=lambda item: item[1]))
         
         distancia_referencia = next(iter(sorted_results.values()))
