@@ -50,6 +50,7 @@ CREATE TABLE serie (
 
 ALTER TABLE serie ADD CONSTRAINT pk_serie PRIMARY KEY (id);
 ALTER TABLE serie ADD CONSTRAINT ck_serie_tipo CHECK (tipo IN ('TV','MOVIE'));
+ALTER TABLE serie ADD CONSTRAINT unique_serie UNIQUE (titulo, tipo);
 
 -- Criar a sequência para ator com incremento 50
 CREATE SEQUENCE ator_seq START 1 INCREMENT BY 50;
