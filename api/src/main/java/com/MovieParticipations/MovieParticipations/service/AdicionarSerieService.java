@@ -14,13 +14,17 @@ import com.MovieParticipations.MovieParticipations.repository.SerieRepository;
 import com.MovieParticipations.MovieParticipations.validator.ExisteAtorNoDBPorNome;
 import com.MovieParticipations.MovieParticipations.validator.ExisteSerieNoDBValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 public class AdicionarSerieService {
+
+    private static final String NAO_TEM_ELENCO = "A serie nao tem elenco";
 
     @Autowired
     SerieRepository serieRepository;
@@ -47,7 +51,8 @@ public class AdicionarSerieService {
             return serieEntity.getTitulo();
 
         List<AtorTMDBDto> atores = buscarElencoService.pesquisarElenco(dto.getId(), tipoMidia);
-
+        if (atores.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NAO_TEM_ELENCO);
         List<String> nomes = atores.stream().map(AtorTMDBDto::getName).toList();
         List<Ator> atoresNoBanco = atorRepository.findAtorByNomeIn(nomes);
         List<Ator> novosAtores = obterNovosAtores(atores, atoresNoBanco);
