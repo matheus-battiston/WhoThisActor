@@ -12,6 +12,6 @@ public class AtorTMDBDtoPesquisaId {
     Long id;
     String name;
     String known_for_department;
-    Long popularity;
+    Double popularity;
     String profile_path;
 }
