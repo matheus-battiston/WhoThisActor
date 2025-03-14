@@ -8,11 +8,14 @@ import { useSwipeable } from "react-swipeable";
 import Tab from "../../components/tab/tab.component";
 import ListProducoes from "../../components/list-producoes/list-producoes.component";
 import Cabecalho from "../../components/cabecalho/cabecalho.component";
+import { clearUrl } from "../../redux/store";
+import { useDispatch } from "react-redux";
 
 export function ExibirProducoesScreen() {
   const { producoes, getProducoesPorNomeFunc } = useGetProducoesPorNome();
   const { name } = useParams();
   const [tab, setTab] = useState("FILME");
+  const dispatch = useDispatch();
 
   const handleSwipe = useSwipeable({
     onSwipedLeft: () => setTab("TV"),
@@ -21,8 +24,9 @@ export function ExibirProducoesScreen() {
   });
 
   useEffect(() => {
+    dispatch(clearUrl());
     getProducoesPorNomeFunc(name);
-  }, [name, getProducoesPorNomeFunc]);
+  }, [name, getProducoesPorNomeFunc, dispatch]);
 
   return (
     <div className="container">
