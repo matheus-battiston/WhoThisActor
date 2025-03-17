@@ -2,6 +2,8 @@ package com.MovieParticipations.MovieParticipations.service;
 
 import com.MovieParticipations.MovieParticipations.mapper.ClassificacaoApiExternaMapper;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -31,8 +35,12 @@ public class RequisicaoApiClassificacaoService {
             String response = restTemplate.postForObject(CLASSIFYADDRESS, request, String.class);
             return JsonParser.parseString(response).getAsJsonArray();
         } catch (HttpClientErrorException e) {
-            String erroMensagem = e.getResponseBodyAsString();
+            JsonObject erroJson = JsonParser.parseString(e.getResponseBodyAsString()).getAsJsonObject();
+            String erroMensagem = Optional.ofNullable(erroJson.get("detail"))
+                    .map(JsonElement::getAsString)
+                    .orElse("Erro desconhecido");
             throw new ResponseStatusException(BAD_REQUEST, erroMensagem);
         }
+
     }
 }
