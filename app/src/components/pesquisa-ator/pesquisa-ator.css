@@ -1,3 +1,9 @@
 .container-pesquisa-ator {
   height: 200px;
 }
+
+.slider {
+  display: flex;
+  align-items: center;
+  color: white;
+}

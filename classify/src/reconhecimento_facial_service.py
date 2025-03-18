@@ -1,6 +1,7 @@
 from calculo_embedding import make_square
 from deepface import DeepFace
 from detect_face import detect_face_retina
+from detect_face import detect_face_mtcnn
 from blob_service import EmbeddingService
 from urllib.parse import urlparse
 import numpy as np
@@ -94,7 +95,7 @@ def recognize_face_with_faiss(image, top_n=5):
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
         return []
 
-async def classify_image_service(req: str):
+async def classify_image_service(req: str, fast: bool):
     try:
         image_url = req
     except Exception:
@@ -110,7 +111,8 @@ async def classify_image_service(req: str):
     image = Image.open(BytesIO(imagemBaixada)).convert("RGB")
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
-    face_image = detect_face_retina(image)
+    face_image = detect_face_mtcnn(image) if fast else detect_face_retina(image)
+
     if face_image is None:
         raise HTTPException(status_code=404, detail=ROSTO_NAO_DETECTADO)
 

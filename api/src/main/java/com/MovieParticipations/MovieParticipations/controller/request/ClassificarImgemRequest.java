@@ -10,4 +10,7 @@ import lombok.*;
 @Setter
 public class ClassificarImgemRequest {
     String url;
+
+    @Builder.Default
+    boolean fast = false;
 }

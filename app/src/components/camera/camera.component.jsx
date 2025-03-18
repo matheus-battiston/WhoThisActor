@@ -4,9 +4,9 @@ import { useGenerateSas } from "../../api/hooks/useGenerateSas/useGenerateSas.ho
 import { useEnviarImagemBlob } from "../../api/hooks/useEnviarImagemBlob/useEnviarImagemBlob.hook";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUrl } from "../../redux/store";
+import { setFast, setUrl } from "../../redux/store";
 
-const CameraComponent = () => {
+const CameraComponent = ({ checked }) => {
   const { sas, generateSasFunc } = useGenerateSas();
   const { enviarImagemBlobFunc } = useEnviarImagemBlob();
   const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const CameraComponent = () => {
 
   const classificarAtor = (url) => {
     dispatch(setUrl(url));
+    dispatch(setFast(checked));
     navigate("/opcoesAtores");
   };
 
