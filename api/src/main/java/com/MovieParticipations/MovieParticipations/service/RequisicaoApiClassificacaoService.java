@@ -22,9 +22,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class RequisicaoApiClassificacaoService {
     @Value("${CLASSIFYADDRESS}")
     private String CLASSIFYADDRESS;
-    public JsonArray classificarImagem(String urlImagem, boolean fast) {
+    public JsonArray classificarImagem(String urlImagem) {
         RestTemplate restTemplate = new RestTemplate();
-        String body = ClassificacaoApiExternaMapper.toResponse(urlImagem, fast);
+        String body = ClassificacaoApiExternaMapper.toResponse(urlImagem);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);

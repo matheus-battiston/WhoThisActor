@@ -9,7 +9,6 @@ import { useCallback } from "react";
 
 export function OpcoesAtoresScreen() {
   const url = useSelector((state) => state.url.url);
-  const fast = useSelector((state) => state.fast.fast);
   const navigate = useNavigate();
   const { atores, classificarImagemFunc } = useClassificarImagem();
   const [loading, setLoading] = useState(true);
@@ -34,10 +33,9 @@ export function OpcoesAtoresScreen() {
   useEffect(() => {
     if (url && !loadingApi) {
       setLoadingApi(true);
-      classificarImagemFunc(url, fast);
-      console.log(fast);
+      classificarImagemFunc(url);
     }
-  }, [url, classificarImagemFunc, loadingApi, fast]);
+  }, [url, classificarImagemFunc, loadingApi]);
 
   const handlePress = (item) => {
     navigateToItemDetails(item.identity);

@@ -4,11 +4,10 @@ import com.MovieParticipations.MovieParticipations.controller.request.Classifica
 import com.google.gson.Gson;
 
 public class ClassificacaoApiExternaMapper {
-    public static String toResponse(String url, boolean fast){
+    public static String toResponse(String url){
         Gson gson = new Gson();
         ClassificarApiExternaRequest requestObject = ClassificarApiExternaRequest.builder()
                 .image_url(url)
-                .fast(fast)
                 .build();
 
         return gson.toJson(requestObject);

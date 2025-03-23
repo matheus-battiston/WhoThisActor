@@ -118,7 +118,7 @@ def recognize_face_with_faiss(image, top_n=5):
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
         return []
 
-async def classify_image_service(req: str, fast: bool):
+async def classify_image_service(req: str):
     try:
         image_url = req
     except Exception:

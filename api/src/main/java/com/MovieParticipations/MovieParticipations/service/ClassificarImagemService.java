@@ -28,7 +28,7 @@ public class ClassificarImagemService {
     public List<OpcoesAtoresParecidosResponse> classificarImagem(ClassificarImgemRequest request) {
         List<OpcoesAtoresParecidosResponse> response = new ArrayList<>();
 
-        JsonArray responseClassificacao = requisicaoApiClassificacaoService.classificarImagem(request.getUrl(), request.isFast());
+        JsonArray responseClassificacao = requisicaoApiClassificacaoService.classificarImagem(request.getUrl());
 
         for (JsonElement element : responseClassificacao) {
             response.add(toResponse(element));
