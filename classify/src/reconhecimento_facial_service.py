@@ -1,6 +1,5 @@
+import onnxruntime as ort
 from calculo_embedding import make_square
-from deepface import DeepFace
-from detect_face import detect_face_retina
 from detect_face import detect_face_mtcnn
 from blob_service import EmbeddingService
 from urllib.parse import urlparse
@@ -11,7 +10,6 @@ import faiss
 from PIL import Image
 from io import BytesIO
 from fastapi import HTTPException
-
 import pickle
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +18,31 @@ ATRIBUTO_IDENTIDADE = "identity"
 ATRIBUTO_DISTANCIA_MEDIA = "average_distance"
 CONTAINER_NAME = "blobs"
 URL_NAO_FORNECIDA = "URL da imagem não fornecida"
-CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=whothisactorblobstorage;AccountKey=OFlwXfhQgnLNt8rhf3tAQ2a/0j1D06LtL/VFm4UGGSdvLcDAA0v8DbeNwcWROuvDLEl9kYSIr+NX+ASts08AHw==;EndpointSuffix=core.windows.net"
+CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=whothisactorblobstorage;AccountKey=OFlwXfhQgnLNt8rhf3tAQ2a/0j1D06LtL/VFm4UGGSdvLcDAA0v8DbeNwcWROuvDLEl9kYSIr+NX+ASts08AHw==;EndpointSuffix=core.windows.net"
+
+# Carregar o modelo ONNX
+def load_onnx_model(onnx_path):
+    ort_session = ort.InferenceSession(onnx_path)
+    return ort_session
+
+# Pré-processar imagem para FaceNet
+def preprocess_image(image):
+    image = cv2.resize(image, (160, 160))  # FaceNet espera 160x160
+    image = image.astype(np.float32) / 255.0  # Normalizar
+    image = np.expand_dims(image, axis=0)  # Adicionar batch dimension
+    return image
+
+# Inferência para obter embedding usando ONNX
+def get_embedding_onnx(image, onnx_session):
+    preprocessed_img = preprocess_image(image)
+    input_name = onnx_session.get_inputs()[0].name
+    output_name = onnx_session.get_outputs()[0].name
+    embedding = onnx_session.run([output_name], {input_name: preprocessed_img})[0]
+    return embedding[0]
+
+# Caminho para o modelo .onnx
+onnx_model_path = "saved_facenet_model.onnx"
+onnx_session = load_onnx_model(onnx_model_path)
 
 def euclidean_distance(a, b):
     return np.linalg.norm(a - b)
@@ -51,14 +73,16 @@ def get_blob_name_from_url(blob_url):
     parsed_url = urlparse(blob_url)
     return parsed_url.path.split('/')[-1]
 
-
 def recognize_face_with_faiss(image, top_n=5):
     try:
         image = make_square(image)
         
-        embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False, detector_backend="skip")[0]["embedding"]
+        embedding = get_embedding_onnx(image, onnx_session)  # Usando ONNX para obter o embedding
         img_embedding = np.array([embedding], dtype=np.float32)
-        
+
+        # embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False, detector_backend="skip")[0]["embedding"]
+        # img_embedding = np.array([embedding], dtype=np.float32)
+
         faiss.normalize_L2(img_embedding)
     
         index_path = "faiss_index.bin"
@@ -73,7 +97,7 @@ def recognize_face_with_faiss(image, top_n=5):
         with open(labels_path, "rb") as f:
             labels = pickle.load(f)
 
-        distances, indices = index.search(img_embedding, top_n)
+        distances, indices = index.search(img_embedding, 20)
 
         closest_results = {}
         for idx, i in enumerate(indices[0]):  
@@ -82,7 +106,6 @@ def recognize_face_with_faiss(image, top_n=5):
                 closest_results[classe] = distances[0][idx]  
                 
         sorted_results = dict(sorted(closest_results.items(), key=lambda item: item[1]))
-        
         distancia_referencia = next(iter(sorted_results.values()))
         filtrados = {k: v for k, v in sorted_results.items() if abs(v - distancia_referencia) <= 0.10}
         
@@ -111,7 +134,9 @@ async def classify_image_service(req: str, fast: bool):
     image = Image.open(BytesIO(imagemBaixada)).convert("RGB")
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
-    face_image = detect_face_mtcnn(image) if fast else detect_face_retina(image)
+    image = make_square(image)
+
+    face_image = detect_face_mtcnn(image)
 
     if face_image is None:
         raise HTTPException(status_code=404, detail=ROSTO_NAO_DETECTADO)

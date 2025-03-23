@@ -1,63 +1,66 @@
-from deepface import DeepFace
 import cv2
 import numpy as np
+from mtcnn_ort import MTCNN
 
-backends = [
-  'opencv', 'ssd', 'dlib', 'mtcnn', 'fastmtcnn',
-  'retinaface', 'mediapipe', 'yolov8', 'yolov11s',
-  'yolov11n', 'yolov11m', 'yunet', 'centerface',
-]
+def preprocess_image(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Converte BGR para RGB
+    return image
 
-alignment_modes = [True, False]
+def align_face(image, bounding_box, keypoints):
+    try:
+        left_eye = keypoints['left_eye']
+        right_eye = keypoints['right_eye']
+        nose = keypoints['nose']
+        mouth_left = keypoints['mouth_left']
+        mouth_right = keypoints['mouth_right']
+
+        dx = right_eye[0] - left_eye[0]
+        dy = right_eye[1] - left_eye[1]
+        angle = np.arctan2(dy, dx) * 180 / np.pi
+
+        center = ((left_eye[0] + right_eye[0]) / 2, (left_eye[1] + right_eye[1]) / 2)
+
+        rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1)
+
+        aligned_face = cv2.warpAffine(image, rotation_matrix, (image.shape[1], image.shape[0]))
+
+        x, y, w, h = bounding_box
+        aligned_face = aligned_face[y:y+h, x:x+w]
+
+        return aligned_face
+
+    except Exception as e:
+        print(f"Erro no alinhamento da face: {e}")
+        return None
 
 def detect_face_mtcnn(image):
     try:
-        face_objs = DeepFace.extract_faces(
-            img_path=np.array(image),
-            detector_backend="mtcnn",
-            align=alignment_modes[0],
-        )
+        detector = MTCNN()
 
-        if face_objs:
-            first_face = face_objs[0]
-            face_array = first_face["face"]
-            bbox = first_face["facial_area"]
-            confidence = first_face["confidence"] 
+        image_rgb = preprocess_image(image)
 
-            print(f"Confiança da detecção: {confidence:.2f}")
+        faces = detector.detect_faces(image_rgb)
 
-            face_bgr = cv2.cvtColor((face_array * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
-            return face_bgr
+        if faces:
+            face = faces[0]
+            bounding_box = face['box']
+            keypoints = face['keypoints']
+            confidence = face['confidence']
+
+            if confidence > 0.9:
+                aligned_face = align_face(image, bounding_box, keypoints)
+                if aligned_face is not None:
+                    print(f"Confiança da detecção: {confidence:.2f}")
+                    return aligned_face
+                else:
+                    print("Erro ao alinhar a face")
+                    return None
+            else:
+                print("Confiança abaixo do limiar")
+                return None
         else:
             print("Nenhuma face detectada")
             return None
-
-    except Exception as e:
-        print(f"Erro na detecção ou alinhamento da face: {e}")
-        return None
-
-def detect_face_retina(image):
-    try:
-        face_objs = DeepFace.extract_faces(
-            img_path=np.array(image),
-            detector_backend="retinaface",
-            align=alignment_modes[0],
-        )
-
-        if face_objs:
-            first_face = face_objs[0]
-            face_array = first_face["face"]
-            bbox = first_face["facial_area"]
-            confidence = first_face["confidence"] 
-
-            print(f"Confiança da detecção: {confidence:.2f}")
-
-            face_bgr = cv2.cvtColor((face_array * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
-            return face_bgr
-        else:
-            print("Nenhuma face detectada")
-            return None
-
     except Exception as e:
         print(f"Erro na detecção ou alinhamento da face: {e}")
         return None

@@ -348,3 +348,6 @@ thumb
 sketch
 
 classify/src/embeddings/
+classify/src/deepface/
+classify/src/saved_facenet_model/
+classify/src/gerarOnnx.py

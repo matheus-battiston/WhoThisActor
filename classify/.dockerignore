@@ -15,3 +15,5 @@ node_modules
 # Ignorar diretórios desnecessários
 tests
 src/embeddings/
+src/saved_facenet_model/
+src/deepface/
