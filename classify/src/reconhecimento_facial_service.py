@@ -40,7 +40,6 @@ def get_embedding_onnx(image, onnx_session):
     embedding = onnx_session.run([output_name], {input_name: preprocessed_img})[0]
     return embedding[0]
 
-# Caminho para o modelo .onnx
 onnx_model_path = "saved_facenet_model.onnx"
 onnx_session = load_onnx_model(onnx_model_path)
 
@@ -77,11 +76,8 @@ def recognize_face_with_faiss(image, top_n=5):
     try:
         image = make_square(image)
         
-        embedding = get_embedding_onnx(image, onnx_session)  # Usando ONNX para obter o embedding
+        embedding = get_embedding_onnx(image, onnx_session)
         img_embedding = np.array([embedding], dtype=np.float32)
-
-        # embedding = DeepFace.represent(image, model_name="Facenet512", enforce_detection=False, detector_backend="skip")[0]["embedding"]
-        # img_embedding = np.array([embedding], dtype=np.float32)
 
         faiss.normalize_L2(img_embedding)
     
@@ -133,8 +129,6 @@ async def classify_image_service(req: str):
 
     image = Image.open(BytesIO(imagemBaixada)).convert("RGB")
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
-    image = make_square(image)
 
     face_image = detect_face_mtcnn(image)
 

@@ -3,7 +3,7 @@ import numpy as np
 from mtcnn_ort import MTCNN
 
 def preprocess_image(image):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Converte BGR para RGB
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
 def align_face(image, bounding_box, keypoints):
@@ -19,9 +19,7 @@ def align_face(image, bounding_box, keypoints):
         angle = np.arctan2(dy, dx) * 180 / np.pi
 
         center = ((left_eye[0] + right_eye[0]) / 2, (left_eye[1] + right_eye[1]) / 2)
-
         rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1)
-
         aligned_face = cv2.warpAffine(image, rotation_matrix, (image.shape[1], image.shape[0]))
 
         x, y, w, h = bounding_box
@@ -36,9 +34,7 @@ def align_face(image, bounding_box, keypoints):
 def detect_face_mtcnn(image):
     try:
         detector = MTCNN()
-
         image_rgb = preprocess_image(image)
-
         faces = detector.detect_faces(image_rgb)
 
         if faces:
