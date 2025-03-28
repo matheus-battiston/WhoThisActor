@@ -11,6 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Comparator;
+
 import static org.springframework.http.HttpMethod.GET;
 
 @Service
@@ -78,16 +80,14 @@ public class BuscarProducaoPorNomeTMBDService {
 
     private FilmeTMDBDto temNomeExatoFilme(BuscarIdFilmePorNomeDTO response, String nome){
         return response.getResults().stream()
-                .filter(serie -> nomeExato(nome, serie.getTitle()))
-                .findFirst()
+                .filter(serie -> nomeExato(nome, serie.getTitle())).max(Comparator.comparing(FilmeTMDBDto::getPopularity))
                 .orElse(null); // Retorna null se não encontrar nenhum filme com o nome exato
     }
 
     private SerieTMDBDto temNomeExatoSerie(BuscarIdSeriePorNomeDTO response, String nome){
         return response.getResults().stream()
-                .filter(serie -> nomeExato(nome, serie.getName()))
-                .findFirst()
-                .orElse(null); // Retorna null se não encontrar nenhuma série com o nome exato
+                .filter(serie -> nomeExato(nome, serie.getName())).max(Comparator.comparing(SerieTMDBDto::getPopularity))
+                .orElse(null);
     }
 
 
