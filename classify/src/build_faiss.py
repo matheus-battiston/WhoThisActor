@@ -4,8 +4,7 @@ import pickle
 import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-EMBEDDINGS_FILES = ["embeddings/embed512v3.pkl", "embeddings/embed512v4.pkl"]  # Adicione os arquivos aqui
-OUTPUT_FILE = f"{BASE_DIR}/embeddings/embeddings_combinados.pkl"
+OUTPUT_FILE = f"{BASE_DIR}/embeddings/embed_combinado.pkl"
 
 def load_embeddings():
     combined_embeddings = {}
