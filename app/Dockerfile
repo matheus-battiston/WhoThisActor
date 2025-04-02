@@ -1,20 +1,18 @@
 # Etapa de construção
-FROM node:16 AS build
+FROM node:16
 
 WORKDIR /app
 
-# Definindo argumentos que serão passados pelo docker-compose
 ARG REACT_APP_API_URL
 ARG APP_ADDRESS
 
-# Passando os argumentos como variáveis de ambiente dentro do container
 ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 ENV APP_ADDRESS=${APP_ADDRESS}
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
+EXPOSE 3000
 
-# Instalação e execução do servidor em modo de desenvolvimento
 CMD ["npm", "start"]

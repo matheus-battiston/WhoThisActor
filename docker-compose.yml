@@ -32,6 +32,8 @@ services:
       - /app/node_modules # Isolando os node_modules dentro do container
     ports:
       - "3000:3000"
+    depends_on:
+      - api
     networks:
       - app-network
 
