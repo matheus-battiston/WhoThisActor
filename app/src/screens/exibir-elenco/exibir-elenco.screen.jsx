@@ -18,6 +18,7 @@ export function ExibirElencoScreen() {
   const { serie, getSerieInfoFunc } = useGetSerieInfo();
   const [loading, setLoading] = useState(true);
   const PLACEHOLDER = "Alex Dunphy";
+  console.log(serie);
 
   useEffect(() => {
     getElencoFunc(name, personagemNome, tipo);
@@ -46,6 +47,7 @@ export function ExibirElencoScreen() {
             <SerieInfo
               imagem={URL_BASE_IMAGEM_TMDB + serie.imagem}
               nome={serie.nome}
+              providers={serie.providers}
             />
             <div className="input-personagem">
               <InputSearch

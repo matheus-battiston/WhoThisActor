@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class ClassificarApiExternaRequest {
     String image_url;
-    boolean fast;
+    String nome_serie;
 }

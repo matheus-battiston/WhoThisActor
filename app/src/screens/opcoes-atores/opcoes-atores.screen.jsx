@@ -9,6 +9,8 @@ import { useCallback } from "react";
 
 export function OpcoesAtoresScreen() {
   const url = useSelector((state) => state.url.url);
+  const filtro = useSelector((state) => state.filtro.filtro);
+  const tipoFiltro = useSelector((state) => state.tipoFiltro.tipoFiltro);
   const navigate = useNavigate();
   const { atores, classificarImagemFunc } = useClassificarImagem();
   const [loading, setLoading] = useState(true);
@@ -33,9 +35,9 @@ export function OpcoesAtoresScreen() {
   useEffect(() => {
     if (url && !loadingApi) {
       setLoadingApi(true);
-      classificarImagemFunc(url);
+      classificarImagemFunc(url, filtro, tipoFiltro);
     }
-  }, [url, classificarImagemFunc, loadingApi]);
+  }, [url, classificarImagemFunc, loadingApi, filtro, tipoFiltro]);
 
   const handlePress = (item) => {
     navigateToItemDetails(item.identity);

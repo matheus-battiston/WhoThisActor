@@ -49,14 +49,48 @@ const urlSlice = createSlice({
   },
 });
 
+const filtroSlice = createSlice({
+  name: "filtro",
+  initialState: {
+    data: null,
+  },
+  reducers: {
+    setFiltro: (state, action) => {
+      state.filtro = action.payload;
+    },
+    clearFiltro: (state) => {
+      state.filtro = null;
+    },
+  },
+});
+
+const tipoFiltroSlice = createSlice({
+  name: "tipoFiltro",
+  initialState: {
+    data: null,
+  },
+  reducers: {
+    setTipoFiltro: (state, action) => {
+      state.tipoFiltro = action.payload;
+    },
+    clearTipoFiltro: (state) => {
+      state.tipoFiltro = null;
+    },
+  },
+});
+
 export const { setError, clearError } = errorSlice.actions;
 export const { setData, clearData } = dataSlice.actions;
 export const { setUrl, clearUrl } = urlSlice.actions;
+export const { setFiltro, clearFiltro } = filtroSlice.actions;
+export const { setTipoFiltro, clearTipoFiltro } = tipoFiltroSlice.actions;
 
 export const store = configureStore({
   reducer: {
     error: errorSlice.reducer,
     data: dataSlice.reducer,
     url: urlSlice.reducer,
+    filtro: filtroSlice.reducer,
+    tipoFiltro: tipoFiltroSlice.reducer,
   },
 });

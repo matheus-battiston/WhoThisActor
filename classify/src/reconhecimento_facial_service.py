@@ -11,6 +11,7 @@ from PIL import Image
 from io import BytesIO
 from fastapi import HTTPException
 import pickle
+from buscar_atores import buscar_atores_por_serie
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROSTO_NAO_DETECTADO = "Nenhum rosto detectado"
@@ -19,20 +20,78 @@ ATRIBUTO_DISTANCIA_MEDIA = "average_distance"
 CONTAINER_NAME = "blobs"
 URL_NAO_FORNECIDA = "URL da imagem não fornecida"
 CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=whothisactorblobstorage;AccountKey=OFlwXfhQgnLNt8rhf3tAQ2a/0j1D06LtL/VFm4UGGSdvLcDAA0v8DbeNwcWROuvDLEl9kYSIr+NX+ASts08AHw==;EndpointSuffix=core.windows.net"
+INDEX_PATH = "faiss_index.bin"
+LABELS_PATH = "faiss_labels.pkl"
 
-# Carregar o modelo ONNX
+def filtrar_labels(labels, valid_labels, index):
+    valid_indices = [i for i, label in enumerate(labels) if label in valid_labels]
+    if not valid_indices:
+        print("Nenhum rótulo válido encontrado no índice.")
+        return []
+        
+    sub_index = faiss.IndexFlatL2(index.d)
+    sub_labels = []
+        
+    for i in valid_indices:
+        vector = np.array(index.reconstruct(i)).reshape(1, -1)
+        sub_index.add(vector)
+        sub_labels.append(labels[i]) 
+
+    return sub_labels, sub_index
+    
+def gerar_resultados(resultados_filtrados, embedding):
+    if len(resultados_filtrados) == 1:
+        return [next(iter(resultados_filtrados.items()))]
+    else:
+        return recognize_face_with_centroids(embedding, list(resultados_filtrados.keys()))
+    
+
+def melhores_resultados(distances, indices, labels):
+    closest_results = {}
+    for idx, i in enumerate(indices[0]):  
+        classe = labels[i]  
+        if classe not in closest_results or distances[0][idx] < closest_results[classe]:  
+            closest_results[classe] = distances[0][idx]
+
+    return closest_results
+
+def organizar_resultados(resultados):
+    sorted_results = dict(sorted(resultados.items(), key=lambda item: item[1]))
+    distancia_referencia = next(iter(sorted_results.values()))
+    filtrados = {k: v for k, v in sorted_results.items() if abs(v - distancia_referencia) <= 0.10}
+
+    return filtrados
+
+
+def gerar_embedding(image):
+    image = make_square(image)
+    embedding = get_embedding_onnx(image, onnx_session)
+    img_embedding = np.array([embedding], dtype=np.float32)
+    faiss.normalize_L2(img_embedding)
+
+    return img_embedding
+
+def load_index():
+    if not os.path.exists(INDEX_PATH) or not os.path.exists(LABELS_PATH):
+        print("Índice FAISS ou labels não encontrados.")
+        return []
+        
+    index = faiss.read_index(INDEX_PATH)
+    with open(LABELS_PATH, "rb") as f:
+        labels = pickle.load(f)
+
+    return index, labels
+
 def load_onnx_model(onnx_path):
     ort_session = ort.InferenceSession(onnx_path)
     return ort_session
 
-# Pré-processar imagem para FaceNet
 def preprocess_image(image):
-    image = cv2.resize(image, (160, 160))  # FaceNet espera 160x160
-    image = image.astype(np.float32) / 255.0  # Normalizar
-    image = np.expand_dims(image, axis=0)  # Adicionar batch dimension
+    image = cv2.resize(image, (160, 160))
+    image = image.astype(np.float32) / 255.0
+    image = np.expand_dims(image, axis=0)
     return image
 
-# Inferência para obter embedding usando ONNX
 def get_embedding_onnx(image, onnx_session):
     preprocessed_img = preprocess_image(image)
     input_name = onnx_session.get_inputs()[0].name
@@ -71,50 +130,39 @@ def recognize_face_with_centroids(embedding, labels):
 def get_blob_name_from_url(blob_url):
     parsed_url = urlparse(blob_url)
     return parsed_url.path.split('/')[-1]
-
+    
 def recognize_face_with_faiss(image, top_n=5):
     try:
-        image = make_square(image)
-        
-        embedding = get_embedding_onnx(image, onnx_session)
-        img_embedding = np.array([embedding], dtype=np.float32)
-
-        faiss.normalize_L2(img_embedding)
-    
-        index_path = "faiss_index.bin"
-        labels_path = "faiss_labels.pkl"
-        
-        if not os.path.exists(index_path) or not os.path.exists(labels_path):
-            print("Índice FAISS ou labels não encontrados.")
-            return []
-        
-        index = faiss.read_index(index_path)
-        
-        with open(labels_path, "rb") as f:
-            labels = pickle.load(f)
-
+        img_embedding = gerar_embedding(image)
+        index, labels = load_index()
         distances, indices = index.search(img_embedding, 20)
-
-        closest_results = {}
-        for idx, i in enumerate(indices[0]):  
-            classe = labels[i]  
-            if classe not in closest_results or distances[0][idx] < closest_results[classe]:  
-                closest_results[classe] = distances[0][idx]  
-                
-        sorted_results = dict(sorted(closest_results.items(), key=lambda item: item[1]))
-        distancia_referencia = next(iter(sorted_results.values()))
-        filtrados = {k: v for k, v in sorted_results.items() if abs(v - distancia_referencia) <= 0.10}
+        closest_results = melhores_resultados(distances, indices, labels)
+        filtrados = organizar_resultados(closest_results)
         
-        if len(filtrados) == 1:
-            return [next(iter(filtrados.items()))]
-        else:
-            return recognize_face_with_centroids(img_embedding, list(filtrados.keys()))
-    
+        return gerar_resultados(filtrados, img_embedding)
+        
     except Exception as e:
         print(f"Erro ao reconhecer rosto com Faiss: {e}")
         return []
 
-async def classify_image_service(req: str):
+def recognize_face_with_faiss_filtrado(image, valid_labels, top_n=5):
+    try:
+        img_embedding = gerar_embedding(image)
+        index, labels = load_index()
+
+        sub_labels, sub_index = filtrar_labels(labels, valid_labels, index)
+    
+        distances, indices = sub_index.search(img_embedding, top_n)
+        closest_results = melhores_resultados(distances, indices, sub_labels)
+        filtrados = organizar_resultados(closest_results)
+        
+        return gerar_resultados(filtrados, img_embedding)
+    
+    except Exception as e:
+        print(f"Erro ao reconhecer rosto com Faiss: {e}")
+        return []
+    
+async def classify_image_service(req: str, serie: str):
     try:
         image_url = req
     except Exception:
@@ -136,7 +184,11 @@ async def classify_image_service(req: str):
         raise HTTPException(status_code=404, detail=ROSTO_NAO_DETECTADO)
 
     top_n = 10
-    top_results = recognize_face_with_faiss(face_image, top_n)
+    if serie is None:
+        top_results = recognize_face_with_faiss(face_image, top_n)
+    else:
+        atores = buscar_atores_por_serie(serie)
+        top_results = recognize_face_with_faiss_filtrado(face_image, atores, top_n)
 
     result = [
         {ATRIBUTO_IDENTIDADE: identity, ATRIBUTO_DISTANCIA_MEDIA: float(distance)} 

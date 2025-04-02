@@ -41,7 +41,6 @@ public class AdicionarSerieService {
     @Autowired
     ExisteSerieNoDBValidator existeSerieNoDBValidator;
 
-
     @Transactional
     public String adicionarSerieComNome(String nomeSerie, TipoMidia tipoMidia){
         TMDBDto dto = buscarProducaoPorNomeTMBDService.buscarIdPorNome(nomeSerie, tipoMidia);

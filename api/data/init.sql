@@ -45,12 +45,16 @@ CREATE TABLE serie (
                        id BIGINT DEFAULT nextval('serie_seq') NOT NULL,
                        titulo VARCHAR(255) NOT NULL,
                        tipo VARCHAR(10) NOT NULL,
+                       id_tmdb INTEGER NOT NULL,
+                       ultima_atualizacao DATE NOT NULL,
                        imagem VARCHAR(255)
 );
 
 ALTER TABLE serie ADD CONSTRAINT pk_serie PRIMARY KEY (id);
 ALTER TABLE serie ADD CONSTRAINT ck_serie_tipo CHECK (tipo IN ('TV','MOVIE'));
 ALTER TABLE serie ADD CONSTRAINT unique_serie UNIQUE (titulo, tipo);
+ALTER TABLE serie ADD CONSTRAINT unique_serie_tmdb UNIQUE (id_tmdb);
+
 
 -- Criar a sequência para ator com incremento 50
 CREATE SEQUENCE ator_seq START 1 INCREMENT BY 50;

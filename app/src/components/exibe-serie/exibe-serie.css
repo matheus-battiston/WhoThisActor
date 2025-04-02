@@ -31,3 +31,17 @@
   width: fit-content;
   max-width: 100%;
 }
+
+.provider-logo {
+  border-radius: 10px;
+  height: 35px;
+  margin: 8px;
+}
+
+.providers {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}

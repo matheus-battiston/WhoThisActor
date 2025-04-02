@@ -4,6 +4,9 @@ package com.MovieParticipations.MovieParticipations.service;
 import com.MovieParticipations.MovieParticipations.controller.request.ClassificarImgemRequest;
 import com.MovieParticipations.MovieParticipations.controller.response.OpcoesAtoresParecidosResponse;
 import com.MovieParticipations.MovieParticipations.controller.response.PesquisaPorNomeResponse;
+import com.MovieParticipations.MovieParticipations.repository.SerieRepository;
+import com.MovieParticipations.MovieParticipations.validator.ExisteSerieNoDBValidator;
+import com.MovieParticipations.MovieParticipations.validator.ParametroClassificacaoValidator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +23,25 @@ public class ClassificarImagemService {
     private static final String TAMANHO_IMAGEM = "/w200";
 
     @Autowired
-    private RequisicaoApiClassificacaoService requisicaoApiClassificacaoService;
-
+    RequisicaoApiClassificacaoService requisicaoApiClassificacaoService;
     @Autowired
-    private PesquisarAtorService pesquisarAtorService;
-
+    PesquisarAtorService pesquisarAtorService;
+    @Autowired
+    ExisteSerieNoDBValidator existeSerieNoDBValidator;
+    @Autowired
+    SerieRepository serieRepository;
+    @Autowired
+    ParametroClassificacaoValidator parametroClassificacaoValidator;
     public List<OpcoesAtoresParecidosResponse> classificarImagem(ClassificarImgemRequest request) {
+        parametroClassificacaoValidator.validar(request);
         List<OpcoesAtoresParecidosResponse> response = new ArrayList<>();
+        String nomeSerie = null;
+        if ((request.getNomeSerie() != null) && existeSerieNoDBValidator.ExisteSerieComNome(request.getNomeSerie(), request.getTipoMidia()))
+            nomeSerie = serieRepository.findByTituloIgnoreCaseAndTipo(request.getNomeSerie(), request.getTipoMidia()).getTitulo();
+        JsonArray responseClassificacao = requisicaoApiClassificacaoService.classificarImagem(request.getUrl(), nomeSerie);
 
-        JsonArray responseClassificacao = requisicaoApiClassificacaoService.classificarImagem(request.getUrl());
-
-        for (JsonElement element : responseClassificacao) {
+        for (JsonElement element : responseClassificacao)
             response.add(toResponse(element));
-        }
 
         for (OpcoesAtoresParecidosResponse ator : response){
             PesquisaPorNomeResponse pesquisaPorNomeResponse = pesquisarAtorService.pesquisarIdPorNome(ator.getIdentity());

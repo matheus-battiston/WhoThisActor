@@ -1,5 +1,4 @@
 import "./pesquisa-ator.css";
-import CameraComponent from "../../components/camera/camera.component";
 import InputSearch from "../../components/pesquisa/pesquisa.component";
 
 const PesquisaAtor = ({ handleSubmit, onChange }) => {
@@ -12,7 +11,6 @@ const PesquisaAtor = ({ handleSubmit, onChange }) => {
           placeholder={"Adam Sandler"}
         />
       </form>
-      <CameraComponent />
     </div>
   );
 };

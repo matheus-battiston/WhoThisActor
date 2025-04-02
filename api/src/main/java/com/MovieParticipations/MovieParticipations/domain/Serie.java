@@ -3,6 +3,7 @@ package com.MovieParticipations.MovieParticipations.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class Serie {
     private Long id;
     private String imagem;
     private String titulo;
+    private Long idTmdb;
+    private LocalDate ultimaAtualizacao;
 
     @Enumerated(value = STRING)
     private TipoMidia tipo; // Adicionado o campo tipo

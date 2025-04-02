@@ -14,3 +14,4 @@ faiss-cpu
 psutil
 fastapi
 uvicorn
+psycopg2

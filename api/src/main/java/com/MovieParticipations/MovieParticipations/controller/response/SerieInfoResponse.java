@@ -2,7 +2,10 @@ package com.MovieParticipations.MovieParticipations.controller.response;
 
 
 import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
+import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
 import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,4 +16,5 @@ public class SerieInfoResponse {
     String nome;
     String imagem;
     TipoMidia tipoMidia;
+    List<ProviderDto> providers;
 }

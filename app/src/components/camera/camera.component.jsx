@@ -1,12 +1,13 @@
+import "./camera-component.css";
 import React, { useEffect } from "react";
-import BotaoComponent from "../botao/botao.component";
 import { useGenerateSas } from "../../api/hooks/useGenerateSas/useGenerateSas.hook";
 import { useEnviarImagemBlob } from "../../api/hooks/useEnviarImagemBlob/useEnviarImagemBlob.hook";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUrl } from "../../redux/store";
+import { setUrl, setFiltro, setTipoFiltro } from "../../redux/store";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
-const CameraComponent = () => {
+const CameraComponent = ({ tipo, serieNome }) => {
   const { sas, generateSasFunc } = useGenerateSas();
   const { enviarImagemBlobFunc } = useEnviarImagemBlob();
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const CameraComponent = () => {
 
   const classificarAtor = (url) => {
     dispatch(setUrl(url));
+    dispatch(setFiltro(serieNome));
+    dispatch(setTipoFiltro(tipo));
     navigate("/opcoesAtores");
   };
 
@@ -115,10 +118,10 @@ const CameraComponent = () => {
         onChange={handleFileChange}
         id="cameraInput"
       />
-      <BotaoComponent
-        big={true}
-        onPress={() => document.getElementById("cameraInput").click()}
-        texto={"Tirar foto"}
+      <AddAPhotoIcon
+        fontSize="large"
+        className="icon-camera"
+        onClick={() => document.getElementById("cameraInput").click()}
       />
     </>
   );

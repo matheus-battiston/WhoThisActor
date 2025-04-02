@@ -9,9 +9,9 @@ export function useClassificarImagem() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  async function classificarImagemFunc(url) {
+  async function classificarImagemFunc(url, filtro, tipoFiltro) {
     try {
-      const respostaApi = await classificar(url);
+      const respostaApi = await classificar(url, filtro, tipoFiltro);
       setAtores(respostaApi);
     } catch (error) {
       dispatch(setError(error.response.data || "Erro desconhecido"));
