@@ -1,0 +1,119 @@
+.container-exibe-producao {
+  display: flex;
+  justify-content: flex-start;
+  width: 210px;
+  margin-bottom: 20px;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 24px;
+  padding: 12px 12px 14px;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.container-exibe-producao:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  cursor: pointer;
+}
+
+@media (max-width: 629px) {
+  .container-exibe-producao {
+    width: 190px;
+  }
+}
+
+@media (max-width: 570px) {
+  .container-exibe-producao {
+    width: 170px;
+  }
+}
+
+@media (max-width: 510px) {
+  .container-exibe-producao {
+    width: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-exibe-producao {
+    width: 150px;
+  }
+}
+
+.linha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 115px;
+  aspect-ratio: 2 / 3;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.image-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(7, 10, 37, 0.12) 100%
+  );
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.titleProducao {
+  font-size: 15px;
+  font-weight: bold;
+  word-wrap: break-word;
+  color: white;
+  text-align: center;
+  margin: 12px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.personagem {
+  font-size: 12px;
+  word-wrap: break-word;
+  color: white;
+  text-align: center;
+  margin: 2px 0 0;
+  opacity: 0.88;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.producaoTexto {
+  display: flex;
+  max-width: 100%;
+  flex-shrink: 1;
+  overflow: hidden;
+  padding: 0 8px;
+  flex-direction: column;
+}

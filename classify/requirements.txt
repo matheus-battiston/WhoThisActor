@@ -1,0 +1,18 @@
+# DO NOT include azure-functions-worker in this file
+# The Python Worker is managed by Azure Functions platform
+# Manually managing azure-functions-worker may cause unexpected issues
+
+opencv-python==4.5.4.60
+onnxruntime==1.19.2
+mtcnn-onnxruntime
+numpy==1.26.4
+pillow
+python-multipart
+retrying
+faiss-cpu==1.10.0
+psutil
+fastapi
+uvicorn
+psycopg2-binary
+gdown
+requests

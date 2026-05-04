@@ -1,0 +1,28 @@
+services:
+  whothisactor:
+    build:
+      context: ./api
+    image: whothisactor:latest
+    container_name: whothisactor
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./api/.env
+    depends_on:
+      - classify
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  classify:
+    build:
+      context: ./classify
+      args:
+        OCI_PAR_BASE_URL: ${OCI_PAR_BASE_URL}
+    image: classify-service:latest
+    container_name: classify-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./classify/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,123 @@
+name: Deploy API
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "api/**"
+
+concurrency:
+  group: deploy-api
+  cancel-in-progress: false
+
+env:
+  API_IMAGE: matheusbattiston/whothisactor
+
+jobs:
+  build_api_amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+          server-id: github
+          settings-path: ${{ github.workspace }}
+
+      - name: Build JAR
+        working-directory: ./api
+        run: mvn -B -DskipTests package --settings ${{ github.workspace }}/settings.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_PAT }}
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build API AMD64
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ env.API_IMAGE }}:amd64-${{ github.sha }}
+
+  build_api_arm64:
+    runs-on: [self-hosted, linux, ARM64, whothisbuild]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+          server-id: github
+          settings-path: ${{ github.workspace }}
+
+      - name: Build JAR
+        working-directory: ./api
+        run: mvn -B -DskipTests package --settings ${{ github.workspace }}/settings.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_PAT }}
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build API ARM64
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          push: true
+          platforms: linux/arm64
+          tags: |
+            ${{ env.API_IMAGE }}:arm64-${{ github.sha }}
+
+  publish_api_manifest:
+    needs: [build_api_amd64, build_api_arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Publish API manifest
+        run: |
+          docker buildx imagetools create \
+            -t ${{ env.API_IMAGE }}:sha-${{ github.sha }} \
+            -t ${{ env.API_IMAGE }}:latest \
+            ${{ env.API_IMAGE }}:amd64-${{ github.sha }} \
+            ${{ env.API_IMAGE }}:arm64-${{ github.sha }}
+
+  trigger_infra_deploy:
+    needs: [publish_api_manifest]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger infra deploy
+        run: |
+          curl -L -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.INFRA_REPO_TOKEN }}" \
+            https://api.github.com/repos/matheus-battiston/InfraWhoThis/actions/workflows/deploy.yaml/dispatches \
+            -d '{
+              "ref":"main",
+              "inputs":{
+                "api_tag":"sha-${{ github.sha }}"
+              }
+            }'

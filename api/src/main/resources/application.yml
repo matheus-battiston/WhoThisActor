@@ -1,0 +1,63 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 1
+      idle-timeout: 60000
+      max-lifetime: 300000
+      keepalive-time: 0
+      data-source-properties:
+        reWriteBatchedInserts: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      "[hibernate.jdbc.batch_size]": 50
+      "[hibernate.order_inserts]": true
+      "[hibernate.order_updates]": true
+      "[hibernate.id.new_generator_mappings]": true
+      "[hibernate.format_sql]": true
+      "[hibernate.generate_statistics]": true
+
+  web:
+    error:
+      include-message: always
+
+auth:
+  jwt:
+    public-key: ${JWT_PUBLIC_KEY}
+    expiration: 86400000
+  public-paths:
+    - /classificar
+    - /atores
+    - /atores/**
+    - /series
+    - /series/**
+    - /filmes
+    - /filmes/**
+    - /swagger-ui.html
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /actuator/health
+    - /actuator/health/**
+  enabled: true
+
+server:
+  port: 8081
+#
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.orm.jdbc.bind: TRACE
+#    org.hibernate.engine.jdbc.batch.internal: DEBUG
+#    org.hibernate.session.metrics: DEBUG
+#    org.hibernate.stat: DEBUG

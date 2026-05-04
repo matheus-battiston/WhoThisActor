@@ -1,0 +1,54 @@
+.input-personagem {
+  margin-top: 60px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.lista-personagens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  flex: 1;
+  min-height: 0;
+  width: calc(100% - 40px);
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  overflow: auto;
+  padding-bottom: 20px;
+}
+
+.container-elenco {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+  background-color: rgb(15, 9, 94);
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.conteudo-elenco {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.serie-info-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 583px) {
+  .input-personagem {
+    margin-top: 10px;
+  }
+}

@@ -1,0 +1,9 @@
+.producoes-list {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  overflow: auto;
+  align-items: center;
+  padding-top: 20px;
+}

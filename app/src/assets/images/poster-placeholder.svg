@@ -1,0 +1,29 @@
+<svg width="360" height="540" viewBox="0 0 360 540" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="38" y1="26" x2="320" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="0.55" stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="95" y1="120" x2="260" y2="410" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#93C5FD" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#BFDBFE" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="360" height="540" rx="24" fill="url(#bg)"/>
+  <circle cx="270" cy="90" r="86" fill="url(#glow)"/>
+  <circle cx="105" cy="425" r="74" fill="url(#glow)"/>
+
+  <rect x="44" y="44" width="272" height="452" rx="18" fill="white" fill-opacity="0.08" stroke="white" stroke-opacity="0.16"/>
+
+  <path d="M126 204C126 174.729 149.729 151 179 151C208.271 151 232 174.729 232 204V210H238C249.046 210 258 218.954 258 230V310C258 321.046 249.046 330 238 330H120C108.954 330 100 321.046 100 310V230C100 218.954 108.954 210 120 210H126V204Z" fill="white" fill-opacity="0.92"/>
+  <circle cx="180" cy="191" r="24" fill="#1D4ED8"/>
+  <path d="M180 219C150.713 219 127 242.713 127 272V289H233V272C233 242.713 209.287 219 180 219Z" fill="#1D4ED8"/>
+
+  <path d="M135 382L162.317 354.683C165.441 351.559 170.507 351.559 173.631 354.683L193.369 374.421C196.493 377.545 201.559 377.545 204.683 374.421L218.317 360.787C221.441 357.663 226.507 357.663 229.631 360.787L250 381.156V406H135V382Z" fill="white" fill-opacity="0.92"/>
+  <circle cx="150" cy="352" r="14" fill="#93C5FD"/>
+
+  <text x="180" y="455" text-anchor="middle" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="0.08em">WHO THIS ACTOR</text>
+  <text x="180" y="485" text-anchor="middle" fill="#DBEAFE" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="500">imagem indisponivel</text>
+</svg>
