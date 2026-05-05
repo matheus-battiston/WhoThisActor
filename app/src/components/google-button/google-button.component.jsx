@@ -1,11 +1,8 @@
 import "./googleButton.css";
+import { API_URL } from "../../constants/api-url";
 
 export function GoogleButtonCustom({ setLoading }) {
-  const origin = window.location.origin;
-
-  const url = `${process.env.REACT_APP_API_LOGIN_URL}/auth/google?origin=${encodeURIComponent(
-    origin,
-  )}`;
+  const url = `${process.env.REACT_APP_API_LOGIN_URL}/auth/google?origin=${encodeURIComponent(API_URL)}`;
 
   const handleClick = () => {
     setLoading(true);

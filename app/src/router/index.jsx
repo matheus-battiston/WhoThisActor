@@ -7,7 +7,6 @@ import {
   OpcoesProducoesScreen,
 } from "../screens/index";
 import { LoginScreen } from "../screens/login/login.screen";
-import OAuth2Callback from "../screens/oauth2/oauth2-callback";
 import FavoritosScreen from "../screens/favoritos/favoritos.screen";
 import { PrivateRoute } from "./private-route.component";
 
@@ -35,10 +34,6 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginScreen />,
-  },
-  {
-    path: "/oauth2/callback",
-    element: <OAuth2Callback />,
   },
   {
     path: "/fav",

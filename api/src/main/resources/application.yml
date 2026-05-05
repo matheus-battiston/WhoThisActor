@@ -33,6 +33,11 @@ spring:
       include-message: always
 
 auth:
+  auth-url: ${AUTH_URL}
+  callback:
+    cookie-name: WHOTHIS_TOKEN
+    redirect-url: ${FRONT_URL}
+    max-age: 86400
   jwt:
     public-key: ${JWT_PUBLIC_KEY}
     expiration: 86400000
@@ -49,6 +54,7 @@ auth:
     - /v3/api-docs/**
     - /actuator/health
     - /actuator/health/**
+    - /oauth2/callback
   enabled: true
 
 server:
