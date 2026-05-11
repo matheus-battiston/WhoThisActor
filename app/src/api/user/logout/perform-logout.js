@@ -1,5 +1,5 @@
-import { axiosInstanceLogin } from "../../_base/axiosInstanceLogin";
+import { axiosInstance } from "../../_base/axiosInstance";
 
 export function logoutApi() {
-  return axiosInstanceLogin.post("/auth/logout");
+  return axiosInstance.post("/auth/logout");
 }
