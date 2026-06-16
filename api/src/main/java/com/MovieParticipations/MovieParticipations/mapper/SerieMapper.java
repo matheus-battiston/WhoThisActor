@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
+import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.valueOf;
 import static com.MovieParticipations.MovieParticipations.util.NormalizadorDeString.normalizar;
 
@@ -47,6 +48,7 @@ public class SerieMapper {
         return ProducaoInfoResponse.builder()
                 .nome(serie.getTitulo())
                 .imagem(serie.getImagem())
+                .tipoMidia(TV)
                 .providers(providers)
                 .id(serie.getId())
                 .build();

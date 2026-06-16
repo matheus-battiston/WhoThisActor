@@ -8,6 +8,7 @@ import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
 
 import java.util.List;
 
+import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
 
 public class DetalhesProducaoComElencoMapper {
@@ -20,7 +21,7 @@ public class DetalhesProducaoComElencoMapper {
                 .elenco(elenco)
                 .nome(filme.getTitulo())
                 .imagem(filme.getImagem())
-                .tipoMidia(TV)
+                .tipoMidia(MOVIE)
                 .providers(providers)
                 .id(filme.getId())
                 .estaFavoritado(estaFavoritado)
