@@ -4,7 +4,6 @@ import com.MovieParticipations.MovieParticipations.controller.response.InfoAtorR
 import com.MovieParticipations.MovieParticipations.controller.response.OpcoesAtoresParecidosResponse;
 import com.MovieParticipations.MovieParticipations.domain.Ator;
 import com.MovieParticipations.MovieParticipations.dto.AtorTMDBDtoPesquisaId;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.MovieParticipations.MovieParticipations.factories.AtorFactory.getKeanuReevesComId;
 import static com.MovieParticipations.MovieParticipations.factories.OpcoesAtoresParecidosResponseFactory.getKeanuReeves;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class AtorMapperTest {
@@ -23,13 +24,13 @@ public class AtorMapperTest {
 
         Ator response = AtorMapper.toEntity(dto);
 
-        Assertions.assertEquals(dto.getId(), response.getIdTmdb());
-        Assertions.assertEquals(dto.getNome(), response.getNome());
-        Assertions.assertEquals("keanu reeves", response.getNomeNormalizado());
-        Assertions.assertEquals(dto.getFotoDePerfil(), response.getImagem());
-        Assertions.assertEquals(dto.getPopularidade(), response.getPopularity());
-        Assertions.assertEquals(false, response.getInicializado());
-        Assertions.assertNotNull(response.getUltimaAtualizacao());
+        assertEquals(dto.getId(), response.getIdTmdb());
+        assertEquals(dto.getNome(), response.getNome());
+        assertEquals("keanu reeves", response.getNomeNormalizado());
+        assertEquals(dto.getFotoDePerfil(), response.getImagem());
+        assertEquals(dto.getPopularidade(), response.getPopularity());
+        assertEquals(false, response.getInicializado());
+        assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
@@ -42,13 +43,13 @@ public class AtorMapperTest {
 
         Ator response = AtorMapper.toEntityFromOpcoesParecidos(dto);
 
-        Assertions.assertEquals(dto.getIdTmdb(), response.getIdTmdb());
-        Assertions.assertEquals(dto.getIdentidade(), response.getNome());
-        Assertions.assertEquals("keanu reeves", response.getNomeNormalizado());
-        Assertions.assertEquals("/keanu.jpg", response.getImagem());
-        Assertions.assertEquals(dto.getPopularidade(), response.getPopularity());
-        Assertions.assertEquals(false, response.getInicializado());
-        Assertions.assertNotNull(response.getUltimaAtualizacao());
+        assertEquals(dto.getIdTmdb(), response.getIdTmdb());
+        assertEquals(dto.getIdentidade(), response.getNome());
+        assertEquals("keanu reeves", response.getNomeNormalizado());
+        assertEquals("/keanu.jpg", response.getImagem());
+        assertEquals(dto.getPopularidade(), response.getPopularity());
+        assertEquals(false, response.getInicializado());
+        assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
@@ -58,9 +59,9 @@ public class AtorMapperTest {
 
         InfoAtorResponse response = AtorMapper.toInfo(ator);
 
-        Assertions.assertEquals(ator.getId(), response.getId());
-        Assertions.assertEquals(ator.getNome(), response.getNome());
-        Assertions.assertEquals("https://image.tmdb.org/t/p/w200" + ator.getImagem(), response.getUrlImagem());
-        Assertions.assertEquals(ator.getPopularity(), response.getPopularity());
+        assertEquals(ator.getId(), response.getId());
+        assertEquals(ator.getNome(), response.getNome());
+        assertEquals("https://image.tmdb.org/t/p/w200" + ator.getImagem(), response.getUrlImagem());
+        assertEquals(ator.getPopularity(), response.getPopularity());
     }
 }

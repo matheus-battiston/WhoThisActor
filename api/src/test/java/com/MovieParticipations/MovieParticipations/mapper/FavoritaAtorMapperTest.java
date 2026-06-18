@@ -4,7 +4,6 @@ import com.MovieParticipations.MovieParticipations.controller.response.InfoAtorR
 import com.MovieParticipations.MovieParticipations.domain.Ator;
 import com.MovieParticipations.MovieParticipations.domain.FavoritaAtor;
 import com.MovieParticipations.MovieParticipations.security.domain.Usuario;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.MovieParticipations.MovieParticipations.factories.AtorFactory.getKeanuReevesComId;
 import static com.MovieParticipations.MovieParticipations.factories.UsuarioFactory.get;
+import static com.MovieParticipations.MovieParticipations.mapper.FavoritaAtorMapper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class FavoritaAtorMapperTest {
@@ -22,10 +23,10 @@ public class FavoritaAtorMapperTest {
         Ator ator = getKeanuReevesComId();
         Usuario usuario = get(1L);
 
-        FavoritaAtor response = FavoritaAtorMapper.toEntity(ator, usuario);
+        FavoritaAtor response = toEntity(ator, usuario);
 
-        Assertions.assertEquals(ator, response.getAtor());
-        Assertions.assertEquals(usuario, response.getUsuario());
+        assertEquals(ator, response.getAtor());
+        assertEquals(usuario, response.getUsuario());
     }
 
     @Test
@@ -33,10 +34,10 @@ public class FavoritaAtorMapperTest {
     void transformarEmResponse() {
         Ator ator = getKeanuReevesComId();
 
-        InfoAtorResponse response = FavoritaAtorMapper.toResponse(ator);
+        InfoAtorResponse response = toResponse(ator);
 
-        Assertions.assertEquals(ator.getId(), response.getId());
-        Assertions.assertEquals(ator.getNome(), response.getNome());
-        Assertions.assertEquals("https://image.tmdb.org/t/p/w200" + ator.getImagem(), response.getUrlImagem());
+        assertEquals(ator.getId(), response.getId());
+        assertEquals(ator.getNome(), response.getNome());
+        assertEquals("https://image.tmdb.org/t/p/w200" + ator.getImagem(), response.getUrlImagem());
     }
 }

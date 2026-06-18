@@ -3,16 +3,16 @@ package com.MovieParticipations.MovieParticipations.mapper;
 import com.MovieParticipations.MovieParticipations.controller.response.ProducoesFavoritasResponse;
 import com.MovieParticipations.MovieParticipations.domain.Filme;
 import com.MovieParticipations.MovieParticipations.domain.Serie;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
 import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
 import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadComId;
+import static com.MovieParticipations.MovieParticipations.mapper.ListaFavoritosMapper.toResponse;
+import static java.util.List.of;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class ListaFavoritosMapperTest {
@@ -23,15 +23,15 @@ public class ListaFavoritosMapperTest {
         Serie serie = getBreakingBadComId();
         Filme filme = getMatrixComId();
 
-        ProducoesFavoritasResponse response = ListaFavoritosMapper.toResponse(List.of(serie), List.of(filme));
+        ProducoesFavoritasResponse response = toResponse(of(serie), of(filme));
 
-        Assertions.assertEquals(1, response.getSeries().size());
-        Assertions.assertEquals(serie.getId(), response.getSeries().get(0).getId());
-        Assertions.assertEquals(serie.getTitulo(), response.getSeries().get(0).getNome());
-        Assertions.assertEquals(serie.getImagem(), response.getSeries().get(0).getImagem());
-        Assertions.assertEquals(1, response.getFilmes().size());
-        Assertions.assertEquals(filme.getId(), response.getFilmes().get(0).getId());
-        Assertions.assertEquals(filme.getTitulo(), response.getFilmes().get(0).getNome());
-        Assertions.assertEquals(filme.getImagem(), response.getFilmes().get(0).getImagem());
+        assertEquals(1, response.getSeries().size());
+        assertEquals(serie.getId(), response.getSeries().get(0).getId());
+        assertEquals(serie.getTitulo(), response.getSeries().get(0).getNome());
+        assertEquals(serie.getImagem(), response.getSeries().get(0).getImagem());
+        assertEquals(1, response.getFilmes().size());
+        assertEquals(filme.getId(), response.getFilmes().get(0).getId());
+        assertEquals(filme.getTitulo(), response.getFilmes().get(0).getNome());
+        assertEquals(filme.getImagem(), response.getFilmes().get(0).getImagem());
     }
 }

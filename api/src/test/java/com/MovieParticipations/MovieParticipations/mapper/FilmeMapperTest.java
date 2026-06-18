@@ -6,7 +6,6 @@ import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
 import com.MovieParticipations.MovieParticipations.dto.FilmeTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.ProducaoTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +16,9 @@ import java.util.List;
 import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
 import static com.MovieParticipations.MovieParticipations.factories.FilmeTMDBDtoFactory.getMatrix;
 import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflix;
+import static com.MovieParticipations.MovieParticipations.mapper.FilmeMapper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class FilmeMapperTest {
@@ -26,15 +28,15 @@ public class FilmeMapperTest {
     void transformarProducaoTmdbEmEntidade() {
         ProducaoTMDBDto dto = com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrix();
 
-        Filme response = FilmeMapper.toEntity(dto);
+        Filme response = toEntity(dto);
 
-        Assertions.assertEquals(dto.getId(), response.getIdTmdb());
-        Assertions.assertEquals(dto.getTitulo(), response.getTitulo());
-        Assertions.assertEquals("matrix", response.getTituloNormalizado());
-        Assertions.assertEquals(dto.getImagemPoster(), response.getImagem());
-        Assertions.assertEquals(dto.getPopularidade(), response.getPopularidade());
-        Assertions.assertEquals(false, response.getInicializado());
-        Assertions.assertNotNull(response.getUltimaAtualizacao());
+        assertEquals(dto.getId(), response.getIdTmdb());
+        assertEquals(dto.getTitulo(), response.getTitulo());
+        assertEquals("matrix", response.getTituloNormalizado());
+        assertEquals(dto.getImagemPoster(), response.getImagem());
+        assertEquals(dto.getPopularidade(), response.getPopularidade());
+        assertEquals(false, response.getInicializado());
+        assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
@@ -42,15 +44,15 @@ public class FilmeMapperTest {
     void transformarFilmeTmdbEmEntidade() {
         FilmeTMDBDto dto = getMatrix();
 
-        Filme response = FilmeMapper.toEntity(dto);
+        Filme response = toEntity(dto);
 
-        Assertions.assertEquals(dto.getId(), response.getIdTmdb());
-        Assertions.assertEquals(dto.getTitulo(), response.getTitulo());
-        Assertions.assertEquals("matrix", response.getTituloNormalizado());
-        Assertions.assertEquals(dto.getImagemPoster(), response.getImagem());
-        Assertions.assertEquals(dto.getPopularidade(), response.getPopularidade());
-        Assertions.assertEquals(false, response.getInicializado());
-        Assertions.assertNotNull(response.getUltimaAtualizacao());
+        assertEquals(dto.getId(), response.getIdTmdb());
+        assertEquals(dto.getTitulo(), response.getTitulo());
+        assertEquals("matrix", response.getTituloNormalizado());
+        assertEquals(dto.getImagemPoster(), response.getImagem());
+        assertEquals(dto.getPopularidade(), response.getPopularidade());
+        assertEquals(false, response.getInicializado());
+        assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
@@ -59,12 +61,12 @@ public class FilmeMapperTest {
         Filme filme = getMatrixComId();
         List<ProviderDto> providers = List.of(getNetflix());
 
-        ProducaoInfoResponse response = FilmeMapper.toResponse(filme, providers);
+        ProducaoInfoResponse response = toResponse(filme, providers);
 
-        Assertions.assertEquals(filme.getId(), response.getId());
-        Assertions.assertEquals(filme.getTitulo(), response.getNome());
-        Assertions.assertEquals(filme.getImagem(), response.getImagem());
-        Assertions.assertEquals(TipoMidia.MOVIE, response.getTipoMidia());
-        Assertions.assertEquals(providers, response.getProviders());
+        assertEquals(filme.getId(), response.getId());
+        assertEquals(filme.getTitulo(), response.getNome());
+        assertEquals(filme.getImagem(), response.getImagem());
+        assertEquals(TipoMidia.MOVIE, response.getTipoMidia());
+        assertEquals(providers, response.getProviders());
     }
 }
