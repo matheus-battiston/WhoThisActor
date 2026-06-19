@@ -26,6 +26,9 @@ public class BuscarProducaoPorNomeTMBDService {
     private static final String TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search";
     private static final String MOVIE = "/movie";
     private static final String TV = "/tv";
+    private static final String QUERY = "query";
+    private static final String API_KEY = "api_key";
+
     private final RestTemplate restTemplate;
 
     public BuscarProducaoPorNomeTMBDService() {
@@ -34,16 +37,16 @@ public class BuscarProducaoPorNomeTMBDService {
 
     public List<FilmeTMDBDto> buscarIdFilmePorNome(String nome) {
         String url = UriComponentsBuilder.fromUriString(TMDB_SEARCH_URL + MOVIE)
-                .queryParam("query", nome)
-                .queryParam("api_key", apiKey)
+                .queryParam(QUERY, nome)
+                .queryParam(API_KEY, apiKey)
                 .toUriString();
         return buscarFilme(url, nome);
     }
 
     public List<SerieTMDBDto> buscarIdSeriePorNome(String nome) {
         String url = UriComponentsBuilder.fromUriString(TMDB_SEARCH_URL + TV)
-                .queryParam("query", nome)
-                .queryParam("api_key", apiKey)
+                .queryParam(QUERY, nome)
+                .queryParam(API_KEY, apiKey)
                 .toUriString();
         return buscarSerie(url, nome);
     }

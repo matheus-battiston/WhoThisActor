@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UsuarioFactory {
 
-    public static Usuario get() {
+    public static Usuario getUsuarioEntity() {
         Long authUserId = 77L;
         String nome = "Matheus";
         String email = "matheus@email.com";
@@ -30,13 +30,13 @@ public class UsuarioFactory {
                 .build();
     }
 
-    public static Usuario get(Long id) {
-        Usuario usuario = get();
+    public static Usuario getUsuarioEntityComId(Long id) {
+        Usuario usuario = getUsuarioEntity();
         usuario.setId(id);
         return usuario;
     }
 
-    public static Usuario getInativo() {
+    public static Usuario getUsuarioInativoEntity() {
         Long authUserId = 78L;
         String nome = "Usuario Inativo";
         String email = "inativo@email.com";

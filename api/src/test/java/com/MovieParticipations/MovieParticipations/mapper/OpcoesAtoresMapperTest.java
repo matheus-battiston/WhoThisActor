@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.MovieParticipations.MovieParticipations.factories.ClassificacaoResponseDTOFactory.getKeanuReeves;
+import static com.MovieParticipations.MovieParticipations.factories.ClassificacaoResponseDTOFactory.getKeanuReevesClassificacaoResponseDTO;
 import static com.MovieParticipations.MovieParticipations.mapper.OpcoesAtoresMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +17,7 @@ public class OpcoesAtoresMapperTest {
     @Test
     @DisplayName("Deve transformar classificacao em response")
     void transformarEmResponse() {
-        ClassificacaoResponseDTO classificacao = getKeanuReeves();
+        ClassificacaoResponseDTO classificacao = getKeanuReevesClassificacaoResponseDTO();
 
         OpcoesAtoresParecidosResponse response = toResponse(classificacao);
 

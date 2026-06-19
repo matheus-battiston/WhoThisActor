@@ -13,25 +13,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
-import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getNeo;
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflix;
-import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadComId;
+import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getNeoOpcaoPesquisaElencoResponse;
+import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflixProviderDto;
+import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.DetalhesProducaoComElencoMapper.*;
 import static java.util.List.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class DetalhesProducaoComElencoMapperTest {
+    private static final boolean ESTA_FAVORITADO = true;
+    private static final boolean NAO_ESTA_FAVORITADO = false;
 
     @Test
     @DisplayName("Deve transformar filme em response com elenco")
     void transformarFilmeEmResponseComElenco() {
-        Filme filme = getMatrixComId();
-        List<OpcaoPesquisaElencoResponse> elenco = of(getNeo());
-        List<ProviderDto> providers = of(getNetflix());
+        Filme filme = getMatrixFilmeEntityComId();
+        List<OpcaoPesquisaElencoResponse> elenco = of(getNeoOpcaoPesquisaElencoResponse());
+        List<ProviderDto> providers = of(getNetflixProviderDto());
 
-        DetalhesProducaoComElenco response = toResponse(elenco, filme, providers, true);
+        DetalhesProducaoComElenco response = toResponse(elenco, filme, providers, ESTA_FAVORITADO);
 
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
@@ -39,17 +41,17 @@ public class DetalhesProducaoComElencoMapperTest {
         assertEquals(TipoMidia.MOVIE, response.getTipoMidia());
         assertEquals(elenco, response.getElenco());
         assertEquals(providers, response.getProviders());
-        assertEquals(true, response.getEstaFavoritado());
+        assertEquals(ESTA_FAVORITADO, response.getEstaFavoritado());
     }
 
     @Test
     @DisplayName("Deve transformar serie em response com elenco")
     void transformarSerieEmResponseComElenco() {
-        Serie serie = getBreakingBadComId();
-        List<OpcaoPesquisaElencoResponse> elenco = of(getNeo());
-        List<ProviderDto> providers = of(getNetflix());
+        Serie serie = getBreakingBadSerieEntityComId();
+        List<OpcaoPesquisaElencoResponse> elenco = of(getNeoOpcaoPesquisaElencoResponse());
+        List<ProviderDto> providers = of(getNetflixProviderDto());
 
-        DetalhesProducaoComElenco response = toResponse(elenco, serie, providers, false);
+        DetalhesProducaoComElenco response = toResponse(elenco, serie, providers, NAO_ESTA_FAVORITADO);
 
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
@@ -57,6 +59,6 @@ public class DetalhesProducaoComElencoMapperTest {
         assertEquals(TipoMidia.TV, response.getTipoMidia());
         assertEquals(elenco, response.getElenco());
         assertEquals(providers, response.getProviders());
-        assertEquals(false, response.getEstaFavoritado());
+        assertEquals(NAO_ESTA_FAVORITADO, response.getEstaFavoritado());
     }
 }

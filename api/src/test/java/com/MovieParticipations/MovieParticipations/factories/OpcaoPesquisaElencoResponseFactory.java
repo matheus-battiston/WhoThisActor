@@ -4,7 +4,7 @@ import com.MovieParticipations.MovieParticipations.controller.response.OpcaoPesq
 
 public class OpcaoPesquisaElencoResponseFactory {
 
-    public static OpcaoPesquisaElencoResponse get() {
+    public static OpcaoPesquisaElencoResponse getOpcaoPesquisaElencoResponse() {
         Long id = 99L;
         String nome = "Ator Teste";
         String nomePersonagem = "Personagem Teste";
@@ -20,7 +20,7 @@ public class OpcaoPesquisaElencoResponseFactory {
                 .build();
     }
 
-    public static OpcaoPesquisaElencoResponse getNeo() {
+    public static OpcaoPesquisaElencoResponse getNeoOpcaoPesquisaElencoResponse() {
         Long id = 99L;
         String nome = "Keanu Reeves";
         String nomePersonagem = "Neo";
@@ -36,7 +36,7 @@ public class OpcaoPesquisaElencoResponseFactory {
                 .build();
     }
 
-    public static OpcaoPesquisaElencoResponse getWalterWhite() {
+    public static OpcaoPesquisaElencoResponse getWalterWhiteOpcaoPesquisaElencoResponse() {
         Long id = 100L;
         String nome = "Bryan Cranston";
         String nomePersonagem = "Walter White";

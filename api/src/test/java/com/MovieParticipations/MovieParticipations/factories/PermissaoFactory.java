@@ -6,7 +6,7 @@ import com.MovieParticipations.MovieParticipations.security.domain.Usuario;
 
 public class PermissaoFactory {
 
-    public static Permissao get(Usuario usuario) {
+    public static Permissao getPermissaoEntity(Usuario usuario) {
         Funcao funcao = Funcao.USUARIO;
 
         Permissao permissao = new Permissao();
@@ -15,8 +15,8 @@ public class PermissaoFactory {
         return permissao;
     }
 
-    public static Permissao getComId(Usuario usuario, Long id) {
-        Permissao permissao = get(usuario);
+    public static Permissao getPermissaoEntityComId(Usuario usuario, Long id) {
+        Permissao permissao = getPermissaoEntity(usuario);
         permissao.setId(id);
         return permissao;
     }

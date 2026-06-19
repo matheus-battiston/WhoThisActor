@@ -13,9 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.AtorFactory.getKeanuReevesComId;
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrix;
+import static com.MovieParticipations.MovieParticipations.factories.AtorFactory.getKeanuReevesAtorEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,9 +36,9 @@ class AdicionarFilmesDeAtorServiceTest {
     @Test
     @DisplayName("Deve resolver filmes e vincular ao ator")
     void deveResolverFilmesEVincularAoAtor() {
-        Ator ator = getKeanuReevesComId();
-        List<ProducaoTMDBDto> producoesDto = List.of(getMatrix());
-        List<Filme> filmes = List.of(getMatrixComId());
+        Ator ator = getKeanuReevesAtorEntityComId();
+        List<ProducaoTMDBDto> producoesDto = List.of(getMatrixProducaoTMDBDto());
+        List<Filme> filmes = List.of(getMatrixFilmeEntityComId());
 
         when(filmeResolverService.resolverFilme(producoesDto)).thenReturn(filmes);
 
@@ -51,9 +51,9 @@ class AdicionarFilmesDeAtorServiceTest {
     @Test
     @DisplayName("Deve resolver filmes antes de vincular ao ator")
     void deveResolverFilmesAntesDeVincularAoAtor() {
-        Ator ator = getKeanuReevesComId();
-        List<ProducaoTMDBDto> producoesDto = List.of(getMatrix());
-        List<Filme> filmes = List.of(getMatrixComId());
+        Ator ator = getKeanuReevesAtorEntityComId();
+        List<ProducaoTMDBDto> producoesDto = List.of(getMatrixProducaoTMDBDto());
+        List<Filme> filmes = List.of(getMatrixFilmeEntityComId());
 
         when(filmeResolverService.resolverFilme(producoesDto)).thenReturn(filmes);
 

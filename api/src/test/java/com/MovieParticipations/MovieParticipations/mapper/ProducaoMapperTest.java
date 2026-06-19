@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
-import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadComId;
+import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.ProducaoMapper.toResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +19,7 @@ public class ProducaoMapperTest {
     @Test
     @DisplayName("Deve transformar serie em response")
     void transformarSerieEmResponse() {
-        Serie serie = getBreakingBadComId();
+        Serie serie = getBreakingBadSerieEntityComId();
 
         ProducaoResponse response = toResponse(serie);
 
@@ -31,7 +31,7 @@ public class ProducaoMapperTest {
     @Test
     @DisplayName("Deve transformar filme em response")
     void transformarFilmeEmResponse() {
-        Filme filme = getMatrixComId();
+        Filme filme = getMatrixFilmeEntityComId();
 
         ProducaoResponse response = toResponse(filme);
 

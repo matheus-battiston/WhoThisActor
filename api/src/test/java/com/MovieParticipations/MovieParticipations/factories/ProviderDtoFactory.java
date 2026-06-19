@@ -4,7 +4,7 @@ import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
 
 public class ProviderDtoFactory {
 
-    public static ProviderDto get() {
+    public static ProviderDto getProviderTesteProviderDto() {
         int idProvider = 1;
         String nomeProvider = "Provider Teste";
         String imagemLogo = "/provider-teste.jpg";
@@ -18,7 +18,7 @@ public class ProviderDtoFactory {
                 .build();
     }
 
-    public static ProviderDto getNetflix() {
+    public static ProviderDto getNetflixProviderDto() {
         int idProvider = 8;
         String nomeProvider = "Netflix";
         String imagemLogo = "/netflix.jpg";
@@ -32,7 +32,7 @@ public class ProviderDtoFactory {
                 .build();
     }
 
-    public static ProviderDto getDisneyPlus() {
+    public static ProviderDto getDisneyPlusProviderDto() {
         int idProvider = 337;
         String nomeProvider = "Disney+";
         String imagemLogo = "/disney-plus.jpg";

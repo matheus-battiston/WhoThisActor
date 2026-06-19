@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
+import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.*;
+import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.PesquisaFilmeMapper.toResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,14 +19,14 @@ public class PesquisaFilmeMapperTest {
     @Test
     @DisplayName("Deve transformar entidade em response")
     void transformarEmResponse() {
-        Filme filme = getMatrixComId();
+        Filme filme = getMatrixFilmeEntityComId();
 
         PesquisaProducaoInfoResponse response = toResponse(filme);
 
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
         assertEquals(filme.getImagem(), response.getImagem());
-        assertEquals(TipoMidia.MOVIE, response.getTipoMidia());
+        assertEquals(MOVIE, response.getTipoMidia());
         assertEquals(filme.getPopularidade(), response.getPopularidade());
     }
 }

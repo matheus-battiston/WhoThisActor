@@ -19,10 +19,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
-import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getWalterWhite;
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getDisneyPlus;
-import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadComId;
-import static com.MovieParticipations.MovieParticipations.factories.UsuarioAutenticadoFactory.get;
+import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getWalterWhiteOpcaoPesquisaElencoResponse;
+import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getDisneyPlusProviderDto;
+import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadSerieEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -31,6 +31,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("PesquisarElencoSerieService")
 class PesquisarElencoSerieServiceTest {
+    private static final Long ID_SERIE_PESQUISA = 10L;
+    private static final Long ID_SERIE = 2L;
+    private static final Long ID_TMDB_BREAKING_BAD = 456L;
+    private static final String FILTRO_VAZIO = "";
+    private static final String FILTRO_INEXISTENTE = "Inexistente";
+    private static final String FILTRO_WALTER = "Walter";
+    private static final int PRIMEIRA_PAGINA = 0;
+    private static final int TAMANHO_PAGINA = 20;
+    private static final String NOME_BREAKING_BAD = "Breaking Bad";
+    private static final String IMAGEM_BREAKING_BAD = "/breaking-bad.jpg";
+    private static final boolean NAO_ESTA_FAVORITADO = false;
 
     @Mock
     private SerieAtorRepository serieAtorRepository;
@@ -50,55 +61,69 @@ class PesquisarElencoSerieServiceTest {
     @Test
     @DisplayName("Deve pesquisar elenco com filtro vazio quando o filtro for nulo")
     void devePesquisarElencoComFiltroVazioQuandoFiltroForNulo() {
-        OpcaoPesquisaElencoResponse opcao = getWalterWhite();
-        when(serieAtorRepository.findElencoPorIdComPersonagem(10L, "", Pageable.ofSize(20)))
-                .thenReturn(new PageImpl<>(List.of(opcao)));
+        OpcaoPesquisaElencoResponse opcao = getWalterWhiteOpcaoPesquisaElencoResponse();
+        Pageable pageable = Pageable.ofSize(TAMANHO_PAGINA);
+        PageRequest pageRequest = PageRequest.of(PRIMEIRA_PAGINA, TAMANHO_PAGINA);
+        List<OpcaoPesquisaElencoResponse> elenco = List.of(opcao);
+        PageImpl<OpcaoPesquisaElencoResponse> page = new PageImpl<>(elenco);
 
-        List<OpcaoPesquisaElencoResponse> resultado = pesquisarElencoSerieService.pesquisarElenco(10L, null);
+        when(serieAtorRepository.findElencoPorIdComPersonagem(ID_SERIE_PESQUISA, FILTRO_VAZIO, pageable))
+                .thenReturn(page);
+
+        List<OpcaoPesquisaElencoResponse> resultado = pesquisarElencoSerieService.pesquisarElenco(ID_SERIE_PESQUISA, null);
 
         assertThat(resultado).containsExactly(opcao);
         verify(serieAtorRepository).findElencoPorIdComPersonagem(
-                10L,
-                "",
-                PageRequest.of(0, 20)
+                ID_SERIE_PESQUISA,
+                FILTRO_VAZIO,
+                pageRequest
         );
     }
 
     @Test
     @DisplayName("Deve retornar lista vazia quando nenhum elenco for encontrado")
     void deveRetornarListaVaziaQuandoNenhumElencoForEncontrado() {
-        when(serieAtorRepository.findElencoPorIdComPersonagem(10L, "Inexistente", Pageable.ofSize(20)))
-                .thenReturn(new PageImpl<>(List.of()));
+        Pageable pageable = Pageable.ofSize(TAMANHO_PAGINA);
+        PageRequest pageRequest = PageRequest.of(PRIMEIRA_PAGINA, TAMANHO_PAGINA);
+        List<OpcaoPesquisaElencoResponse> elenco = List.of();
+        PageImpl<OpcaoPesquisaElencoResponse> page = new PageImpl<>(elenco);
 
-        List<OpcaoPesquisaElencoResponse> resultado = pesquisarElencoSerieService.pesquisarElenco(10L, "Inexistente");
+        when(serieAtorRepository.findElencoPorIdComPersonagem(ID_SERIE_PESQUISA, FILTRO_INEXISTENTE, pageable))
+                .thenReturn(page);
+
+        List<OpcaoPesquisaElencoResponse> resultado = pesquisarElencoSerieService.pesquisarElenco(ID_SERIE_PESQUISA, FILTRO_INEXISTENTE);
 
         assertThat(resultado).isEmpty();
         verify(serieAtorRepository).findElencoPorIdComPersonagem(
-                10L,
-                "Inexistente",
-                PageRequest.of(0, 20)
+                ID_SERIE_PESQUISA,
+                FILTRO_INEXISTENTE,
+                pageRequest
         );
     }
 
     @Test
     @DisplayName("Deve montar detalhes da serie com elenco, providers e favorito quando usuario estiver autenticado")
     void deveMontarDetalhesDaSerieComElencoProvidersEFavoritoQuandoUsuarioAutenticado() {
-        UsuarioAutenticado usuarioAutenticado = get();
-        Serie serie = getBreakingBadComId();
-        OpcaoPesquisaElencoResponse opcao = getWalterWhite();
-        ProviderDto provider = getDisneyPlus();
+        UsuarioAutenticado usuarioAutenticado = getUsuarioAutenticadoDto();
+        Serie serie = getBreakingBadSerieEntityComId();
+        OpcaoPesquisaElencoResponse opcao = getWalterWhiteOpcaoPesquisaElencoResponse();
+        ProviderDto provider = getDisneyPlusProviderDto();
+        Pageable pageable = Pageable.ofSize(TAMANHO_PAGINA);
+        List<OpcaoPesquisaElencoResponse> elenco = List.of(opcao);
+        PageImpl<OpcaoPesquisaElencoResponse> page = new PageImpl<>(elenco);
+        List<ProviderDto> providers = List.of(provider);
 
-        when(obterSerieInicializadaService.obter(2L)).thenReturn(serie);
-        when(serieAtorRepository.findElencoPorIdComPersonagem(2L, "Walter", Pageable.ofSize(20)))
-                .thenReturn(new PageImpl<>(List.of(opcao)));
-        when(providersService.buscarProviders(456L, TV)).thenReturn(List.of(provider));
-        when(favoritarSerieService.estaFavoritadoComAuthId(usuarioAutenticado, 2L)).thenReturn(false);
+        when(obterSerieInicializadaService.obter(ID_SERIE)).thenReturn(serie);
+        when(serieAtorRepository.findElencoPorIdComPersonagem(ID_SERIE, FILTRO_WALTER, pageable))
+                .thenReturn(page);
+        when(providersService.buscarProviders(ID_TMDB_BREAKING_BAD, TV)).thenReturn(providers);
+        when(favoritarSerieService.estaFavoritadoComAuthId(usuarioAutenticado, ID_SERIE)).thenReturn(NAO_ESTA_FAVORITADO);
 
-        DetalhesProducaoComElenco resultado = pesquisarElencoSerieService.pesquisar(2L, "Walter", usuarioAutenticado);
+        DetalhesProducaoComElenco resultado = pesquisarElencoSerieService.pesquisar(ID_SERIE, FILTRO_WALTER, usuarioAutenticado);
 
-        assertThat(resultado.getId()).isEqualTo(2L);
-        assertThat(resultado.getNome()).isEqualTo("Breaking Bad");
-        assertThat(resultado.getImagem()).isEqualTo("/breaking-bad.jpg");
+        assertThat(resultado.getId()).isEqualTo(ID_SERIE);
+        assertThat(resultado.getNome()).isEqualTo(NOME_BREAKING_BAD);
+        assertThat(resultado.getImagem()).isEqualTo(IMAGEM_BREAKING_BAD);
         assertThat(resultado.getTipoMidia()).isEqualTo(TV);
         assertThat(resultado.getElenco()).containsExactly(opcao);
         assertThat(resultado.getProviders()).containsExactly(provider);
@@ -108,14 +133,18 @@ class PesquisarElencoSerieServiceTest {
     @Test
     @DisplayName("Deve manter favorito nulo quando usuario nao estiver autenticado")
     void deveManterFavoritoNuloQuandoUsuarioNaoAutenticado() {
-        Serie serie = getBreakingBadComId();
+        Serie serie = getBreakingBadSerieEntityComId();
+        Pageable pageable = Pageable.ofSize(TAMANHO_PAGINA);
+        List<OpcaoPesquisaElencoResponse> elenco = List.of();
+        PageImpl<OpcaoPesquisaElencoResponse> page = new PageImpl<>(elenco);
+        List<ProviderDto> providers = List.of();
 
-        when(obterSerieInicializadaService.obter(2L)).thenReturn(serie);
-        when(serieAtorRepository.findElencoPorIdComPersonagem(2L, "", Pageable.ofSize(20)))
-                .thenReturn(new PageImpl<>(List.of()));
-        when(providersService.buscarProviders(456L, TV)).thenReturn(List.of());
+        when(obterSerieInicializadaService.obter(ID_SERIE)).thenReturn(serie);
+        when(serieAtorRepository.findElencoPorIdComPersonagem(ID_SERIE, FILTRO_VAZIO, pageable))
+                .thenReturn(page);
+        when(providersService.buscarProviders(ID_TMDB_BREAKING_BAD, TV)).thenReturn(providers);
 
-        DetalhesProducaoComElenco resultado = pesquisarElencoSerieService.pesquisar(2L, "", null);
+        DetalhesProducaoComElenco resultado = pesquisarElencoSerieService.pesquisar(ID_SERIE, FILTRO_VAZIO, null);
 
         assertThat(resultado.getEstaFavoritado()).isNull();
         verifyNoInteractions(favoritarSerieService);

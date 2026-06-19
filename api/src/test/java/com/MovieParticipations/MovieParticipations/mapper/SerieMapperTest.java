@@ -13,60 +13,64 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflix;
-import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadComId;
-import static com.MovieParticipations.MovieParticipations.factories.SerieTMDBDtoFactory.getBreakingBad;
+import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.*;
+import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getBreakingBadProducaoTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflixProviderDto;
+import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadSerieEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.SerieTMDBDtoFactory.getBreakingBadSerieTMDBDto;
 import static com.MovieParticipations.MovieParticipations.mapper.SerieMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class SerieMapperTest {
+    private static final String TITULO_NORMALIZADO_BREAKING_BAD = "breaking bad";
+    private static final boolean FALSO = false;
 
     @Test
     @DisplayName("Deve transformar producao tmdb em entidade")
     void transformarProducaoTmdbEmEntidade() {
-        ProducaoTMDBDto dto = com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getBreakingBad();
+        ProducaoTMDBDto dto =getBreakingBadProducaoTMDBDto();
 
         Serie response = toEntity(dto);
 
         assertEquals(dto.getId(), response.getIdTmdb());
         assertEquals(dto.getNome(), response.getTitulo());
-        assertEquals("breaking bad", response.getTituloNormalizado());
+        assertEquals(TITULO_NORMALIZADO_BREAKING_BAD, response.getTituloNormalizado());
         assertEquals(dto.getImagemPoster(), response.getImagem());
         assertEquals(dto.getPopularidade(), response.getPopularidade());
-        assertEquals(false, response.getInicializado());
+        assertEquals(FALSO, response.getInicializado());
         assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
     @DisplayName("Deve transformar serie tmdb em entidade")
     void transformarSerieTmdbEmEntidade() {
-        SerieTMDBDto dto = getBreakingBad();
+        SerieTMDBDto dto = getBreakingBadSerieTMDBDto();
 
         Serie response = toEntity(dto);
 
         assertEquals(dto.getId(), response.getIdTmdb());
         assertEquals(dto.getNome(), response.getTitulo());
-        assertEquals("breaking bad", response.getTituloNormalizado());
+        assertEquals(TITULO_NORMALIZADO_BREAKING_BAD, response.getTituloNormalizado());
         assertEquals(dto.getImagemPoster(), response.getImagem());
         assertEquals(dto.getPopularidade(), response.getPopularidade());
-        assertEquals(false, response.getInicializado());
+        assertEquals(FALSO, response.getInicializado());
         assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
     @DisplayName("Deve transformar entidade em response")
     void transformarEmResponse() {
-        Serie serie = getBreakingBadComId();
-        List<ProviderDto> providers = List.of(getNetflix());
+        Serie serie = getBreakingBadSerieEntityComId();
+        List<ProviderDto> providers = List.of(getNetflixProviderDto());
 
         ProducaoInfoResponse response = toResponse(serie, providers);
 
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
         assertEquals(serie.getImagem(), response.getImagem());
-        assertEquals(TipoMidia.TV, response.getTipoMidia());
+        assertEquals(TV, response.getTipoMidia());
         assertEquals(providers, response.getProviders());
     }
 }

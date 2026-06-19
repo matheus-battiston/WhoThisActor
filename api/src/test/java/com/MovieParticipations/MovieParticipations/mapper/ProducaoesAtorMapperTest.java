@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoComPersonagemResponseFactory.getBreakingBad;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoComPersonagemResponseFactory.getMatrix;
+import static com.MovieParticipations.MovieParticipations.factories.ProducaoComPersonagemResponseFactory.getBreakingBadProducaoComPersonagemResponse;
+import static com.MovieParticipations.MovieParticipations.factories.ProducaoComPersonagemResponseFactory.getMatrixProducaoComPersonagemResponse;
 import static com.MovieParticipations.MovieParticipations.mapper.ProducaoesAtorMapper.toResponse;
 import static java.util.List.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +21,8 @@ public class ProducaoesAtorMapperTest {
     @Test
     @DisplayName("Deve transformar listas de producoes em response")
     void transformarEmResponse() {
-        List<ProducaoComPersonagemResponse> filmes = of(getMatrix());
-        List<ProducaoComPersonagemResponse> series = of(getBreakingBad());
+        List<ProducaoComPersonagemResponse> filmes = of(getMatrixProducaoComPersonagemResponse());
+        List<ProducaoComPersonagemResponse> series = of(getBreakingBadProducaoComPersonagemResponse());
 
         ProducaoAtorResponse response = toResponse(filmes, series);
 

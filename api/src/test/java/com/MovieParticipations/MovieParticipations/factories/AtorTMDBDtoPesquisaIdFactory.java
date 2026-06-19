@@ -4,7 +4,7 @@ import com.MovieParticipations.MovieParticipations.dto.AtorTMDBDtoPesquisaId;
 
 public class AtorTMDBDtoPesquisaIdFactory {
 
-    public static AtorTMDBDtoPesquisaId get() {
+    public static AtorTMDBDtoPesquisaId getAtorTesteTMDBDto() {
         Long id = 999L;
         String nome = "Ator Teste";
         String conhecidoPor = "Acting";
@@ -20,7 +20,7 @@ public class AtorTMDBDtoPesquisaIdFactory {
                 .build();
     }
 
-    public static AtorTMDBDtoPesquisaId getKeanuReeves() {
+    public static AtorTMDBDtoPesquisaId getKeanuReevesTMDBDto() {
         Long id = 6384L;
         String nome = "Keanu Reeves";
         String conhecidoPor = "Acting";

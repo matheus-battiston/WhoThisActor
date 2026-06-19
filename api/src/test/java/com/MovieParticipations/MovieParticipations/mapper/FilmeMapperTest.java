@@ -13,60 +13,65 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixComId;
-import static com.MovieParticipations.MovieParticipations.factories.FilmeTMDBDtoFactory.getMatrix;
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflix;
+import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.*;
+import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.FilmeTMDBDtoFactory.getMatrixFilmeTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflixProviderDto;
 import static com.MovieParticipations.MovieParticipations.mapper.FilmeMapper.*;
+import static java.util.List.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class FilmeMapperTest {
+    private static final String TITULO_NORMALIZADO_MATRIX = "matrix";
+    private static final boolean FALSO = false;
 
     @Test
     @DisplayName("Deve transformar producao tmdb em entidade")
     void transformarProducaoTmdbEmEntidade() {
-        ProducaoTMDBDto dto = com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrix();
+        ProducaoTMDBDto dto = getMatrixProducaoTMDBDto();
 
         Filme response = toEntity(dto);
 
         assertEquals(dto.getId(), response.getIdTmdb());
         assertEquals(dto.getTitulo(), response.getTitulo());
-        assertEquals("matrix", response.getTituloNormalizado());
+        assertEquals(TITULO_NORMALIZADO_MATRIX, response.getTituloNormalizado());
         assertEquals(dto.getImagemPoster(), response.getImagem());
         assertEquals(dto.getPopularidade(), response.getPopularidade());
-        assertEquals(false, response.getInicializado());
+        assertEquals(FALSO, response.getInicializado());
         assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
     @DisplayName("Deve transformar filme tmdb em entidade")
     void transformarFilmeTmdbEmEntidade() {
-        FilmeTMDBDto dto = getMatrix();
+        FilmeTMDBDto dto = getMatrixFilmeTMDBDto();
 
         Filme response = toEntity(dto);
 
         assertEquals(dto.getId(), response.getIdTmdb());
         assertEquals(dto.getTitulo(), response.getTitulo());
-        assertEquals("matrix", response.getTituloNormalizado());
+        assertEquals(TITULO_NORMALIZADO_MATRIX, response.getTituloNormalizado());
         assertEquals(dto.getImagemPoster(), response.getImagem());
         assertEquals(dto.getPopularidade(), response.getPopularidade());
-        assertEquals(false, response.getInicializado());
+        assertEquals(FALSO, response.getInicializado());
         assertNotNull(response.getUltimaAtualizacao());
     }
 
     @Test
     @DisplayName("Deve transformar entidade em response")
     void transformarEmResponse() {
-        Filme filme = getMatrixComId();
-        List<ProviderDto> providers = List.of(getNetflix());
+        Filme filme = getMatrixFilmeEntityComId();
+        List<ProviderDto> providers = of(getNetflixProviderDto());
 
         ProducaoInfoResponse response = toResponse(filme, providers);
 
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
         assertEquals(filme.getImagem(), response.getImagem());
-        assertEquals(TipoMidia.MOVIE, response.getTipoMidia());
+        assertEquals(MOVIE, response.getTipoMidia());
         assertEquals(providers, response.getProviders());
     }
 }

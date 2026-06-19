@@ -6,7 +6,7 @@ import com.MovieParticipations.MovieParticipations.domain.SerieAtor;
 
 public class SerieAtorFactory {
 
-    public static SerieAtor get(Serie serie, Ator ator, String personagem) {
+    public static SerieAtor getSerieAtorEntity(Serie serie, Ator ator, String personagem) {
         int numeroEpisodios = 1;
 
         return SerieAtor.builder()
@@ -17,7 +17,7 @@ public class SerieAtorFactory {
                 .build();
     }
 
-    public static SerieAtor get(Serie serie, Ator ator, String personagem, int numeroEpisodios) {
+    public static SerieAtor getSerieAtorEntity(Serie serie, Ator ator, String personagem, int numeroEpisodios) {
         return SerieAtor.builder()
                 .serie(serie)
                 .ator(ator)
@@ -26,18 +26,18 @@ public class SerieAtorFactory {
                 .build();
     }
 
-    public static SerieAtor getComId(Serie serie, Ator ator, String personagem, Long id) {
-        SerieAtor serieAtor = get(serie, ator, personagem);
+    public static SerieAtor getSerieAtorEntityComId(Serie serie, Ator ator, String personagem, Long id) {
+        SerieAtor serieAtor = getSerieAtorEntity(serie, ator, personagem);
         serieAtor.setId(id);
         return serieAtor;
     }
 
-    public static SerieAtor getWalterWhite() {
-        Serie serie = SerieFactory.getBreakingBad();
-        Ator ator = AtorFactory.getBryanCranston();
+    public static SerieAtor getWalterWhiteSerieAtorEntity() {
+        Serie serie = SerieFactory.getBreakingBadSerieEntity();
+        Ator ator = AtorFactory.getBryanCranstonAtorEntity();
         String personagem = "Walter White";
         int numeroEpisodios = 62;
 
-        return get(serie, ator, personagem, numeroEpisodios);
+        return getSerieAtorEntity(serie, ator, personagem, numeroEpisodios);
     }
 }
