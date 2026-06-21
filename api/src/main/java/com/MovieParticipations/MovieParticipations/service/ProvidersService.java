@@ -2,8 +2,10 @@ package com.MovieParticipations.MovieParticipations.service;
 
 import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
 import com.MovieParticipations.MovieParticipations.dto.BuscarProvidersDto;
+import com.MovieParticipations.MovieParticipations.dto.CountryProviderDto;
 import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,18 +26,24 @@ public class ProvidersService {
     private final RestTemplate restTemplate;
     private final static String URL_BRASIL = "BR";
 
-    public ProvidersService() {this.restTemplate = new RestTemplate();}
+    public ProvidersService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
+    @Cacheable(cacheNames = "providers", key = "#tipo.name() + ':' + #id")
     public List<ProviderDto> buscarProviders(Long id, TipoMidia tipo) {
         String url = gerarUrl(id, tipo);
         BuscarProvidersDto buscarProvidersDto = restTemplate.exchange(url, GET, EMPTY, BuscarProvidersDto.class)
                 .getBody();
 
-        if (buscarProvidersDto == null
-                || buscarProvidersDto.getResultados().get(URL_BRASIL) == null
-                || buscarProvidersDto.getResultados().get(URL_BRASIL).getFlatrate() == null)
+        if (buscarProvidersDto == null || buscarProvidersDto.getResultados() == null)
             return null;
-        return buscarProvidersDto.getResultados().get(URL_BRASIL).getFlatrate();
+
+        CountryProviderDto providersBrasil = buscarProvidersDto.getResultados().get(URL_BRASIL);
+        if (providersBrasil == null || providersBrasil.getFlatrate() == null)
+            return null;
+
+        return providersBrasil.getFlatrate();
     }
 
     private String gerarUrl(Long id, TipoMidia tipo){

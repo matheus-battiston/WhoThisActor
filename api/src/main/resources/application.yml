@@ -1,4 +1,12 @@
 spring:
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -59,6 +67,10 @@ auth:
 
 server:
   port: 8081
+
+providers:
+  cache:
+    ttl: 24h
 #
 #logging:
 #  level:
