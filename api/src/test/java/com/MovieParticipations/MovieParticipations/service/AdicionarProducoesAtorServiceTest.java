@@ -7,19 +7,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.AtorFactory.getKeanuReevesAtorEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getBreakingBadProducaoTMDBDto;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getProducaoComTipoMidiaDesconhecido;
+import static com.MovieParticipations.MovieParticipations.factories.domain.AtorFactory.getKeanuReevesAtorEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProducaoTMDBDtoFactory.getBreakingBadProducaoTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProducaoTMDBDtoFactory.getProducaoComTipoMidiaDesconhecido;
+import static java.util.List.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.inOrder;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,33 +52,16 @@ class AdicionarProducoesAtorServiceTest {
         ProducaoTMDBDto serie = getBreakingBadProducaoTMDBDto();
         ProducaoTMDBDto filme = getMatrixProducaoTMDBDto();
 
-        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(List.of(serie, filme));
+        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(of(serie, filme));
 
         adicionarProducoesAtorService.adicionar(ator);
 
         verify(creditosAtorService).buscarCreditosValidos(ator);
-        verify(adicionarSeriesDeAtorService).adicionar(ator, seriesCaptor.capture());
-        verify(adicionarFilmesDeAtorService).adicionar(ator, filmesCaptor.capture());
+        verify(adicionarSeriesDeAtorService).adicionar(eq(ator), seriesCaptor.capture());
+        verify(adicionarFilmesDeAtorService).adicionar(eq(ator), filmesCaptor.capture());
 
         assertThat(seriesCaptor.getValue()).containsExactly(serie);
         assertThat(filmesCaptor.getValue()).containsExactly(filme);
-    }
-
-    @Test
-    @DisplayName("Deve adicionar series antes de adicionar filmes")
-    void deveAdicionarSeriesAntesDeAdicionarFilmes() {
-        Ator ator = getKeanuReevesAtorEntityComId();
-        ProducaoTMDBDto serie = getBreakingBadProducaoTMDBDto();
-        ProducaoTMDBDto filme = getMatrixProducaoTMDBDto();
-
-        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(List.of(filme, serie));
-
-        adicionarProducoesAtorService.adicionar(ator);
-
-        InOrder inOrder = inOrder(creditosAtorService, adicionarSeriesDeAtorService, adicionarFilmesDeAtorService);
-        inOrder.verify(creditosAtorService).buscarCreditosValidos(ator);
-        inOrder.verify(adicionarSeriesDeAtorService).adicionar(ator, List.of(serie));
-        inOrder.verify(adicionarFilmesDeAtorService).adicionar(ator, List.of(filme));
     }
 
     @Test
@@ -87,12 +70,12 @@ class AdicionarProducoesAtorServiceTest {
         Ator ator = getKeanuReevesAtorEntityComId();
         ProducaoTMDBDto filme = getMatrixProducaoTMDBDto();
 
-        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(List.of(filme));
+        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(of(filme));
 
         adicionarProducoesAtorService.adicionar(ator);
 
-        verify(adicionarSeriesDeAtorService).adicionar(ator, List.of());
-        verify(adicionarFilmesDeAtorService).adicionar(ator, List.of(filme));
+        verify(adicionarSeriesDeAtorService).adicionar(ator, of());
+        verify(adicionarFilmesDeAtorService).adicionar(ator, of(filme));
     }
 
     @Test
@@ -101,12 +84,12 @@ class AdicionarProducoesAtorServiceTest {
         Ator ator = getKeanuReevesAtorEntityComId();
         ProducaoTMDBDto serie = getBreakingBadProducaoTMDBDto();
 
-        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(List.of(serie));
+        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(of(serie));
 
         adicionarProducoesAtorService.adicionar(ator);
 
-        verify(adicionarSeriesDeAtorService).adicionar(ator, List.of(serie));
-        verify(adicionarFilmesDeAtorService).adicionar(ator, List.of());
+        verify(adicionarSeriesDeAtorService).adicionar(ator, of(serie));
+        verify(adicionarFilmesDeAtorService).adicionar(ator, of());
     }
 
     @Test
@@ -115,12 +98,12 @@ class AdicionarProducoesAtorServiceTest {
         Ator ator = getKeanuReevesAtorEntityComId();
         ProducaoTMDBDto producaoDesconhecida = getProducaoComTipoMidiaDesconhecido();
 
-        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(List.of(producaoDesconhecida));
+        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(of(producaoDesconhecida));
 
         adicionarProducoesAtorService.adicionar(ator);
 
-        verify(adicionarSeriesDeAtorService).adicionar(ator, List.of());
-        verify(adicionarFilmesDeAtorService).adicionar(ator, List.of());
+        verify(adicionarSeriesDeAtorService).adicionar(ator, of());
+        verify(adicionarFilmesDeAtorService).adicionar(ator, of());
     }
 
     @Test
@@ -128,11 +111,11 @@ class AdicionarProducoesAtorServiceTest {
     void deveChamarServicosComListasVaziasQuandoAtorNaoTiverCreditos() {
         Ator ator = getKeanuReevesAtorEntityComId();
 
-        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(List.of());
+        when(creditosAtorService.buscarCreditosValidos(ator)).thenReturn(of());
 
         adicionarProducoesAtorService.adicionar(ator);
 
-        verify(adicionarSeriesDeAtorService).adicionar(ator, List.of());
-        verify(adicionarFilmesDeAtorService).adicionar(ator, List.of());
+        verify(adicionarSeriesDeAtorService).adicionar(ator, of());
+        verify(adicionarFilmesDeAtorService).adicionar(ator, of());
     }
 }

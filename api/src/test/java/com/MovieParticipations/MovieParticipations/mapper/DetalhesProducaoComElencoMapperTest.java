@@ -13,10 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getNeoOpcaoPesquisaElencoResponse;
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflixProviderDto;
-import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadSerieEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.response.OpcaoPesquisaElencoResponseFactory.getNeoOpcaoPesquisaElencoResponse;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getNetflixProviderDto;
+import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.DetalhesProducaoComElencoMapper.*;
 import static java.util.List.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

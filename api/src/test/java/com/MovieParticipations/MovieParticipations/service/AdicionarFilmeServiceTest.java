@@ -19,15 +19,16 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.AtorTMDBMovieDtoFactory.getKeanuReevesAtorTMDBMovieDto;
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.FilmeTMDBDtoFactory.getMatrixFilmeTMDBDto;
-import static com.MovieParticipations.MovieParticipations.factories.FilmeTMDBDtoFactory.getMatrixRevolutionsFilmeTMDBDto;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.AtorTMDBMovieDtoFactory.getKeanuReevesAtorTMDBMovieDto;
+import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getFilmeTMDBDtoSemId;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getMatrixFilmeTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getMatrixRevolutionsFilmeTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
 import static java.time.LocalDate.*;
 import static java.util.List.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
@@ -130,10 +131,12 @@ class AdicionarFilmeServiceTest {
 
         when(buscarElencoService.pesquisaElencoFilme(ID_TMDB_MATRIX)).thenReturn(of());
 
-        assertThatThrownBy(() -> adicionarFilmeService.adicionarElenco(filme))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining(NAO_TEM_ELENCO);
+        ResponseStatusException erro = assertThrows(
+                ResponseStatusException.class,
+                () -> adicionarFilmeService.adicionarElenco(filme)
+        );
 
+        assertThat(erro.getReason()).isEqualTo(NAO_TEM_ELENCO);
         assertThat(filme.getInicializado()).isFalse();
         verifyNoInteractions(processamentoFilmeService, recarregarCacheClassificacaoService);
         verify(filmeRepository, never()).save(filme);
@@ -150,9 +153,12 @@ class AdicionarFilmeServiceTest {
         when(buscarElencoService.pesquisaElencoFilme(ID_TMDB_MATRIX)).thenReturn(atores);
         doThrow(erro).when(processamentoFilmeService).processarElenco(filme, atores);
 
-        assertThatThrownBy(() -> adicionarFilmeService.adicionarElenco(filme))
-                .isSameAs(erro);
+        ResponseStatusException erroLancado = assertThrows(
+                ResponseStatusException.class,
+                () -> adicionarFilmeService.adicionarElenco(filme)
+        );
 
+        assertThat(erroLancado).isSameAs(erro);
         assertThat(filme.getInicializado()).isFalse();
         verify(filmeRepository, never()).save(filme);
         verifyNoInteractions(recarregarCacheClassificacaoService);
@@ -228,8 +234,7 @@ class AdicionarFilmeServiceTest {
     @Test
     @DisplayName("Deve ignorar filmes sem id TMDB ao salvar por nome")
     void deveIgnorarFilmesSemIdTmdbAoSalvarPorNome() {
-        FilmeTMDBDto filmeSemId = getMatrixFilmeTMDBDto();
-        filmeSemId.setId(null);
+        FilmeTMDBDto filmeSemId = getFilmeTMDBDtoSemId();
 
         when(buscarProducaoPorNomeTMBDService.buscarIdFilmePorNome(TITULO_MATRIX)).thenReturn(of(filmeSemId));
 
@@ -237,6 +242,25 @@ class AdicionarFilmeServiceTest {
 
         verify(filmeRepository, never()).findByIdTmdbIn(anyList());
         verify(filmeRepository, never()).saveAll(anyList());
+    }
+
+    @Test
+    @DisplayName("Deve ignorar filme sem id quando busca por nome retornar filmes validos")
+    void deveIgnorarFilmeSemIdQuandoBuscaPorNomeRetornarFilmesValidos() {
+        FilmeTMDBDto filmeValido = getMatrixFilmeTMDBDto();
+        FilmeTMDBDto filmeSemId = getFilmeTMDBDtoSemId();
+
+        when(buscarProducaoPorNomeTMBDService.buscarIdFilmePorNome(TITULO_MATRIX))
+                .thenReturn(of(filmeValido, filmeSemId));
+        when(filmeRepository.findByIdTmdbIn(of(ID_TMDB_MATRIX))).thenReturn(of());
+        when(filmeRepository.saveAll(anyList())).thenReturn(of(getMatrixFilmeEntityComId()));
+
+        adicionarFilmeService.adicionarFilmeComNome(TITULO_MATRIX);
+
+        verify(filmeRepository).saveAll(filmesCaptor.capture());
+        assertThat(filmesCaptor.getValue())
+                .extracting(Filme::getIdTmdb)
+                .containsExactly(ID_TMDB_MATRIX);
     }
 
     @Test

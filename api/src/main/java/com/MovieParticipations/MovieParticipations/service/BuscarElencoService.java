@@ -5,6 +5,7 @@ import com.MovieParticipations.MovieParticipations.dto.AtorTMDBMovieDto;
 import com.MovieParticipations.MovieParticipations.dto.AtorTMDBSerieDto;
 import com.MovieParticipations.MovieParticipations.dto.CastResponseDtoMovie;
 import com.MovieParticipations.MovieParticipations.dto.CastResponseDtoSerie;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +19,7 @@ import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpEntity.EMPTY;
 import static org.springframework.http.HttpMethod.GET;
 
+@RequiredArgsConstructor
 @Service
 public class BuscarElencoService {
     @Value("${TMDBAPIKEY}")
@@ -30,14 +32,15 @@ public class BuscarElencoService {
     private static final String MOVIE_STRING = "movie";
     private static final String ATUANDO = "Acting";
 
-    private String criarUrl(Long id, TipoMidia tipo){
+    private final RestTemplate restTemplate;
+
+    private String criarUrl(Long id, TipoMidia tipo) {
         String tipoMidia = tipo.equals(TV) ? TV_STRING : MOVIE_STRING;
         String MEIO_DA_URL = tipo.equals(TV) ? MEIO_DA_URL_SERIE : MEIO_DA_URL_FILME;
         return URL_BASE + BARRA + tipoMidia + BARRA + id + MEIO_DA_URL + apiKey;
     }
 
     public List<AtorTMDBSerieDto> pesquisaElencoSerie(Long id) {
-        RestTemplate restTemplate = new RestTemplate();
         String url = criarUrl(id, TV);
         CastResponseDtoSerie response = restTemplate.exchange(
                 url,
@@ -55,7 +58,6 @@ public class BuscarElencoService {
     }
 
     public List<AtorTMDBMovieDto> pesquisaElencoFilme(Long id) {
-        RestTemplate restTemplate = new RestTemplate();
         String url = criarUrl(id, MOVIE);
         CastResponseDtoMovie response = restTemplate.exchange(
                 url,

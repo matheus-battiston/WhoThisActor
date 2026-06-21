@@ -11,8 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.MovieParticipations.MovieParticipations.factories.AtorFactory.getKeanuReevesAtorEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.AtorTMDBDtoPesquisaIdFactory.getKeanuReevesTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.domain.AtorFactory.getKeanuReevesAtorEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.AtorTMDBDtoPesquisaIdFactory.getKeanuReevesTMDBDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;

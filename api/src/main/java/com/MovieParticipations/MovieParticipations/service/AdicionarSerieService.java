@@ -10,15 +10,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.MovieParticipations.MovieParticipations.util.NormalizadorDeString.normalizar;
+import static java.time.LocalDate.*;
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 @Service
@@ -70,7 +70,7 @@ public class AdicionarSerieService {
         if (idsTmdb.isEmpty()) return;
 
         Map<Long, Serie> seriesPorIdTmdb = serieRepository.findByIdTmdbIn(idsTmdb).stream()
-                .collect(Collectors.toMap(Serie::getIdTmdb, Function.identity()));
+                .collect(toMap(Serie::getIdTmdb, Function.identity()));
 
         List<Serie> seriesParaSalvar = producoes.stream()
                 .filter(producao -> producao.getId() != null)
@@ -86,18 +86,22 @@ public class AdicionarSerieService {
         Serie serie = seriesPorIdTmdb.get(producao.getId());
         if (serie == null) return SerieMapper.toEntity(producao);
 
+        atualizarSerieBasica(serie, producao);
+        return serie;
+    }
+
+    private void atualizarSerieBasica(Serie serie, SerieTMDBDto producao) {
         serie.setTitulo(producao.getNome());
         serie.setTituloNormalizado(normalizar(producao.getNome()));
         serie.setImagem(producao.getImagemPoster());
         serie.setPopularidade(producao.getPopularidade());
-        serie.setUltimaAtualizacao(LocalDate.now());
-        return serie;
+        serie.setUltimaAtualizacao(now());
     }
 
-    private List<AtorTMDBSerieDto> deduplicarAtoresDto( List<AtorTMDBSerieDto> atoresDto) {
+    private List<AtorTMDBSerieDto> deduplicarAtoresDto(List<AtorTMDBSerieDto> atoresDto) {
         return new ArrayList<>(
                 atoresDto.stream()
-                        .collect(Collectors.toMap(
+                        .collect(toMap(
                                 AtorTMDBSerieDto::getId,
                                 Function.identity(),
                                 this::escolherMelhorCredito

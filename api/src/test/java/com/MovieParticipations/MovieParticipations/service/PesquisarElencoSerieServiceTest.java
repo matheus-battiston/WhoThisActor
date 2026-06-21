@@ -19,10 +19,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
-import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getWalterWhiteOpcaoPesquisaElencoResponse;
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getDisneyPlusProviderDto;
-import static com.MovieParticipations.MovieParticipations.factories.SerieFactory.getBreakingBadSerieEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
+import static com.MovieParticipations.MovieParticipations.factories.response.OpcaoPesquisaElencoResponseFactory.getWalterWhiteOpcaoPesquisaElencoResponse;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getDisneyPlusProviderDto;
+import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.security.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;

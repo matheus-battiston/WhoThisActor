@@ -19,10 +19,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
-import static com.MovieParticipations.MovieParticipations.factories.FilmeFactory.getMatrixFilmeEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.OpcaoPesquisaElencoResponseFactory.getNeoOpcaoPesquisaElencoResponse;
-import static com.MovieParticipations.MovieParticipations.factories.ProviderDtoFactory.getNetflixProviderDto;
-import static com.MovieParticipations.MovieParticipations.factories.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
+import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.response.OpcaoPesquisaElencoResponseFactory.getNeoOpcaoPesquisaElencoResponse;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getNetflixProviderDto;
+import static com.MovieParticipations.MovieParticipations.factories.security.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;

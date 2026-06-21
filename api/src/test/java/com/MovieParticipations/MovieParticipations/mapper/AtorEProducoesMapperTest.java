@@ -11,8 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.controller.response.ProducaoAtorResponse.*;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoComPersonagemResponseFactory.getBreakingBadProducaoComPersonagemResponse;
-import static com.MovieParticipations.MovieParticipations.factories.ProducaoComPersonagemResponseFactory.getMatrixProducaoComPersonagemResponse;
+import static com.MovieParticipations.MovieParticipations.factories.response.ProducaoComPersonagemResponseFactory.getBreakingBadProducaoComPersonagemResponse;
+import static com.MovieParticipations.MovieParticipations.factories.response.ProducaoComPersonagemResponseFactory.getMatrixProducaoComPersonagemResponse;
 import static com.MovieParticipations.MovieParticipations.mapper.AtorEProducoesMapper.*;
 import static java.util.List.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
