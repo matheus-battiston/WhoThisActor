@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class FavoritosClassificacaoService {
+public class ListaFavoritosService {
 
     private final FavoritaSerieRepository favoritaSerieRepository;
     private final FavoritaFilmeRepository favoritaFilmeRepository;

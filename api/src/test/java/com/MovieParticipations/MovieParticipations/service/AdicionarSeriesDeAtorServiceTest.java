@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 class AdicionarSeriesDeAtorServiceTest {
 
     @Mock
-    private SerieResolverService serieResolverService;
+    private ObterOuCriarSeriesService obterOuCriarSeriesService;
 
     @Mock
     private SerieAtorVinculoService serieAtorVinculoService;
@@ -40,11 +40,11 @@ class AdicionarSeriesDeAtorServiceTest {
         List<ProducaoTMDBDto> producoesDto = List.of(getBreakingBadProducaoTMDBDto());
         List<Serie> series = List.of(getBreakingBadSerieEntityComId());
 
-        when(serieResolverService.resolverSerie(producoesDto)).thenReturn(series);
+        when(obterOuCriarSeriesService.obterOuCriar(producoesDto)).thenReturn(series);
 
         adicionarSeriesDeAtorService.adicionar(ator, producoesDto);
 
-        verify(serieResolverService).resolverSerie(producoesDto);
+        verify(obterOuCriarSeriesService).obterOuCriar(producoesDto);
         verify(serieAtorVinculoService).vincularAtorASerie(ator, series, producoesDto);
     }
 
@@ -55,12 +55,12 @@ class AdicionarSeriesDeAtorServiceTest {
         List<ProducaoTMDBDto> producoesDto = List.of(getBreakingBadProducaoTMDBDto());
         List<Serie> series = List.of(getBreakingBadSerieEntityComId());
 
-        when(serieResolverService.resolverSerie(producoesDto)).thenReturn(series);
+        when(obterOuCriarSeriesService.obterOuCriar(producoesDto)).thenReturn(series);
 
         adicionarSeriesDeAtorService.adicionar(ator, producoesDto);
 
-        InOrder inOrder = inOrder(serieResolverService, serieAtorVinculoService);
-        inOrder.verify(serieResolverService).resolverSerie(producoesDto);
+        InOrder inOrder = inOrder(obterOuCriarSeriesService, serieAtorVinculoService);
+        inOrder.verify(obterOuCriarSeriesService).obterOuCriar(producoesDto);
         inOrder.verify(serieAtorVinculoService).vincularAtorASerie(ator, series, producoesDto);
     }
 
@@ -71,11 +71,11 @@ class AdicionarSeriesDeAtorServiceTest {
         List<ProducaoTMDBDto> producoesDto = List.of();
         List<Serie> series = List.of();
 
-        when(serieResolverService.resolverSerie(producoesDto)).thenReturn(series);
+        when(obterOuCriarSeriesService.obterOuCriar(producoesDto)).thenReturn(series);
 
         adicionarSeriesDeAtorService.adicionar(ator, producoesDto);
 
-        verify(serieResolverService).resolverSerie(producoesDto);
+        verify(obterOuCriarSeriesService).obterOuCriar(producoesDto);
         verify(serieAtorVinculoService).vincularAtorASerie(ator, series, producoesDto);
     }
 }

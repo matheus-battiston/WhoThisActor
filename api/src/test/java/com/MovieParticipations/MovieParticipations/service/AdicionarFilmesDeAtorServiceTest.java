@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 class AdicionarFilmesDeAtorServiceTest {
 
     @Mock
-    private FilmeResolverService filmeResolverService;
+    private ObterOuCriarFilmesService obterOuCriarFilmesService;
 
     @Mock
-    private FilmeAtorVinculoService filmeAtorVinculoService;
+    private CriarVinculosFilmeAtorService criarVinculosFilmeAtorService;
 
     @InjectMocks
     private AdicionarFilmesDeAtorService adicionarFilmesDeAtorService;
@@ -40,12 +40,12 @@ class AdicionarFilmesDeAtorServiceTest {
         List<ProducaoTMDBDto> producoesDto = List.of(getMatrixProducaoTMDBDto());
         List<Filme> filmes = List.of(getMatrixFilmeEntityComId());
 
-        when(filmeResolverService.resolverFilme(producoesDto)).thenReturn(filmes);
+        when(obterOuCriarFilmesService.obterOuCriar(producoesDto)).thenReturn(filmes);
 
         adicionarFilmesDeAtorService.adicionar(ator, producoesDto);
 
-        verify(filmeResolverService).resolverFilme(producoesDto);
-        verify(filmeAtorVinculoService).vincularAtorAFilme(ator, filmes, producoesDto);
+        verify(obterOuCriarFilmesService).obterOuCriar(producoesDto);
+        verify(criarVinculosFilmeAtorService).criarVinculos(ator, filmes, producoesDto);
     }
 
     @Test
@@ -55,12 +55,12 @@ class AdicionarFilmesDeAtorServiceTest {
         List<ProducaoTMDBDto> producoesDto = List.of(getMatrixProducaoTMDBDto());
         List<Filme> filmes = List.of(getMatrixFilmeEntityComId());
 
-        when(filmeResolverService.resolverFilme(producoesDto)).thenReturn(filmes);
+        when(obterOuCriarFilmesService.obterOuCriar(producoesDto)).thenReturn(filmes);
 
         adicionarFilmesDeAtorService.adicionar(ator, producoesDto);
 
-        InOrder inOrder = inOrder(filmeResolverService, filmeAtorVinculoService);
-        inOrder.verify(filmeResolverService).resolverFilme(producoesDto);
-        inOrder.verify(filmeAtorVinculoService).vincularAtorAFilme(ator, filmes, producoesDto);
+        InOrder inOrder = inOrder(obterOuCriarFilmesService, criarVinculosFilmeAtorService);
+        inOrder.verify(obterOuCriarFilmesService).obterOuCriar(producoesDto);
+        inOrder.verify(criarVinculosFilmeAtorService).criarVinculos(ator, filmes, producoesDto);
     }
 }

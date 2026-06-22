@@ -13,13 +13,13 @@ import java.util.List;
 @Service
 public class AdicionarFilmesDeAtorService {
 
-    private final FilmeResolverService filmeResolverService;
-    private final FilmeAtorVinculoService filmeAtorVinculoService;
+    private final ObterOuCriarFilmesService obterOuCriarFilmesService;
+    private final CriarVinculosFilmeAtorService criarVinculosFilmeAtorService;
 
     @Transactional
     public void adicionar(Ator ator, List<ProducaoTMDBDto> producaoTMDBDtoStream) {
 
-        List<Filme> producoes = filmeResolverService.resolverFilme(producaoTMDBDtoStream);
-        filmeAtorVinculoService.vincularAtorAFilme(ator, producoes, producaoTMDBDtoStream);
+        List<Filme> producoes = obterOuCriarFilmesService.obterOuCriar(producaoTMDBDtoStream);
+        criarVinculosFilmeAtorService.criarVinculos(ator, producoes, producaoTMDBDtoStream);
     }
 }

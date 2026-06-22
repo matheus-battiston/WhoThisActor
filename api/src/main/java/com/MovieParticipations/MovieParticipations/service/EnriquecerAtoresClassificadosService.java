@@ -8,6 +8,7 @@ import com.MovieParticipations.MovieParticipations.util.NormalizadorDeString;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,7 +27,8 @@ public class EnriquecerAtoresClassificadosService {
     private final SalvarAtoresClassificadosService salvarAtoresClassificadosService;
 
     public List<OpcoesAtoresParecidosResponse> enriquecerComDadosTmdb(List<OpcoesAtoresParecidosResponse> atores) {
-        List<OpcoesAtoresParecidosResponse> atoresComDadosDoBanco = preencherDadosDoBanco(atores);
+        List<OpcoesAtoresParecidosResponse> atoresSemDuplicados = removerDuplicadosPorIdentidade(atores);
+        List<OpcoesAtoresParecidosResponse> atoresComDadosDoBanco = preencherDadosDoBanco(atoresSemDuplicados);
 
         List<OpcoesAtoresParecidosResponse> atoresNovos = atoresComDadosDoBanco.stream()
                 .filter(ator -> ator.getId() == null)
@@ -36,6 +38,32 @@ public class EnriquecerAtoresClassificadosService {
         salvarAtoresClassificadosService.salvarNovosEPreencherIds(atoresNovos);
 
         return juntarAtores(atoresComDadosDoBanco, atoresNovos);
+    }
+
+    private List<OpcoesAtoresParecidosResponse> removerDuplicadosPorIdentidade(
+            List<OpcoesAtoresParecidosResponse> atores
+    ) {
+        Map<String, OpcoesAtoresParecidosResponse> melhorAtorPorIdentidade = atores.stream()
+                .filter(ator -> ator.getIdentidade() != null)
+                .collect(Collectors.toMap(
+                        OpcoesAtoresParecidosResponse::getIdentidade,
+                        Function.identity(),
+                        this::manterAtorComMenorDistancia,
+                        LinkedHashMap::new
+                ));
+
+        return atores.stream()
+                .filter(ator -> ator.getIdentidade() == null || melhorAtorPorIdentidade.get(ator.getIdentidade()) == ator)
+                .toList();
+    }
+
+    private OpcoesAtoresParecidosResponse manterAtorComMenorDistancia(
+            OpcoesAtoresParecidosResponse atorExistente,
+            OpcoesAtoresParecidosResponse atorDuplicado
+    ) {
+        return atorExistente.getDistanciaMedia() <= atorDuplicado.getDistanciaMedia()
+                ? atorExistente
+                : atorDuplicado;
     }
 
     private List<OpcoesAtoresParecidosResponse> preencherDadosDoBanco(List<OpcoesAtoresParecidosResponse> atores) {
@@ -82,7 +110,8 @@ public class EnriquecerAtoresClassificadosService {
         Map<String, OpcoesAtoresParecidosResponse> atoresNovosPorNome = atoresNovos.stream()
                 .collect(Collectors.toMap(
                         OpcoesAtoresParecidosResponse::getIdentidade,
-                        Function.identity()
+                        Function.identity(),
+                        this::manterAtorComMenorDistancia
                 ));
 
         return atores.stream()

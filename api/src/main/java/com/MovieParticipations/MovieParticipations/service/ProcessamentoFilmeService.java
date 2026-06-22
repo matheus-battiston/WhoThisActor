@@ -5,6 +5,7 @@ import com.MovieParticipations.MovieParticipations.domain.Filme;
 import com.MovieParticipations.MovieParticipations.domain.FilmeAtor;
 import com.MovieParticipations.MovieParticipations.dto.AtorTMDBMovieDto;
 import com.MovieParticipations.MovieParticipations.repository.FilmeAtorRepository;
+import com.MovieParticipations.MovieParticipations.service.internal.ContextoElenco;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,14 +27,14 @@ public class ProcessamentoFilmeService {
         if (atoresDto.isEmpty()) throw new ResponseStatusException(BAD_REQUEST, NAO_TEM_ELENCO);
         List<Ator> atores = obterOuCriarAtoresService.obter(atoresDto);
 
-        ElencoProcessamento elencoProcessamento = ElencoProcessamento.criar(
+        ContextoElenco contextoElenco = ContextoElenco.criar(
                 atores,
                 filmeAtorRepository.findAtorIdsTmdbByProducaoId(filmeEntity.getId())
         );
 
         List<FilmeAtor> elenco = atoresDto.stream()
-                .filter(atorDto -> !elencoProcessamento.atorJaRelacionado(atorDto.getId()))
-                .map(atorDto -> criarProducaoAtor(filmeEntity, atorDto, elencoProcessamento))
+                .filter(atorDto -> !contextoElenco.atorJaRelacionado(atorDto.getId()))
+                .map(atorDto -> criarProducaoAtor(filmeEntity, atorDto, contextoElenco))
                 .toList();
 
         if (elenco.isEmpty()) return;
@@ -44,9 +45,9 @@ public class ProcessamentoFilmeService {
     private FilmeAtor criarProducaoAtor(
             Filme filme,
             AtorTMDBMovieDto atorDto,
-            ElencoProcessamento elencoProcessamento
+            ContextoElenco contextoElenco
     ) {
-        Ator ator = elencoProcessamento.buscarAtor(atorDto.getId());
+        Ator ator = contextoElenco.buscarAtor(atorDto.getId());
 
         return FilmeAtor.builder()
                 .filme(filme)

@@ -13,13 +13,13 @@ import java.util.List;
 @Service
 public class AdicionarSeriesDeAtorService {
 
-    private final SerieResolverService serieResolverService;
+    private final ObterOuCriarSeriesService obterOuCriarSeriesService;
     private final SerieAtorVinculoService serieAtorVinculoService;
 
     @Transactional
     public void adicionar(Ator ator, List<ProducaoTMDBDto> producaoTMDBDtoStream) {
 
-        List<Serie> producoes = serieResolverService.resolverSerie(producaoTMDBDtoStream);
+        List<Serie> producoes = obterOuCriarSeriesService.obterOuCriar(producaoTMDBDtoStream);
         serieAtorVinculoService.vincularAtorASerie(ator, producoes, producaoTMDBDtoStream);
     }
 }

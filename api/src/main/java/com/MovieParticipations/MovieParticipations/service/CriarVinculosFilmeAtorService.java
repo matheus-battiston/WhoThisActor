@@ -8,16 +8,17 @@ import com.MovieParticipations.MovieParticipations.repository.FilmeAtorRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class FilmeAtorVinculoService {
+public class CriarVinculosFilmeAtorService {
 
     private final FilmeAtorRepository filmeAtorRepository;
 
@@ -30,41 +31,43 @@ public class FilmeAtorVinculoService {
         }
     }
 
-    public void vincularAtorAFilme(Ator ator, List<Filme> filmes, List<ProducaoTMDBDto> creditos) {
+    public void criarVinculos(Ator ator, List<Filme> filmes, List<ProducaoTMDBDto> creditos) {
         Map<Long, Filme> filmePorTmdb = filmes.stream()
-                .collect(Collectors.toMap(Filme::getIdTmdb, Function.identity()));
+                .collect(Collectors.toMap(
+                        Filme::getIdTmdb,
+                        Function.identity(),
+                        (filmeExistente, filmeDuplicado) -> filmeExistente
+                ));
 
         Set<VinculoFilmeAtor> vinculosExistentes = filmeAtorRepository.findByAtorId(ator.getId())
                 .stream()
                 .map(VinculoFilmeAtor::de)
                 .collect(Collectors.toSet());
 
-        List<FilmeAtor> novasRelacoes = creditos.stream()
-                .map(credito -> criarRelacao(ator, filmePorTmdb, credito))
-                .filter(Objects::nonNull)
-                .filter(relacao -> vinculosExistentes.add(VinculoFilmeAtor.de(relacao)))
-                .toList();
+        List<FilmeAtor> novosVinculos = new ArrayList<>();
 
-        filmeAtorRepository.saveAll(novasRelacoes);
-    }
+        for (ProducaoTMDBDto credito : creditos) {
+            Filme filme = filmePorTmdb.get(credito.getId());
+            String personagem = credito.getPersonagem();
 
-    private FilmeAtor criarRelacao(
-            Ator ator,
-            Map<Long, Filme> seriePorIdTmdb,
-            ProducaoTMDBDto credito
-    ) {
-        Filme filme = seriePorIdTmdb.get(credito.getId());
-        if (filme == null) return null;
+            if (filme == null || personagem == null || personagem.isBlank()) continue;
 
-        return FilmeAtor.builder()
-                .ator(ator)
-                .filme(filme)
-                .personagem(credito.getPersonagem())
-                .creditOrder(credito.getOrdem())
-                .build();
+            FilmeAtor vinculo = FilmeAtor.builder()
+                    .ator(ator)
+                    .filme(filme)
+                    .personagem(personagem)
+                    .creditOrder(credito.getOrdem())
+                    .build();
+
+            if (vinculosExistentes.add(VinculoFilmeAtor.de(vinculo))) {
+                novosVinculos.add(vinculo);
+            }
+        }
+
+        if (!novosVinculos.isEmpty()) filmeAtorRepository.saveAll(novosVinculos);
     }
 
     private static String normalizarPersonagem(String personagem) {
-        return personagem == null ? null : personagem.trim().toLowerCase();
+        return personagem.trim().toLowerCase(Locale.ROOT);
     }
 }

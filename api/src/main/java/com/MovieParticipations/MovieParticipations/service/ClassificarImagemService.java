@@ -17,7 +17,7 @@ import java.util.List;
 public class ClassificarImagemService {
 
     private final RequisicaoApiClassificacaoService requisicaoApiClassificacaoService;
-    private final FavoritosClassificacaoService favoritosClassificacaoService;
+    private final ListaFavoritosService listaFavoritosService;
     private final EnriquecerAtoresClassificadosService enriquecerAtoresClassificadosService;
 
     public ClassificarImagemResponse classificarImagem(
@@ -44,8 +44,8 @@ public class ClassificarImagemService {
 
         return requisicaoApiClassificacaoService.classificarImagem(
                 image,
-                favoritosClassificacaoService.buscarIdsSeriesFavoritas(usuarioAutenticado),
-                favoritosClassificacaoService.buscarIdsFilmesFavoritos(usuarioAutenticado)
+                listaFavoritosService.buscarIdsSeriesFavoritas(usuarioAutenticado),
+                listaFavoritosService.buscarIdsFilmesFavoritos(usuarioAutenticado)
         );
     }
 
