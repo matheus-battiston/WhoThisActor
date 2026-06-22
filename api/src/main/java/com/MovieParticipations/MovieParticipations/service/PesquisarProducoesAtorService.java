@@ -18,6 +18,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.mapper.AtorEProducoesMapper.toResponse;
+import static java.text.Normalizer.*;
+import static java.text.Normalizer.Form.*;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -79,7 +81,7 @@ public class PesquisarProducoesAtorService {
 
     private String normalizar(String s) {
         if (s == null) return "";
-        String normalized = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD);
+        String normalized = normalize(s, NFD);
         return normalized
                 .replaceAll("\\p{M}", "") // remove acentos
                 .replaceAll("[^a-zA-Z0-9 ]", "")

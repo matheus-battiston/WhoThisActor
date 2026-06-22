@@ -66,6 +66,9 @@ public class RequisicaoApiClassificacaoService {
                     return requisicao(requestEntity);
                 },
                 context -> {
+                    if (context.getLastThrowable() instanceof ResponseStatusException responseStatusException) {
+                        throw responseStatusException;
+                    }
                     throw new ResponseStatusException(
                             SERVICE_UNAVAILABLE,
                             SERVICO_INDISPONIVEL,
@@ -90,6 +93,9 @@ public class RequisicaoApiClassificacaoService {
                     return requisicao(criarRequestEntity(body));
                 },
                 context -> {
+                    if (context.getLastThrowable() instanceof ResponseStatusException responseStatusException) {
+                        throw responseStatusException;
+                    }
                     throw new ResponseStatusException(
                             SERVICE_UNAVAILABLE,
                             SERVICO_INDISPONIVEL,
