@@ -30,6 +30,7 @@ import static java.util.List.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
@@ -50,6 +51,9 @@ class AdicionarFilmeServiceTest {
     private static final String TITULO_ATUALIZADO_NORMALIZADO = "matrix revolutions";
     private static final String IMAGEM_ATUALIZADA = "/matrix-revolutions.jpg";
     private static final Double POPULARIDADE_ATUALIZADA = 20.0;
+    private static final Long ID_TMDB_KEANU_REEVES = 6384L;
+    private static final String PERSONAGEM_NEO_MAIS_COMPLETO = "Neo / The One";
+    private static final String PERSONAGEM_NEO_MENOR = "N";
 
     @Mock
     private FilmeRepository filmeRepository;
@@ -71,6 +75,9 @@ class AdicionarFilmeServiceTest {
 
     @Captor
     private ArgumentCaptor<List<Long>> idsCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<AtorTMDBMovieDto>> atoresCaptor;
 
     @InjectMocks
     private AdicionarFilmeService adicionarFilmeService;
@@ -121,6 +128,46 @@ class AdicionarFilmeServiceTest {
         inOrder.verify(processamentoFilmeService).processarElenco(filme, atores);
         inOrder.verify(filmeRepository).save(filme);
         inOrder.verify(recarregarCacheClassificacaoService).recarregarCacheAtoresPorProducao();
+    }
+
+    @Test
+    @DisplayName("Deve manter apenas um crédito por ator e escolher personagem mais completo")
+    void deveManterApenasUmCreditoPorAtorEEscolherPersonagemMaisCompleto() {
+        Filme filme = getMatrixFilmeEntityComId();
+        AtorTMDBMovieDto keanu = getKeanuReevesAtorTMDBMovieDto();
+        AtorTMDBMovieDto keanuComPersonagemMaior = AtorTMDBMovieDto.builder()
+                .id(ID_TMDB_KEANU_REEVES)
+                .nome(keanu.getNome())
+                .personagem(PERSONAGEM_NEO_MAIS_COMPLETO)
+                .build();
+
+        when(buscarElencoService.pesquisaElencoFilme(ID_TMDB_MATRIX))
+                .thenReturn(of(keanu, keanuComPersonagemMaior));
+
+        adicionarFilmeService.adicionarElenco(filme);
+
+        verify(processamentoFilmeService).processarElenco(eq(filme), atoresCaptor.capture());
+        assertThat(atoresCaptor.getValue()).containsExactly(keanuComPersonagemMaior);
+    }
+
+    @Test
+    @DisplayName("Deve manter primeiro crédito quando personagem duplicado for menor")
+    void deveManterPrimeiroCreditoQuandoPersonagemDuplicadoForMenor() {
+        Filme filme = getMatrixFilmeEntityComId();
+        AtorTMDBMovieDto keanu = getKeanuReevesAtorTMDBMovieDto();
+        AtorTMDBMovieDto keanuComPersonagemMenor = AtorTMDBMovieDto.builder()
+                .id(ID_TMDB_KEANU_REEVES)
+                .nome(keanu.getNome())
+                .personagem(PERSONAGEM_NEO_MENOR)
+                .build();
+
+        when(buscarElencoService.pesquisaElencoFilme(ID_TMDB_MATRIX))
+                .thenReturn(of(keanu, keanuComPersonagemMenor));
+
+        adicionarFilmeService.adicionarElenco(filme);
+
+        verify(processamentoFilmeService).processarElenco(eq(filme), atoresCaptor.capture());
+        assertThat(atoresCaptor.getValue()).containsExactly(keanu);
     }
 
     @Test

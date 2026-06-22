@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,13 +46,33 @@ public class AdicionarFilmeService {
     public void adicionarElenco(Filme filmeEntity) {
 
         List<AtorTMDBMovieDto> atores = buscarElencoService.pesquisaElencoFilme(filmeEntity.getIdTmdb());
+        List<AtorTMDBMovieDto> atoresSemDuplicado = deduplicarAtoresDto(atores);
 
-        if (atores.isEmpty()) throw new ResponseStatusException(BAD_REQUEST, NAO_TEM_ELENCO);
+        if (atoresSemDuplicado.isEmpty()) throw new ResponseStatusException(BAD_REQUEST, NAO_TEM_ELENCO);
 
-        processamentoFilmeService.processarElenco(filmeEntity, atores);
+        processamentoFilmeService.processarElenco(filmeEntity, atoresSemDuplicado);
         filmeEntity.setInicializado(true);
         filmeRepository.save(filmeEntity);
         recarregarCacheClassificacaoService.recarregarCacheAtoresPorProducao();
+    }
+
+    private List<AtorTMDBMovieDto> deduplicarAtoresDto(List<AtorTMDBMovieDto> atoresDto) {
+        return new ArrayList<>(
+                atoresDto.stream()
+                        .collect(Collectors.toMap(
+                                AtorTMDBMovieDto::getId,
+                                Function.identity(),
+                                this::escolherMelhorCredito
+                        ))
+                        .values()
+        );
+    }
+
+    private AtorTMDBMovieDto escolherMelhorCredito(AtorTMDBMovieDto primeiro, AtorTMDBMovieDto segundo) {
+        String personagemPrimeiro = primeiro.getPersonagem().trim();
+        String personagemSegundo = segundo.getPersonagem().trim();
+
+        return personagemSegundo.length() > personagemPrimeiro.length() ? segundo : primeiro;
     }
 
     @Transactional

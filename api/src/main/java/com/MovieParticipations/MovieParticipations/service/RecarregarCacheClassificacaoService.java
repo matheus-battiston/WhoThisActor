@@ -13,6 +13,9 @@ import static org.springframework.http.HttpMethod.POST;
 @Service
 public class RecarregarCacheClassificacaoService {
 
+    private static final String ERRO_RECARREGAR_CACHE =
+            "Nao foi possivel recarregar o cache de atores por producao do classify";
+
     @Value("${CLASSIFY_CACHE_RELOAD_ADDRESS}")
     private String classifyCacheReloadAddress;
 
@@ -27,7 +30,7 @@ public class RecarregarCacheClassificacaoService {
                     String.class
             );
         } catch (Exception e) {
-            log.warn("Nao foi possivel recarregar o cache de atores por producao do classify", e);
+            log.warn(ERRO_RECARREGAR_CACHE, e);
         }
     }
 }
