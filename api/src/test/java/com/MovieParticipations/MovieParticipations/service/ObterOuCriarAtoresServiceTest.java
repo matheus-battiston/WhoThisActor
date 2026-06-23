@@ -111,9 +111,12 @@ class ObterOuCriarAtoresServiceTest {
     void deveConsultarNovamenteQuandoSalvarAtoresGerarConflitoDeIntegridade() {
         AtorTMDBMovieDto keanuDto = getKeanuReevesAtorTMDBMovieDto();
         Ator keanu = getKeanuReevesAtorEntityComId();
+        List<Ator> atoresNaoEncontrados = of();
+        List<Ator> atoresEncontrados = of(keanu);
 
         when(atorRepository.findByIdTmdbIn(of(ID_TMDB_KEANU_REEVES)))
-                .thenReturn(of(), of(keanu));
+                .thenReturn(atoresNaoEncontrados)
+                .thenReturn(atoresEncontrados);
         when(atorRepository.saveAll(anyList()))
                 .thenThrow(new DataIntegrityViolationException("Conflito de integridade"));
 

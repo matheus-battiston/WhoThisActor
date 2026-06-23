@@ -36,23 +36,4 @@ public class UsuarioFactory {
         return usuario;
     }
 
-    public static Usuario getUsuarioInativoEntity() {
-        Long authUserId = 78L;
-        String nome = "Usuario Inativo";
-        String email = "inativo@email.com";
-        boolean ativo = false;
-        List<FavoritaAtor> favoritos = new ArrayList<>();
-        List<FavoritaSerie> seriesFavoritas = new ArrayList<>();
-        List<Permissao> permissoes = new ArrayList<>();
-
-        return Usuario.builder()
-                .authUserId(authUserId)
-                .nome(nome)
-                .email(email)
-                .ativo(ativo)
-                .favoritos(favoritos)
-                .seriesFavoritas(seriesFavoritas)
-                .permissoes(permissoes)
-                .build();
-    }
 }

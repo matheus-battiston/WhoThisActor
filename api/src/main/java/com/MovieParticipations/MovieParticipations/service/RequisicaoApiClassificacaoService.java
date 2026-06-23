@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,7 +38,7 @@ public class RequisicaoApiClassificacaoService {
     private static final String IMAGEM = "image";
     private static final String DETALHE = "detail";
     private static final String ERRO_DESCONHECIDO = "Erro desconhecido";
-    private static final String SERVICO_INDISPONIVEL = "Serviço de classificação indisponível após 3 tentativas";
+    private static final String SERVICO_INDISPONIVEL = "Serviço de classificação indisponível";
     private static final String RESPOSTA_CLASSIFICACAO_INVALIDA = "Resposta inválida do serviço de classificação";
     private static final String LISTA_SERIES = "lista_series";
     private static final String LISTA_FILMES = "lista_filmes";
@@ -47,62 +48,33 @@ public class RequisicaoApiClassificacaoService {
     private String CLASSIFYADDRESS;
 
     private final Gson gson = new Gson();
-    private final RetryTemplate retryTemplate;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
-    public RequisicaoApiClassificacaoService(RetryTemplate retryTemplate) {
-        this.retryTemplate = retryTemplate;
+    public RequisicaoApiClassificacaoService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public List<ClassificacaoResponseDTO> classificarImagem(MultipartFile image) throws IOException {
-        return retryTemplate.execute(
-                context -> {
-                    MultiValueMap<String, Object> body =
-                            criarBody(image.getInputStream(), image.getOriginalFilename());
+        MultiValueMap<String, Object> body =
+                criarBody(image.getInputStream(), image.getOriginalFilename());
 
-                    HttpEntity<MultiValueMap<String, Object>> requestEntity =
-                            criarRequestEntity(body);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity =
+                criarRequestEntity(body);
 
-                    return requisicao(requestEntity);
-                },
-                context -> {
-                    if (context.getLastThrowable() instanceof ResponseStatusException responseStatusException) {
-                        throw responseStatusException;
-                    }
-                    throw new ResponseStatusException(
-                            SERVICE_UNAVAILABLE,
-                            SERVICO_INDISPONIVEL,
-                            context.getLastThrowable()
-                    );
-                }
-        );
+        return requisicao(requestEntity);
     }
 
     public List<ClassificacaoResponseDTO> classificarImagem(MultipartFile image,
             List<Long> idsSeries,
             List<Long> idsFilmes
     ) throws IOException {
-        return retryTemplate.execute(
-                context -> {
-                    MultiValueMap<String, Object> body =
-                            criarBody(image.getInputStream(), image.getOriginalFilename());
+        MultiValueMap<String, Object> body =
+                criarBody(image.getInputStream(), image.getOriginalFilename());
 
-                    body.add(LISTA_SERIES, gson.toJson(idsSeries));
-                    body.add(LISTA_FILMES, gson.toJson(idsFilmes));
+        body.add(LISTA_SERIES, gson.toJson(idsSeries));
+        body.add(LISTA_FILMES, gson.toJson(idsFilmes));
 
-                    return requisicao(criarRequestEntity(body));
-                },
-                context -> {
-                    if (context.getLastThrowable() instanceof ResponseStatusException responseStatusException) {
-                        throw responseStatusException;
-                    }
-                    throw new ResponseStatusException(
-                            SERVICE_UNAVAILABLE,
-                            SERVICO_INDISPONIVEL,
-                            context.getLastThrowable()
-                    );
-                }
-        );
+        return requisicao(criarRequestEntity(body));
     }
 
     private MultiValueMap<String, Object> criarBody(
@@ -158,6 +130,8 @@ public class RequisicaoApiClassificacaoService {
 
         } catch (HttpClientErrorException e) {
             throw extrairErro(e);
+        } catch (ResourceAccessException | HttpServerErrorException e) {
+            throw new ResponseStatusException(SERVICE_UNAVAILABLE, SERVICO_INDISPONIVEL, e);
         }
     }
 }

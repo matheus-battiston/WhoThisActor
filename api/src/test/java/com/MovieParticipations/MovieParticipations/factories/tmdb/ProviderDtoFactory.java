@@ -4,20 +4,6 @@ import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
 
 public class ProviderDtoFactory {
 
-    public static ProviderDto getProviderTesteProviderDto() {
-        int idProvider = 1;
-        String nomeProvider = "Provider Teste";
-        String imagemLogo = "/provider-teste.jpg";
-        int prioridade = 1;
-
-        return ProviderDto.builder()
-                .idProvider(idProvider)
-                .nomeProvider(nomeProvider)
-                .imagemLogo(imagemLogo)
-                .prioridade(prioridade)
-                .build();
-    }
-
     public static ProviderDto getNetflixProviderDto() {
         int idProvider = 8;
         String nomeProvider = "Netflix";

@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 class CriarVinculosFilmeAtorServiceTest {
 
     private static final Long ID_ATOR = 99L;
-    private static final Long ID_FILME = 1L;
     private static final Long ID_FILME_DUPLICADO = 2L;
     private static final Long ID_TMDB_FILME_NAO_RESOLVIDO = 456L;
     private static final String PERSONAGEM_NEO = "Neo";

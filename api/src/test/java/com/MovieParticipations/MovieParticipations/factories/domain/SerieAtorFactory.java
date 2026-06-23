@@ -26,18 +26,4 @@ public class SerieAtorFactory {
                 .build();
     }
 
-    public static SerieAtor getSerieAtorEntityComId(Serie serie, Ator ator, String personagem, Long id) {
-        SerieAtor serieAtor = getSerieAtorEntity(serie, ator, personagem);
-        serieAtor.setId(id);
-        return serieAtor;
-    }
-
-    public static SerieAtor getWalterWhiteSerieAtorEntity() {
-        Serie serie = SerieFactory.getBreakingBadSerieEntity();
-        Ator ator = AtorFactory.getBryanCranstonAtorEntity();
-        String personagem = "Walter White";
-        int numeroEpisodios = 62;
-
-        return getSerieAtorEntity(serie, ator, personagem, numeroEpisodios);
-    }
 }

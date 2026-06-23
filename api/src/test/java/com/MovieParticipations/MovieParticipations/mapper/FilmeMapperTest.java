@@ -2,7 +2,6 @@ package com.MovieParticipations.MovieParticipations.mapper;
 
 import com.MovieParticipations.MovieParticipations.controller.response.ProducaoInfoResponse;
 import com.MovieParticipations.MovieParticipations.domain.Filme;
-import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
 import com.MovieParticipations.MovieParticipations.dto.FilmeTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.ProducaoTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.ProviderDto;

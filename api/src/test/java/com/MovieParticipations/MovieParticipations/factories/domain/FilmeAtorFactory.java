@@ -26,18 +26,4 @@ public class FilmeAtorFactory {
                 .build();
     }
 
-    public static FilmeAtor getFilmeAtorEntityComId(Filme filme, Ator ator, String personagem, Long id) {
-        FilmeAtor filmeAtor = getFilmeAtorEntity(filme, ator, personagem);
-        filmeAtor.setId(id);
-        return filmeAtor;
-    }
-
-    public static FilmeAtor getNeoFilmeAtorEntity() {
-        Filme filme = FilmeFactory.getMatrixFilmeEntity();
-        Ator ator = AtorFactory.getKeanuReevesAtorEntity();
-        String personagem = "Neo";
-        Long creditOrder = 1L;
-
-        return getFilmeAtorEntity(filme, ator, personagem, creditOrder);
-    }
 }

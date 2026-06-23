@@ -2,353 +2,220 @@ package com.MovieParticipations.MovieParticipations.service;
 
 import com.MovieParticipations.MovieParticipations.dto.ClassificacaoImagemResponseDTO;
 import com.MovieParticipations.MovieParticipations.dto.ClassificacaoResponseDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.MockedConstruction;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.retry.RecoveryCallback;
-import org.springframework.retry.RetryCallback;
-import org.springframework.retry.RetryContext;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static com.MovieParticipations.MovieParticipations.factories.response.ClassificacaoResponseDTOFactory.getKeanuReevesClassificacaoResponseDTO;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 
-@DisplayName("RequisicaoApiClassificacaoService")
+@ExtendWith(MockitoExtension.class)
+@DisplayName(RequisicaoApiClassificacaoServiceTest.NOME_CLASSE)
 class RequisicaoApiClassificacaoServiceTest {
 
-    private static final String URL_CLASSIFICACAO = "http://classificador/teste";
+    static final String NOME_CLASSE = "RequisicaoApiClassificacaoService";
+    private static final String NOME_TESTE_IMAGEM = "Deve fazer requisição multipart e retornar classificações";
+    private static final String NOME_TESTE_FILTROS = "Deve fazer requisição com filtros de séries e filmes";
+    private static final String NOME_TESTE_DETALHE_ERRO = "Deve fazer conversão do detalhe de erro do classificador";
+    private static final String NOME_TESTE_ERRO_SEM_DETALHE = "Deve fazer uso de mensagem padrão sem detalhe";
+    private static final String NOME_TESTE_RESPOSTA_SEM_CORPO = "Deve fazer rejeição de resposta sem corpo";
+    private static final String NOME_TESTE_RESPOSTA_SEM_RESULTADO = "Deve fazer rejeição de resposta sem resultado";
+    private static final String NOME_TESTE_SERVICO_INDISPONIVEL = "Deve fazer retorno de serviço indisponível";
+    private static final String URL_CLASSIFICADOR = "http://classificador/teste";
+    private static final String CAMPO_ENDERECO_CLASSIFICADOR = "CLASSIFYADDRESS";
+    private static final String CAMPO_IMAGEM = "image";
+    private static final String CAMPO_LISTA_SERIES = "lista_series";
+    private static final String CAMPO_LISTA_FILMES = "lista_filmes";
+    private static final String NOME_ARQUIVO_IMAGEM = "rosto.jpg";
+    private static final String CONTEUDO_IMAGEM = "imagem";
+    private static final Long ID_SERIE_FAVORITA = 1L;
+    private static final Long ID_FILME_FAVORITO = 2L;
+    private static final String IDS_SERIES_EM_JSON = "[1]";
+    private static final String IDS_FILMES_EM_JSON = "[2]";
+    private static final String DETALHE_IMAGEM_INVALIDA = "Imagem inválida";
+    private static final String JSON_COM_DETALHE = "{\"detail\":\"Imagem inválida\"}";
+    private static final String JSON_SEM_DETALHE = "{}";
+    private static final String MENSAGEM_ERRO_DESCONHECIDO = "Erro desconhecido";
+    private static final String MENSAGEM_RESPOSTA_INVALIDA = "Resposta inválida do serviço de classificação";
+    private static final String MENSAGEM_SERVICO_INDISPONIVEL = "Serviço de classificação indisponível";
+    private static final String MENSAGEM_ERRO_CLIENTE = "Erro";
+    private static final String MENSAGEM_CONEXAO_RECUSADA = "Conexão recusada";
+
+    @Mock
+    private RestTemplate restTemplate;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<MultiValueMap<String, Object>>> requisicaoCaptor;
+
+    private RequisicaoApiClassificacaoService service;
+    private MultipartFile imagem;
+
+    @BeforeEach
+    void setUp() {
+        service = new RequisicaoApiClassificacaoService(restTemplate);
+        ReflectionTestUtils.setField(service, CAMPO_ENDERECO_CLASSIFICADOR, URL_CLASSIFICADOR);
+        imagem = new MockMultipartFile(
+                CAMPO_IMAGEM,
+                NOME_ARQUIVO_IMAGEM,
+                IMAGE_JPEG_VALUE,
+                CONTEUDO_IMAGEM.getBytes(StandardCharsets.UTF_8)
+        );
+    }
 
     @Test
-    @DisplayName("Deve enviar imagem em multipart e retornar classificações")
-    void deveEnviarImagemEmMultipartERetornarClassificacoes() throws Exception {
-        MultipartFile imagem = imagem();
-        ClassificacaoResponseDTO classificacao = new ClassificacaoResponseDTO("Keanu Reeves", 0.15);
+    @DisplayName(NOME_TESTE_IMAGEM)
+    void deveFazerRequisicaoMultipartERetornarClassificacoes() throws Exception {
+        ClassificacaoResponseDTO classificacao = getKeanuReevesClassificacaoResponseDTO();
         ClassificacaoImagemResponseDTO resposta = new ClassificacaoImagemResponseDTO(List.of(classificacao));
 
-        try (MockedConstruction<RestTemplate> restTemplates = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        eq(URL_CLASSIFICACAO), eq(POST), any(HttpEntity.class),
-                        eq(ClassificacaoImagemResponseDTO.class)
-                )).thenReturn(ResponseEntity.ok(resposta))
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenReturn(ResponseEntity.ok(resposta));
 
-            List<ClassificacaoResponseDTO> resultado = service.classificarImagem(imagem);
+        List<ClassificacaoResponseDTO> classificacoes = service.classificarImagem(imagem);
 
-            assertThat(resultado).containsExactly(classificacao);
-            ArgumentCaptor<HttpEntity> requisicaoCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-            verify(restTemplates.constructed().get(0)).exchange(
-                    eq(URL_CLASSIFICACAO), eq(POST), requisicaoCaptor.capture(), eq(ClassificacaoImagemResponseDTO.class)
-            );
-            assertThat(requisicaoCaptor.getValue().getHeaders().getContentType().toString())
-                    .startsWith("multipart/form-data");
-            assertThat(requisicaoCaptor.getValue().getBody()).isInstanceOf(org.springframework.util.MultiValueMap.class);
-            org.springframework.util.MultiValueMap<String, Object> body =
-                    (org.springframework.util.MultiValueMap<String, Object>) requisicaoCaptor.getValue().getBody();
-            assertThat(body).containsKey("image");
-        }
+        assertEquals(List.of(classificacao), classificacoes);
+        verify(restTemplate).exchange(eq(URL_CLASSIFICADOR), eq(POST), requisicaoCaptor.capture(),
+                eq(ClassificacaoImagemResponseDTO.class));
+        HttpEntity<MultiValueMap<String, Object>> requisicao = requisicaoCaptor.getValue();
+        assertEquals(MULTIPART_FORM_DATA, requisicao.getHeaders().getContentType());
+        MultiValueMap<String, Object> corpo = Objects.requireNonNull(requisicao.getBody());
+        Resource arquivoEnviado = (Resource) Objects.requireNonNull(corpo.getFirst(CAMPO_IMAGEM));
+        assertEquals(NOME_ARQUIVO_IMAGEM, arquivoEnviado.getFilename());
     }
 
     @Test
-    @DisplayName("Deve enviar filtros de séries e filmes como JSON")
-    void deveEnviarFiltrosDeSeriesEFilmesComoJson() throws Exception {
-        MultipartFile imagem = imagem();
+    @DisplayName(NOME_TESTE_FILTROS)
+    void deveFazerRequisicaoComFiltrosDeSeriesEFilmes() throws Exception {
+        List<Long> idsSeries = List.of(ID_SERIE_FAVORITA);
+        List<Long> idsFilmes = List.of(ID_FILME_FAVORITO);
         ClassificacaoImagemResponseDTO resposta = new ClassificacaoImagemResponseDTO(List.of());
 
-        try (MockedConstruction<RestTemplate> restTemplates = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenReturn(ResponseEntity.ok(resposta))
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenReturn(ResponseEntity.ok(resposta));
 
-            service.classificarImagem(imagem, List.of(1L, 2L), List.of(3L));
+        service.classificarImagem(imagem, idsSeries, idsFilmes);
 
-            ArgumentCaptor<HttpEntity> requisicaoCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-            verify(restTemplates.constructed().get(0)).exchange(
-                    eq(URL_CLASSIFICACAO), eq(POST), requisicaoCaptor.capture(), eq(ClassificacaoImagemResponseDTO.class)
-            );
-            org.springframework.util.MultiValueMap<String, Object> body =
-                    (org.springframework.util.MultiValueMap<String, Object>) requisicaoCaptor.getValue().getBody();
-            assertThat(body.getFirst("lista_series")).isEqualTo("[1,2]");
-            assertThat(body.getFirst("lista_filmes")).isEqualTo("[3]");
-        }
+        verify(restTemplate).exchange(eq(URL_CLASSIFICADOR), eq(POST), requisicaoCaptor.capture(),
+                eq(ClassificacaoImagemResponseDTO.class));
+        MultiValueMap<String, Object> corpo = Objects.requireNonNull(requisicaoCaptor.getValue().getBody());
+        assertEquals(IDS_SERIES_EM_JSON, corpo.getFirst(CAMPO_LISTA_SERIES));
+        assertEquals(IDS_FILMES_EM_JSON, corpo.getFirst(CAMPO_LISTA_FILMES));
     }
 
     @Test
-    @DisplayName("Deve converter detalhe de erro do classificador em requisição inválida")
-    void deveConverterDetalheDeErroDoClassificadorEmRequisicaoInvalida() throws Exception {
-        HttpClientErrorException erro = HttpClientErrorException.create(
+    @DisplayName(NOME_TESTE_DETALHE_ERRO)
+    void deveFazerConversaoDoDetalheDeErroDoClassificador() {
+        HttpClientErrorException erroClassificador = erroDoClassificador(JSON_COM_DETALHE);
+
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenThrow(erroClassificador);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> service.classificarImagem(imagem));
+
+        assertEquals(BAD_REQUEST, erro.getStatusCode());
+        assertEquals(DETALHE_IMAGEM_INVALIDA, erro.getReason());
+    }
+
+    @Test
+    @DisplayName(NOME_TESTE_ERRO_SEM_DETALHE)
+    void deveFazerUsoDeMensagemPadraoSemDetalhe() {
+        HttpClientErrorException erroClassificador = erroDoClassificador(JSON_SEM_DETALHE);
+
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenThrow(erroClassificador);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> service.classificarImagem(imagem));
+
+        assertEquals(BAD_REQUEST, erro.getStatusCode());
+        assertEquals(MENSAGEM_ERRO_DESCONHECIDO, erro.getReason());
+    }
+
+    @Test
+    @DisplayName(NOME_TESTE_RESPOSTA_SEM_CORPO)
+    void deveFazerRejeicaoDeRespostaSemCorpo() {
+        ResponseEntity<ClassificacaoImagemResponseDTO> resposta = ResponseEntity.ok().build();
+
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenReturn(resposta);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> service.classificarImagem(imagem));
+
+        assertEquals(SERVICE_UNAVAILABLE, erro.getStatusCode());
+        assertEquals(MENSAGEM_RESPOSTA_INVALIDA, erro.getReason());
+    }
+
+    @Test
+    @DisplayName(NOME_TESTE_RESPOSTA_SEM_RESULTADO)
+    void deveFazerRejeicaoDeRespostaSemResultado() {
+        ClassificacaoImagemResponseDTO corpoSemResultado = new ClassificacaoImagemResponseDTO(null);
+        ResponseEntity<ClassificacaoImagemResponseDTO> resposta = ResponseEntity.ok(corpoSemResultado);
+
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenReturn(resposta);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> service.classificarImagem(imagem));
+
+        assertEquals(SERVICE_UNAVAILABLE, erro.getStatusCode());
+        assertEquals(MENSAGEM_RESPOSTA_INVALIDA, erro.getReason());
+    }
+
+    @Test
+    @DisplayName(NOME_TESTE_SERVICO_INDISPONIVEL)
+    void deveFazerRetornoDeServicoIndisponivel() {
+        ResourceAccessException erroClassificador = new ResourceAccessException(MENSAGEM_CONEXAO_RECUSADA);
+
+        when(restTemplate.exchange(eq(URL_CLASSIFICADOR), eq(POST), any(),
+                eq(ClassificacaoImagemResponseDTO.class))).thenThrow(erroClassificador);
+
+        ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                () -> service.classificarImagem(imagem));
+
+        assertEquals(SERVICE_UNAVAILABLE, erro.getStatusCode());
+        assertEquals(MENSAGEM_SERVICO_INDISPONIVEL, erro.getReason());
+    }
+
+    private HttpClientErrorException erroDoClassificador(String corpo) {
+        return HttpClientErrorException.create(
                 BAD_REQUEST,
-                "Erro",
+                MENSAGEM_ERRO_CLIENTE,
                 HttpHeaders.EMPTY,
-                "{\"detail\":\"Imagem inválida\"}".getBytes(StandardCharsets.UTF_8),
+                corpo.getBytes(StandardCharsets.UTF_8),
                 StandardCharsets.UTF_8
         );
-
-        try (MockedConstruction<RestTemplate> ignored = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenThrow(erro)
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
-
-            assertThatThrownBy(() -> service.classificarImagem(imagem()))
-                    .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
-                    .satisfies(exception -> {
-                        org.springframework.web.server.ResponseStatusException responseException =
-                                (org.springframework.web.server.ResponseStatusException) exception;
-                        assertThat(responseException.getStatusCode()).isEqualTo(BAD_REQUEST);
-                        assertThat(responseException.getReason()).isEqualTo("Imagem inválida");
-                    });
-        }
-    }
-
-    @Test
-    @DisplayName("Deve usar mensagem padrão quando erro do classificador não contiver detalhe")
-    void deveUsarMensagemPadraoQuandoErroDoClassificadorNaoContiverDetalhe() throws Exception {
-        HttpClientErrorException erro = HttpClientErrorException.create(
-                BAD_REQUEST,
-                "Erro",
-                HttpHeaders.EMPTY,
-                "{}".getBytes(StandardCharsets.UTF_8),
-                StandardCharsets.UTF_8
-        );
-
-        try (MockedConstruction<RestTemplate> ignored = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenThrow(erro)
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
-
-            assertThatThrownBy(() -> service.classificarImagem(imagem()))
-                    .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
-                    .satisfies(exception -> assertThat(
-                            ((org.springframework.web.server.ResponseStatusException) exception).getReason()
-                    ).isEqualTo("Erro desconhecido"));
-        }
-    }
-
-    @Test
-    @DisplayName("Deve usar mensagem padrão quando corpo de erro for inválido")
-    void deveUsarMensagemPadraoQuandoCorpoDeErroForInvalido() throws Exception {
-        HttpClientErrorException erro = HttpClientErrorException.create(
-                BAD_REQUEST,
-                "Erro",
-                HttpHeaders.EMPTY,
-                "não é JSON".getBytes(StandardCharsets.UTF_8),
-                StandardCharsets.UTF_8
-        );
-
-        try (MockedConstruction<RestTemplate> ignored = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenThrow(erro)
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
-
-            assertThatThrownBy(() -> service.classificarImagem(imagem()))
-                    .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
-                    .satisfies(exception -> assertThat(
-                            ((org.springframework.web.server.ResponseStatusException) exception).getReason()
-                    ).isEqualTo("Erro desconhecido"));
-        }
-    }
-
-    @Test
-    @DisplayName("Deve rejeitar resposta sem corpo ou resultado")
-    void deveRejeitarRespostaSemCorpoOuResultado() throws Exception {
-        try (MockedConstruction<RestTemplate> ignored = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenReturn(ResponseEntity.ok().build())
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
-
-            assertThatThrownBy(() -> service.classificarImagem(imagem()))
-                    .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
-                    .satisfies(exception -> assertThat(
-                            ((org.springframework.web.server.ResponseStatusException) exception).getStatusCode()
-                    ).isEqualTo(SERVICE_UNAVAILABLE));
-        }
-    }
-
-    @Test
-    @DisplayName("Deve rejeitar corpo de resposta sem lista de resultados")
-    void deveRejeitarCorpoDeRespostaSemListaDeResultados() throws Exception {
-        try (MockedConstruction<RestTemplate> ignored = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenReturn(ResponseEntity.ok(new ClassificacaoImagemResponseDTO(null)))
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
-
-            assertThatThrownBy(() -> service.classificarImagem(imagem()))
-                    .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
-                    .satisfies(exception -> assertThat(
-                            ((org.springframework.web.server.ResponseStatusException) exception).getStatusCode()
-                    ).isEqualTo(SERVICE_UNAVAILABLE));
-        }
-    }
-
-    @Test
-    @DisplayName("Deve retornar serviço indisponível após esgotar tentativas para erro de servidor")
-    void deveRetornarServicoIndisponivelAposEsgotarTentativasParaErroDeServidor() throws Exception {
-        HttpServerErrorException erro = HttpServerErrorException.create(
-                INTERNAL_SERVER_ERROR,
-                "Erro interno",
-                HttpHeaders.EMPTY,
-                new byte[0],
-                StandardCharsets.UTF_8
-        );
-
-        try (MockedConstruction<RestTemplate> restTemplates = mockConstruction(
-                RestTemplate.class,
-                (restTemplate, context) -> when(restTemplate.exchange(
-                        anyString(), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-                )).thenThrow(erro)
-        )) {
-            RequisicaoApiClassificacaoService service = criarService();
-
-            assertThatThrownBy(() -> service.classificarImagem(imagem()))
-                    .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
-                    .satisfies(exception -> {
-                        org.springframework.web.server.ResponseStatusException responseException =
-                                (org.springframework.web.server.ResponseStatusException) exception;
-                        assertThat(responseException.getStatusCode()).isEqualTo(SERVICE_UNAVAILABLE);
-                        assertThat(responseException.getReason())
-                                .isEqualTo("Serviço de classificação indisponível após 3 tentativas");
-                    });
-
-            verify(restTemplates.constructed().get(0), times(3)).exchange(
-                    eq(URL_CLASSIFICACAO), eq(POST), any(HttpEntity.class), eq(ClassificacaoImagemResponseDTO.class)
-            );
-        }
-    }
-
-    @Test
-    @DisplayName("Deve preservar erro de cliente no callback de recuperação sem filtros")
-    void devePreservarErroDeClienteNoCallbackDeRecuperacaoSemFiltros() throws Exception {
-        ResponseStatusException erroOriginal = new ResponseStatusException(BAD_REQUEST, "Imagem inválida");
-        RetryContext contexto = contextoComErro(erroOriginal);
-        RequisicaoApiClassificacaoService service = criarServiceComRecuperacao(contexto);
-
-        assertThatThrownBy(() -> service.classificarImagem(mock(MultipartFile.class)))
-                .isSameAs(erroOriginal);
-    }
-
-    @Test
-    @DisplayName("Deve retornar indisponível no callback de recuperação sem filtros")
-    void deveRetornarIndisponivelNoCallbackDeRecuperacaoSemFiltros() throws Exception {
-        ResourceAccessException erroOriginal = new ResourceAccessException("Conexão recusada");
-        RetryContext contexto = contextoComErro(erroOriginal);
-        RequisicaoApiClassificacaoService service = criarServiceComRecuperacao(contexto);
-
-        assertThatThrownBy(() -> service.classificarImagem(mock(MultipartFile.class)))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(exception -> {
-                    ResponseStatusException responseException = (ResponseStatusException) exception;
-                    assertThat(responseException.getStatusCode()).isEqualTo(SERVICE_UNAVAILABLE);
-                    assertThat(responseException.getCause()).isSameAs(erroOriginal);
-                });
-    }
-
-    @Test
-    @DisplayName("Deve preservar erro de cliente no callback de recuperação com filtros")
-    void devePreservarErroDeClienteNoCallbackDeRecuperacaoComFiltros() throws Exception {
-        ResponseStatusException erroOriginal = new ResponseStatusException(BAD_REQUEST, "Imagem inválida");
-        RetryContext contexto = contextoComErro(erroOriginal);
-        RequisicaoApiClassificacaoService service = criarServiceComRecuperacao(contexto);
-
-        assertThatThrownBy(() -> service.classificarImagem(mock(MultipartFile.class), List.of(1L), List.of(2L)))
-                .isSameAs(erroOriginal);
-    }
-
-    @Test
-    @DisplayName("Deve retornar indisponível no callback de recuperação com filtros")
-    void deveRetornarIndisponivelNoCallbackDeRecuperacaoComFiltros() throws Exception {
-        ResourceAccessException erroOriginal = new ResourceAccessException("Conexão recusada");
-        RetryContext contexto = contextoComErro(erroOriginal);
-        RequisicaoApiClassificacaoService service = criarServiceComRecuperacao(contexto);
-
-        assertThatThrownBy(() -> service.classificarImagem(mock(MultipartFile.class), List.of(1L), List.of(2L)))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(exception -> {
-                    ResponseStatusException responseException = (ResponseStatusException) exception;
-                    assertThat(responseException.getStatusCode()).isEqualTo(SERVICE_UNAVAILABLE);
-                    assertThat(responseException.getCause()).isSameAs(erroOriginal);
-                });
-    }
-
-    private RequisicaoApiClassificacaoService criarService() {
-        RetryTemplate retryTemplate = new RetryTemplate();
-        retryTemplate.setRetryPolicy(new SimpleRetryPolicy(
-                3,
-                Map.of(ResourceAccessException.class, true, HttpServerErrorException.class, true)
-        ));
-        RequisicaoApiClassificacaoService service = new RequisicaoApiClassificacaoService(retryTemplate);
-        ReflectionTestUtils.setField(service, "CLASSIFYADDRESS", URL_CLASSIFICACAO);
-        return service;
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private RequisicaoApiClassificacaoService criarServiceComRecuperacao(RetryContext contexto) {
-        RetryTemplate retryTemplate = mock(RetryTemplate.class);
-        when(retryTemplate.execute(any(RetryCallback.class), any(RecoveryCallback.class)))
-                .thenAnswer(invocation -> ((RecoveryCallback) invocation.getArgument(1)).recover(contexto));
-
-        RequisicaoApiClassificacaoService service = new RequisicaoApiClassificacaoService(retryTemplate);
-        ReflectionTestUtils.setField(service, "CLASSIFYADDRESS", URL_CLASSIFICACAO);
-        return service;
-    }
-
-    private RetryContext contextoComErro(Throwable erro) {
-        RetryContext contexto = mock(RetryContext.class);
-        when(contexto.getLastThrowable()).thenReturn(erro);
-        return contexto;
-    }
-
-    private MultipartFile imagem() throws Exception {
-        MultipartFile imagem = mock(MultipartFile.class);
-        when(imagem.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[]{1, 2, 3}));
-        when(imagem.getOriginalFilename()).thenReturn("rosto.jpg");
-        return imagem;
     }
 }

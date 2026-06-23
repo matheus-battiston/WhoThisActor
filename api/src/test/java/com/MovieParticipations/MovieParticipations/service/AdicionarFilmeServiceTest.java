@@ -8,35 +8,21 @@ import com.MovieParticipations.MovieParticipations.repository.FilmeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import static com.MovieParticipations.MovieParticipations.factories.tmdb.AtorTMDBMovieDtoFactory.getKeanuReevesAtorTMDBMovieDto;
 import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
-import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getFilmeTMDBDtoSemId;
-import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getMatrixFilmeTMDBDto;
-import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getMatrixRevolutionsFilmeTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.AtorTMDBMovieDtoFactory.getKeanuReevesAtorTMDBMovieDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.*;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
-import static java.time.LocalDate.*;
-import static java.util.List.*;
+import static java.time.LocalDate.now;
+import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("AdicionarFilmeService")
