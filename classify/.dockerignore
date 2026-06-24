@@ -1,0 +1,32 @@
+# Ignorar arquivos temporários e do sistema
+*.pyc
+*.pyo
+__pycache__
+*.git
+*.gitignore
+*.dockerignore
+*.env
+*.log
+node_modules
+.env
+*.db
+*.sqlite3
+src/faiss_index.bin
+src/faiss_index_old.bin
+src/faiss_index_pca.bin
+src/faiss_index_raw.bin
+src/faiss_labels.pkl
+src/faiss_labels_old.pkl
+src/faiss_labels_pca.pkl
+src/faiss_labels_raw.pkl
+src/centroids.pkl
+src/centroids_pca.pkl
+src/centroids_raw.pkl
+src/pca_projection.pkl
+src/pca_projection_raw.pkl
+
+# Ignorar diretórios desnecessários
+tests
+src/embeddings/
+src/saved_facenet_model/
+src/deepface/

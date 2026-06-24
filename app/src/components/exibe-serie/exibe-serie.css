@@ -1,0 +1,39 @@
+.titulo-producao {
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.linha-serie {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+.texto-producao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.provider-logo {
+  border-radius: 10px;
+  height: 35px;
+  margin: 8px;
+}
+
+.providers {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}

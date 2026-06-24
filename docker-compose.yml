@@ -1,0 +1,83 @@
+services:
+  whothisactor:
+    build:
+      context: ./api
+    image: whothisactor:latest
+    container_name: whothisactor
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./api/.env
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/WhoThisActor
+      DB_USER: postgres
+      DB_PASSWORD: minhasenha
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      classify:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: whothisactor-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: WhoThisActor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: minhasenha
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d WhoThisActor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: whothisactor-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  classify:
+    build:
+      context: ./classify
+      args:
+        OCI_PAR_BASE_URL: ${OCI_PAR_BASE_URL}
+    image: classify-service:latest
+    container_name: classify-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./classify/.env
+    environment:
+      POSTGRES_DB: WhoThisActor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: minhasenha
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_SSLMODE: disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres-data:
+  redis-data:

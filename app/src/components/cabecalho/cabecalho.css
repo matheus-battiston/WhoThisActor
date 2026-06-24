@@ -1,0 +1,19 @@
+.cabecalho {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  height: 40px;
+  top: 0;
+}
+
+.logo-image-cabecalho {
+  height: 40px;
+  width: auto;
+}
+
+.logo-image-cabecalho:hover {
+  cursor: pointer;
+}

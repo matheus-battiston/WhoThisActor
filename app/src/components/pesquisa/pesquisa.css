@@ -1,0 +1,23 @@
+.titlePesquisa {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.pesquisa {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  height: 50px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: rgb(20, 20, 54);
+  text-align: center;
+}

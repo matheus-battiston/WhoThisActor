@@ -1,0 +1,39 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  height: 280px;
+  flex-shrink: 0;
+}
+
+.logo-image {
+  width: 280px;
+  height: 280px;
+  display: block;
+  object-fit: contain;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.logo-image-loading {
+  animation: logo-fade-in 1s ease-out forwards;
+}
+
+.logo-image-ready {
+  opacity: 1;
+}
+
+@keyframes logo-fade-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}

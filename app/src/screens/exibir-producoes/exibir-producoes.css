@@ -1,0 +1,21 @@
+.container-producoes {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+  background-color: rgb(15, 9, 94);
+  height: 100svh;
+  width: 100vw;
+  flex-direction: column;
+}
+
+.loading {
+  color: white;
+  font-size: 24px;
+}
+
+.ator-info-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+  margin-bottom: 20px;
+}

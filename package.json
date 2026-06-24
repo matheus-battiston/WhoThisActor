@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "jar": "mvn -f api clean package -DskipTests",
+    "build": "npm run jar && docker compose build",
+    "build_back": "npm run jar && docker compose build whothisactor",
+    "back": "docker compose up -d",
+    "front": "npm start --prefix app",
+    "auth": "dotenv -e .env -- sh -c 'docker compose -f \"$AUTH_PATH/compose.yml\" up -d'",
+    "auth:down": "dotenv -e .env -- sh -c 'docker compose -f \"$AUTH_PATH/compose.yml\" down'",
+    "dev": "npm run back && npm run auth && npm run front",
+    "down": "docker compose down && npm run auth:down"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^11.0.0"
+  }
+}

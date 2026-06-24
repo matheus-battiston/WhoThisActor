@@ -1,0 +1,66 @@
+.tabs-pequeno {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.tabs-pequeno button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  color: rgb(155, 162, 204);
+  transition: 0.3s;
+  font-size: 12px;
+  position: relative;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  width: 300px;
+  position: relative;
+  margin: 0 auto 10px;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  color: rgb(155, 162, 204);
+  transition: 0.3s;
+  font-size: 18px;
+  position: relative;
+}
+
+.tabs button.active {
+  color: rgb(215, 103, 51);
+  font-weight: bold;
+}
+
+.tabs button.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background-color: rgb(215, 103, 51);
+}
+
+.tabs-pequeno button.active {
+  color: rgb(215, 103, 51);
+  font-weight: bold;
+}
+
+.tabs-pequeno button.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background-color: rgb(215, 103, 51);
+}

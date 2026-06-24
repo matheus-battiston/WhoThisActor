@@ -1,0 +1,16 @@
+.poster-serie {
+  width: 140px;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.poster-serie-container {
+  position: relative;
+  display: inline-block;
+}
+
+.poster-serie-favorito {
+  position: absolute;
+  top: 8px;
+}

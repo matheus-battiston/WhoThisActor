@@ -1,0 +1,656 @@
+openapi: "3.1.0"
+info:
+  title: "api API"
+  description: "api API"
+  version: "1.0.0"
+servers:
+  - url: "https://api"
+paths:
+  /hello:
+    post:
+      summary: "POST hello"
+      operationId: "Hello"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UsuarioHelloResponse"
+  /classificar:
+    post:
+      summary: "Classificar imagem de ator"
+      description: ""
+      operationId: "classificarImagem"
+      parameters:
+        - name: "tipoMidia"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            enum:
+              - "TV"
+              - "MOVIE"
+        - name: "filtrarPorFavoritos"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
+            default: "false"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              required:
+                - "image"
+              properties:
+                image:
+                  type: "string"
+                  format: "binary"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/OpcoesAtoresParecidosResponse"
+  /atores:
+    get:
+      summary: "Buscar ator e produções pelo nome"
+      description: ""
+      operationId: "pesquisarAtorPorNome"
+      parameters:
+        - name: "nome"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PesquisaAtorResponse"
+  /atores/{id}:
+    get:
+      summary: "Buscar ator pelo ID"
+      description: ""
+      operationId: "pesquisarAtorPorId"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AtorEProducoesResponse"
+  /series/{id}:
+    get:
+      summary: "Pegar informações basicas de uma produção usando id"
+      description: ""
+      operationId: "getSerieInfoPorId"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProducaoInfoResponse"
+  /series/{id}/detalhes:
+    get:
+      summary: "Pesquisar elenco de uma produção por nome, tipo de mídia e filtro\
+        \ opcional por personagem"
+      description: ""
+      operationId: "pesquisarDetalhesSerieComElenco"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "personagem"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DetalhesProducaoComElenco"
+  /series/pesquisa:
+    get:
+      summary: "Pesquisa series por nome, retornando todas que tenham nome exato"
+      description: ""
+      operationId: "pesquisarSeriePorNome"
+      parameters:
+        - name: "nome"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PesquisaProducaoInfoResponse"
+  /filmes/{id}:
+    get:
+      summary: "Pegar informações basicas de um filme usando id"
+      description: ""
+      operationId: "getFilmeInfoPorId"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProducaoInfoResponse"
+  /filmes/{id}/detalhes:
+    get:
+      summary: "Pesquisar elenco de um filme por id e opcionalmente filtrando por\
+        \ personagem"
+      description: ""
+      operationId: "pesquisarDetalhesFilmeComElenco"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "personagem"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DetalhesProducaoComElenco"
+  /filmes/pesquisa:
+    get:
+      summary: "Pesquisa filmes por nome retornando todos que tem nome exato"
+      description: ""
+      operationId: "pesquisarFilmePorNome"
+      parameters:
+        - name: "nome"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PesquisaProducaoInfoResponse"
+  /atores/{id}/favorito:
+    post:
+      summary: "Favoritar um ator"
+      description: ""
+      operationId: "favoritarAtor"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+    delete:
+      summary: "Remover favorito de um ator"
+      description: ""
+      operationId: "desfavoritarAtor"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+    get:
+      summary: "Checar se ator está favoritado"
+      description: ""
+      operationId: "atorEstaFavoritado"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "boolean"
+  /favoritos/atores:
+    get:
+      summary: "Listar atores favoritos do usuário"
+      description: ""
+      operationId: "listarAtoresFavoritos"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/InfoAtorResponse"
+  /favoritos/producoes:
+    get:
+      summary: "Listar produções favoritas do usuário"
+      description: ""
+      operationId: "listarProducoesFavoritas"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProducoesFavoritasResponse"
+  /series/{id}/favorito:
+    post:
+      summary: "Favoritar uma série"
+      description: ""
+      operationId: "favoritarSerie"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+    delete:
+      summary: "Remover favorito de uma série"
+      description: ""
+      operationId: "desfavoritarSerie"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+    get:
+      summary: "Checar se série está favoritada"
+      description: ""
+      operationId: "serieEstaFavoritada"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "boolean"
+  /filmes/{id}/favorito:
+    post:
+      summary: "Favoritar um filme"
+      description: ""
+      operationId: "favoritarFilme"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+    delete:
+      summary: "Remover favorito de um filme"
+      description: ""
+      operationId: "desfavoritarFilme"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+    get:
+      summary: "Checar se filme está favoritado"
+      description: ""
+      operationId: "filmeEstaFavoritado"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "boolean"
+components:
+  schemas:
+    UsuarioHelloResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        nome:
+          type: "string"
+          nullable: true
+        email:
+          type: "string"
+          nullable: true
+        primeiroLogin:
+          type: "boolean"
+          nullable: true
+    OpcoesAtoresParecidosResponse:
+      type: "object"
+      properties:
+        identity:
+          type: "string"
+          nullable: true
+        averageDistance:
+          type: "number"
+          format: "double"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        imagem:
+          type: "string"
+          nullable: true
+        idTmdb:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        popularity:
+          type: "number"
+          format: "double"
+          nullable: true
+    InfoAtorResponse:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+          nullable: true
+        urlImagem:
+          type: "string"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        popularity:
+          type: "number"
+          format: "double"
+          nullable: true
+    PesquisaAtorResponse:
+      type: "object"
+      properties:
+        contratoResposta:
+          type: "string"
+          nullable: true
+          enum:
+            - "UNIQUE_MATCH"
+            - "MULTIPLE_MATCH"
+            - "NOT_FOUND"
+        atores:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/InfoAtorResponse"
+    ProducaoComPersonagemResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        nomeProducao:
+          type: "string"
+          nullable: true
+        nomePersonagem:
+          type: "string"
+          nullable: true
+        posterLink:
+          type: "string"
+          nullable: true
+    ProducaoAtorResponse:
+      type: "object"
+      properties:
+        filmes:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProducaoComPersonagemResponse"
+        series:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProducaoComPersonagemResponse"
+    AtorEProducoesResponse:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+          nullable: true
+        urlFoto:
+          type: "string"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        producoes:
+          nullable: true
+          $ref: "#/components/schemas/ProducaoAtorResponse"
+        favoritado:
+          type: "boolean"
+          nullable: true
+    ProviderDto:
+      type: "object"
+      properties:
+        logo_path:
+          type: "string"
+          nullable: true
+        provider_id:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        provider_name:
+          type: "string"
+          nullable: true
+        display_priority:
+          type: "integer"
+          format: "int32"
+          nullable: true
+    ProducaoInfoResponse:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+          nullable: true
+        imagem:
+          type: "string"
+          nullable: true
+        tipoMidia:
+          type: "string"
+          nullable: true
+          enum:
+            - "TV"
+            - "MOVIE"
+        providers:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProviderDto"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+    OpcaoPesquisaElencoResponse:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+          nullable: true
+        urlImagem:
+          type: "string"
+          nullable: true
+        nomePersonagem:
+          type: "string"
+          nullable: true
+        popularity:
+          type: "number"
+          format: "double"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+    DetalhesProducaoComElenco:
+      type: "object"
+      properties:
+        elenco:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/OpcaoPesquisaElencoResponse"
+        nome:
+          type: "string"
+          nullable: true
+        imagem:
+          type: "string"
+          nullable: true
+        tipoMidia:
+          type: "string"
+          nullable: true
+          enum:
+            - "TV"
+            - "MOVIE"
+        providers:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProviderDto"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        estaFavoritado:
+          type: "boolean"
+          nullable: true
+    PesquisaProducaoInfoResponse:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+          nullable: true
+        imagem:
+          type: "string"
+          nullable: true
+        tipoMidia:
+          type: "string"
+          nullable: true
+          enum:
+            - "TV"
+            - "MOVIE"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        popularidade:
+          type: "number"
+          format: "double"
+          nullable: true
+    ProducaoResponse:
+      type: "object"
+      properties:
+        nome:
+          type: "string"
+          nullable: true
+        imagem:
+          type: "string"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+    ProducoesFavoritasResponse:
+      type: "object"
+      properties:
+        series:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProducaoResponse"
+        filmes:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProducaoResponse"

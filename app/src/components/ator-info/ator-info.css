@@ -1,0 +1,65 @@
+.titleAtor {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+
+.linhaAtor {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 10px 14px;
+}
+.producaoTexto {
+  max-width: 100%;
+  flex-shrink: 1;
+}
+
+.poster-ator-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.poster-ator-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(7, 10, 37, 0.12) 100%
+  );
+}
+
+.poster-ator-image {
+  width: 106px;
+  height: 160px;
+}
+
+.image-ator-info {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.poster-ator-favorito {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
