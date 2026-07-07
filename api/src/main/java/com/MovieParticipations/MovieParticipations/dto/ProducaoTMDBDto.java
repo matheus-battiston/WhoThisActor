@@ -4,6 +4,8 @@ package com.MovieParticipations.MovieParticipations.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -21,6 +23,8 @@ public class ProducaoTMDBDto {
     Double popularidade;
     @JsonProperty("poster_path")
     String imagemPoster;
+    @JsonProperty("release_date")
+    LocalDate dataLancamento;
     @JsonProperty("character")
     String personagem;
     @JsonProperty("episode_count")

@@ -1,0 +1,29 @@
+import OpcaoAtorCard from "../../../components/opcao-ator-card/opcao-ator-card.component";
+import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
+import ResultadoPesquisaOpcao from "../../../components/search-result-intro/search-result-intro.component";
+import "./opcoes-atores-mobile.css";
+
+export default function OpcoesAtoresMobileLayout({ opcoes, abrirAtor }) {
+  return (
+    <div className="opcoes-atores-mobile">
+      <MobilePageHeader />
+
+      <main className="opcoes-atores-mobile-conteudo">
+        <ResultadoPesquisaOpcao
+          title="Encontramos mais de uma pessoa possível"
+          subtitle="Selecione quem corresponde melhor ao resultado para continuar."
+        />
+
+        <div className="opcoes-atores-mobile-lista">
+          {opcoes.map((ator, index) => (
+            <OpcaoAtorCard
+              key={`${ator.id}-${index}`}
+              ator={ator}
+              onClick={() => abrirAtor(ator)}
+            />
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}

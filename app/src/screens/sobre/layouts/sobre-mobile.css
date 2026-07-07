@@ -1,0 +1,28 @@
+.sobre-mobile {
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--app-background);
+}
+
+.sobre-mobile-conteudo {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 18px var(--mobile-footer-space, 96px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 380px) {
+  .sobre-mobile-conteudo {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}

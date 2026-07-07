@@ -14,18 +14,23 @@ import java.time.Duration;
 @EnableCaching
 public class RedisCacheConfig {
     private static final String PROVIDERS_CACHE = "providers";
+    private static final String BUSCA_INICIAL_CACHE = "buscaInicial";
 
     @Bean
     public RedisCacheManager cacheManager(
             RedisConnectionFactory redisConnectionFactory,
-            @Value("${providers.cache.ttl:24h}") Duration providersCacheTtl
+            @Value("${providers.cache.ttl:24h}") Duration providersCacheTtl,
+            @Value("${busca-inicial.cache.ttl:24h}") Duration buscaInicialCacheTtl
     ) {
-        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+        RedisCacheConfiguration providersCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(providersCacheTtl);
+        RedisCacheConfiguration buscaInicialCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(buscaInicialCacheTtl);
 
         return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(cacheConfiguration)
-                .withCacheConfiguration(PROVIDERS_CACHE, cacheConfiguration)
+                .cacheDefaults(providersCacheConfiguration)
+                .withCacheConfiguration(PROVIDERS_CACHE, providersCacheConfiguration)
+                .withCacheConfiguration(BUSCA_INICIAL_CACHE, buscaInicialCacheConfiguration)
                 .build();
     }
 }

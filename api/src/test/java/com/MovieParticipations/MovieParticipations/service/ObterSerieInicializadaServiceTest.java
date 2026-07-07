@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,6 +32,12 @@ class ObterSerieInicializadaServiceTest {
     @Mock
     private AdicionarSerieService adicionarSerieService;
 
+    @Mock
+    private DeveAtualizarSerieService deveAtualizarSerieService;
+
+    @Mock
+    private AtualizarSerieInfoService atualizarSerieInfoService;
+
     @InjectMocks
     private ObterSerieInicializadaService service;
 
@@ -45,6 +52,24 @@ class ObterSerieInicializadaServiceTest {
 
         assertThat(resultado).isSameAs(serie);
         verify(serieRepository).findById(ID_SERIE);
+        verify(deveAtualizarSerieService).deveAtualizar(serie);
+        verifyNoInteractions(adicionarSerieService, atualizarSerieInfoService);
+    }
+
+    @Test
+    @DisplayName("Deve atualizar info antes de retornar série com info desatualizada")
+    void deveAtualizarInfoAntesDeRetornarSerieComInfoDesatualizada() {
+        Serie serie = getBreakingBadSerieEntityComId();
+
+        when(serieRepository.findById(ID_SERIE)).thenReturn(of(serie));
+        when(deveAtualizarSerieService.deveAtualizar(serie)).thenReturn(true);
+
+        Serie resultado = service.obter(ID_SERIE);
+
+        assertThat(resultado).isSameAs(serie);
+        InOrder inOrder = inOrder(deveAtualizarSerieService, atualizarSerieInfoService, adicionarSerieService);
+        inOrder.verify(deveAtualizarSerieService).deveAtualizar(serie);
+        inOrder.verify(atualizarSerieInfoService).atualizar(serie);
         verifyNoInteractions(adicionarSerieService);
     }
 
@@ -52,7 +77,7 @@ class ObterSerieInicializadaServiceTest {
     @DisplayName("Deve inicializar elenco antes de retornar série não inicializada")
     void deveInicializarElencoAntesDeRetornarSerieNaoInicializada() {
         Serie serie = getBreakingBadSerieEntityComId();
-        serie.setInicializado(false);
+        serie.setElencoInicializado(false);
 
         when(serieRepository.findById(ID_SERIE)).thenReturn(of(serie));
 
@@ -60,7 +85,9 @@ class ObterSerieInicializadaServiceTest {
 
         assertThat(resultado).isSameAs(serie);
         verify(serieRepository).findById(ID_SERIE);
+        verify(deveAtualizarSerieService).deveAtualizar(serie);
         verify(adicionarSerieService).adicionarElenco(serie);
+        verifyNoInteractions(atualizarSerieInfoService);
     }
 
     @Test
@@ -76,6 +103,6 @@ class ObterSerieInicializadaServiceTest {
         assertThat(erro.getStatusCode()).isEqualTo(NOT_FOUND);
         assertThat(erro.getReason()).isEqualTo(SERIE_NAO_ENCONTRADA);
         verify(serieRepository).findById(ID_SERIE);
-        verifyNoInteractions(adicionarSerieService);
+        verifyNoInteractions(adicionarSerieService, deveAtualizarSerieService, atualizarSerieInfoService);
     }
 }

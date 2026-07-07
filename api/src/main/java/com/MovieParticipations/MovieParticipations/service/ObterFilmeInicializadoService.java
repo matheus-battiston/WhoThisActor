@@ -15,12 +15,15 @@ public class ObterFilmeInicializadoService {
 
     private final FilmeRepository filmeRepository;
     private final AdicionarFilmeService adicionarFilmeService;
+    private final DeveAtualizarFilmeService deveAtualizarFilmeService;
+    private final AtualizarFilmeInfoService atualizarFilmeInfoService;
 
     public Filme obter(Long idFilme) {
         Filme filme = filmeRepository.findById(idFilme).
                 orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FILME_NAO_ENCONTRADO));
 
-        if (!filme.getInicializado()) adicionarFilmeService.adicionarElenco(filme);
+        if (deveAtualizarFilmeService.deveAtualizar(filme)) atualizarFilmeInfoService.atualizar(filme);
+        if (!Boolean.TRUE.equals(filme.getElencoInicializado())) adicionarFilmeService.adicionarElenco(filme);
 
         return filme;
     }

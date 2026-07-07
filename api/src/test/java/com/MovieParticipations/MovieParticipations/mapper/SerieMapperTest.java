@@ -4,6 +4,7 @@ import com.MovieParticipations.MovieParticipations.controller.response.ProducaoI
 import com.MovieParticipations.MovieParticipations.domain.Serie;
 import com.MovieParticipations.MovieParticipations.dto.ProducaoTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.ProviderDto;
+import com.MovieParticipations.MovieParticipations.dto.SerieDetalhesTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.SerieTMDBDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,15 +18,27 @@ import static com.MovieParticipations.MovieParticipations.factories.tmdb.Produca
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProducaoTMDBDtoFactory.getMatrixProducaoTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getNetflixProviderDto;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesComDatasInvalidasTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesComAnoNaoNumericoTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesComDatasNulasTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesComGenerosNulosTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesSemGenerosTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieTMDBDtoFactory.getBreakingBadSerieTMDBDto;
 import static com.MovieParticipations.MovieParticipations.mapper.SerieMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class SerieMapperTest {
     private static final String TITULO_NORMALIZADO_BREAKING_BAD = "breaking bad";
     private static final String TITULO_NORMALIZADO_MATRIX = "matrix";
+    private static final Integer ANO_PRIMEIRA_TEMPORADA_BREAKING_BAD = 2008;
+    private static final Integer ANO_ULTIMA_TEMPORADA_BREAKING_BAD = 2013;
+    private static final int INDICE_PRIMEIRO_GENERO = 0;
     private static final boolean FALSO = false;
 
     @Test
@@ -40,7 +53,8 @@ public class SerieMapperTest {
         assertEquals(TITULO_NORMALIZADO_BREAKING_BAD, response.getTituloNormalizado());
         assertEquals(dto.getImagemPoster(), response.getImagem());
         assertEquals(dto.getPopularidade(), response.getPopularidade());
-        assertEquals(FALSO, response.getInicializado());
+        assertEquals(FALSO, response.getElencoInicializado());
+        assertEquals(FALSO, response.getInfoAtualizado());
         assertNotNull(response.getUltimaAtualizacao());
     }
 
@@ -67,7 +81,8 @@ public class SerieMapperTest {
         assertEquals(TITULO_NORMALIZADO_BREAKING_BAD, response.getTituloNormalizado());
         assertEquals(dto.getImagemPoster(), response.getImagem());
         assertEquals(dto.getPopularidade(), response.getPopularidade());
-        assertEquals(FALSO, response.getInicializado());
+        assertEquals(FALSO, response.getElencoInicializado());
+        assertEquals(FALSO, response.getInfoAtualizado());
         assertNotNull(response.getUltimaAtualizacao());
     }
 
@@ -82,7 +97,93 @@ public class SerieMapperTest {
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
         assertEquals(serie.getImagem(), response.getImagem());
+        assertEquals(serie.getBackdropPath(), response.getBackdropPath());
+        assertEquals(serie.getAnoPrimeiraTemporada(), response.getAnoPrimeiraTemporada());
+        assertEquals(serie.getAnoUltimaTemporada(), response.getAnoUltimaTemporada());
+        assertEquals(serie.getQuantidadeTemporadas(), response.getQuantidadeTemporadas());
+        assertEquals(serie.getGenero(), response.getGenero());
+        assertEquals(serie.getOverview(), response.getOverview());
         assertEquals(TV, response.getTipoMidia());
         assertEquals(providers, response.getProviders());
+    }
+
+    @Test
+    @DisplayName("Deve atualizar serie com detalhes do TMDB")
+    void deveAtualizarSerieComDetalhesDoTmdb() {
+        Serie serie = getBreakingBadSerieEntityComId();
+        serie.setInfoAtualizado(false);
+        SerieDetalhesTMDBDto detalhes = getBreakingBadSerieDetalhesTMDBDto();
+
+        atualizarComDetalhes(serie, detalhes);
+
+        assertEquals(detalhes.getNome(), serie.getTitulo());
+        assertEquals(TITULO_NORMALIZADO_BREAKING_BAD, serie.getTituloNormalizado());
+        assertEquals(detalhes.getImagemPoster(), serie.getImagem());
+        assertEquals(detalhes.getPopularidade(), serie.getPopularidade());
+        assertEquals(detalhes.getBackdropPath(), serie.getBackdropPath());
+        assertEquals(ANO_PRIMEIRA_TEMPORADA_BREAKING_BAD, serie.getAnoPrimeiraTemporada());
+        assertEquals(ANO_ULTIMA_TEMPORADA_BREAKING_BAD, serie.getAnoUltimaTemporada());
+        assertEquals(detalhes.getQuantidadeTemporadas(), serie.getQuantidadeTemporadas());
+        assertEquals(detalhes.getGenres().get(INDICE_PRIMEIRO_GENERO).getName(), serie.getGenero());
+        assertEquals(detalhes.getOverview(), serie.getOverview());
+        assertTrue(serie.getInfoAtualizado());
+        assertNotNull(serie.getUltimaAtualizacao());
+    }
+
+    @Test
+    @DisplayName("Deve manter serie sem alterações quando detalhes forem nulos")
+    void deveManterSerieSemAlteracoesQuandoDetalhesForemNulos() {
+        Serie serie = getBreakingBadSerieEntityComId();
+        serie.setInfoAtualizado(false);
+
+        atualizarComDetalhes(serie, null);
+
+        assertFalse(serie.getInfoAtualizado());
+    }
+
+    @Test
+    @DisplayName("Deve atualizar genero como nulo quando detalhes nao tiverem generos")
+    void deveAtualizarGeneroComoNuloQuandoDetalhesNaoTiveremGeneros() {
+        Serie serieSemGeneros = getBreakingBadSerieEntityComId();
+        Serie serieComGenerosNulos = getBreakingBadSerieEntityComId();
+
+        atualizarComDetalhes(serieSemGeneros, getBreakingBadSerieDetalhesSemGenerosTMDBDto());
+        atualizarComDetalhes(serieComGenerosNulos, getBreakingBadSerieDetalhesComGenerosNulosTMDBDto());
+
+        assertNull(serieSemGeneros.getGenero());
+        assertNull(serieComGenerosNulos.getGenero());
+    }
+
+    @Test
+    @DisplayName("Deve deixar anos nulos quando datas forem invalidas")
+    void deveDeixarAnosNulosQuandoDatasForemInvalidas() {
+        Serie serie = getBreakingBadSerieEntityComId();
+
+        atualizarComDetalhes(serie, getBreakingBadSerieDetalhesComDatasInvalidasTMDBDto());
+
+        assertNull(serie.getAnoPrimeiraTemporada());
+        assertNull(serie.getAnoUltimaTemporada());
+    }
+
+    @Test
+    @DisplayName("Deve deixar anos nulos quando datas forem nulas")
+    void deveDeixarAnosNulosQuandoDatasForemNulas() {
+        Serie serie = getBreakingBadSerieEntityComId();
+
+        atualizarComDetalhes(serie, getBreakingBadSerieDetalhesComDatasNulasTMDBDto());
+
+        assertNull(serie.getAnoPrimeiraTemporada());
+        assertNull(serie.getAnoUltimaTemporada());
+    }
+
+    @Test
+    @DisplayName("Deve deixar anos nulos quando ano nao for numerico")
+    void deveDeixarAnosNulosQuandoAnoNaoForNumerico() {
+        Serie serie = getBreakingBadSerieEntityComId();
+
+        atualizarComDetalhes(serie, getBreakingBadSerieDetalhesComAnoNaoNumericoTMDBDto());
+
+        assertNull(serie.getAnoPrimeiraTemporada());
+        assertNull(serie.getAnoUltimaTemporada());
     }
 }

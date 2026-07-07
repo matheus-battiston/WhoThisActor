@@ -2,22 +2,21 @@ import "./exibir-producoes.css";
 
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSwipeable } from "react-swipeable";
 import { useAuth } from "../../hooks/use-auth/use-auth.hook";
+import { useIsMobile } from "../../hooks/use-is-mobile/use-is-mobile.hook";
 import { useFavoritoAtor } from "../../api/hooks/use-favorito-ator/use-favorito-ator.hook";
 import Loading from "../../components/loading/loading.component";
 import Erro from "../../components/erro/erro.component";
-import Tab from "../../components/tab/tab.component";
-import Cabecalho from "../../components/cabecalho/cabecalho.component";
-import AtorInfo from "../../components/ator-info/ator-info.component";
-import ListProducoes from "../../components/list-producoes/list-producoes.component";
 import { usePesquisarAtorPorId } from "../../api/generated/api";
 import { getErrorMessage } from "../../utils/getErrorMessage";
+import ExibirProducoesMobileLayout from "./layouts/exibir-producoes-mobile.layout";
+import ExibirProducoesWebLayout from "./layouts/exibir-producoes-web.layout";
 
 export function ExibirProducoesScreen() {
   const FRASE_CARREGAMENTO = "Obtendo informações do ator";
   const { id } = useParams();
   const { isAuthenticated, authChecked } = useAuth();
+  const isMobile = useIsMobile();
 
   const [tab, setTab] = useState("FILME");
 
@@ -40,12 +39,6 @@ export function ExibirProducoesScreen() {
     !pesquisaAtor.isError &&
     (!authChecked || pesquisaAtor.isLoading || !favoritoCarregado);
 
-  const handleSwipe = useSwipeable({
-    onSwipedLeft: () => setTab("TV"),
-    onSwipedRight: () => setTab("FILME"),
-    trackMouse: true,
-  });
-
   if (isLoading) {
     return (
       <div className="container-producoes">
@@ -62,28 +55,23 @@ export function ExibirProducoesScreen() {
     );
   }
 
+  const layoutProps = {
+    ator: pesquisaAtor.data.data,
+    tab,
+    setTab,
+    isAuthenticated,
+    favoritado: favoritoLocal,
+    favoritoPendente,
+    favoritar: alternarFavorito,
+  };
+
   return (
     <div className="container-producoes">
-      <Cabecalho />
-
-      <div className="ator-info-container">
-        <AtorInfo
-          nome={pesquisaAtor.data?.data.nome}
-          imagem={pesquisaAtor.data?.data.urlFoto}
-          logado={isAuthenticated}
-          favoritado={favoritoLocal}
-          favoritar={alternarFavorito}
-          favoritoPendente={favoritoPendente}
-        />
-      </div>
-
-      <Tab setTab={setTab} estado={tab} tabs={["FILME", "TV"]} />
-
-      <ListProducoes
-        producoes={pesquisaAtor.data.data}
-        handleSwipe={handleSwipe}
-        tab={tab}
-      />
+      {isMobile ? (
+        <ExibirProducoesMobileLayout {...layoutProps} />
+      ) : (
+        <ExibirProducoesWebLayout {...layoutProps} />
+      )}
     </div>
   );
 }

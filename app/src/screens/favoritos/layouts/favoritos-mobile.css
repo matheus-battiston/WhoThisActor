@@ -1,0 +1,137 @@
+.favoritos-mobile {
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--app-background);
+}
+
+.favoritos-mobile-conteudo {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 18px var(--mobile-footer-space, 96px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.favoritos-mobile-titulo {
+  margin: 0;
+  color: white;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+}
+
+.favoritos-mobile-abas {
+  flex-shrink: 0;
+}
+
+.favoritos-mobile-painel {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(70, 94, 172, 0.34);
+  border-radius: 18px;
+  background: rgba(4, 8, 45, 0.18);
+  overflow: hidden;
+}
+
+.favoritos-mobile-painel-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #fff;
+}
+
+.favoritos-mobile-painel-header span {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.favoritos-mobile-painel-header svg {
+  width: 27px;
+  height: 27px;
+  color: #5fe8ff;
+  stroke-width: 1.6;
+}
+
+.favoritos-mobile-grid-producoes,
+.favoritos-mobile-grid-atores {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+.favoritos-mobile-grid-producoes {
+  --favorito-producao-card-width: 154px;
+  justify-content: space-around;
+  gap: 12px;
+}
+
+.favoritos-mobile-grid-atores {
+  --favorito-ator-card-width: 148px;
+  justify-content: space-around;
+  gap: 14px;
+}
+
+@media (max-width: 380px) {
+  .favoritos-mobile-conteudo {
+    gap: 13px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .favoritos-mobile-titulo {
+    font-size: 30px;
+  }
+
+  .favoritos-mobile-painel {
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .favoritos-mobile-painel-header span {
+    font-size: 17px;
+  }
+
+  .favoritos-mobile-painel-header svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .favoritos-mobile-grid-producoes {
+    --favorito-producao-card-width: 148px;
+  }
+
+  .favoritos-mobile-grid-atores {
+    --favorito-ator-card-width: 126px;
+  }
+
+  .favoritos-mobile-grid-producoes,
+  .favoritos-mobile-grid-atores {
+    gap: 10px;
+  }
+}

@@ -1,0 +1,16 @@
+.tipo-producao-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid rgba(136, 155, 231, 0.32);
+  border-radius: 12px;
+  color: #5fe8ff;
+  background: rgba(12, 14, 64, 0.45);
+  cursor: pointer;
+}
+
+.tipo-producao-toggle:hover {
+  border-color: rgba(95, 232, 255, 0.54);
+  background: rgba(15, 25, 88, 0.62);
+}

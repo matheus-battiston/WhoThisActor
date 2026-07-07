@@ -27,11 +27,15 @@ import static org.mockito.Mockito.*;
 @DisplayName("PesquisarFilmeService")
 class PesquisarFilmeServiceTest {
 
+    private static final int QUANTIDADE_RESULTADOS_ESPERADA = 1;
+    private static final int INDICE_PRIMEIRO_RESULTADO = 0;
     private static final String NOME_ORIGINAL = "  Mátrix  ";
     private static final String TERMO_NORMALIZADO = "matrix";
     private static final Long ID_FILME = 1L;
     private static final String TITULO_MATRIX = "Matrix";
     private static final String IMAGEM_MATRIX = "/matrix.jpg";
+    private static final String OVERVIEW_MATRIX = "Um hacker descobre que a realidade e uma simulacao.";
+    private static final String GENERO_MATRIX = "Ficcao cientifica";
     private static final Double POPULARIDADE_MATRIX = 10.0;
 
     @Mock
@@ -42,6 +46,12 @@ class PesquisarFilmeServiceTest {
 
     @Mock
     private PesquisaFilmeCacheRepository pesquisaFilmeCacheRepository;
+
+    @Mock
+    private DeveAtualizarFilmeService deveAtualizarFilmeService;
+
+    @Mock
+    private AtualizarFilmeInfoService atualizarFilmeInfoService;
 
     @Captor
     private ArgumentCaptor<PesquisaFilmeCache> cacheCaptor;
@@ -60,11 +70,12 @@ class PesquisarFilmeServiceTest {
 
         List<PesquisaProducaoInfoResponse> resultado = service.pesquisaPorNome(NOME_ORIGINAL);
 
-        assertThat(resultado).hasSize(1);
-        PesquisaProducaoInfoResponse filme = resultado.get(0);
+        assertThat(resultado).hasSize(QUANTIDADE_RESULTADOS_ESPERADA);
+        PesquisaProducaoInfoResponse filme = resultado.get(INDICE_PRIMEIRO_RESULTADO);
         assertThat(filme.getId()).isEqualTo(ID_FILME);
         assertThat(filme.getNome()).isEqualTo(TITULO_MATRIX);
         assertThat(filme.getImagem()).isEqualTo(IMAGEM_MATRIX);
+        assertThat(filme.getDataLancamento()).isEqualTo(matrix.getDataLancamento());
         assertThat(filme.getPopularidade()).isEqualTo(POPULARIDADE_MATRIX);
         assertThat(filme.getTipoMidia()).isEqualTo(MOVIE);
         verify(adicionarFilmeService).adicionarFilmeComNome(NOME_ORIGINAL);
@@ -72,6 +83,38 @@ class PesquisarFilmeServiceTest {
         assertThat(cacheCaptor.getValue().getTermoNormalizado()).isEqualTo(TERMO_NORMALIZADO);
         assertThat(cacheCaptor.getValue().getUltimaSincronizacao()).isEqualTo(now());
         verify(filmeRepository).findByTituloNormalizadoOrderByPopularidadeDesc(TERMO_NORMALIZADO);
+    }
+
+    @Test
+    @DisplayName("Deve inicializar infos do filme na pesquisa sem inicializar elenco")
+    void deveInicializarInfosDoFilmeNaPesquisaSemInicializarElenco() {
+        Filme matrix = getMatrixFilmeEntityComId();
+        matrix.setOverview(null);
+        matrix.setGenero(null);
+        matrix.setInfoAtualizado(false);
+        matrix.setElencoInicializado(false);
+
+        when(pesquisaFilmeCacheRepository.existsByTermoNormalizado(TERMO_NORMALIZADO)).thenReturn(true);
+        when(filmeRepository.findByTituloNormalizadoOrderByPopularidadeDesc(TERMO_NORMALIZADO))
+                .thenReturn(of(matrix));
+        when(deveAtualizarFilmeService.deveAtualizar(matrix)).thenReturn(true);
+        doAnswer(invocation -> {
+            Filme filme = invocation.getArgument(0);
+            filme.setOverview(OVERVIEW_MATRIX);
+            filme.setGenero(GENERO_MATRIX);
+            filme.setInfoAtualizado(true);
+            return null;
+        }).when(atualizarFilmeInfoService).atualizar(matrix);
+
+        List<PesquisaProducaoInfoResponse> resultado = service.pesquisaPorNome(NOME_ORIGINAL);
+
+        assertThat(resultado).hasSize(QUANTIDADE_RESULTADOS_ESPERADA);
+        PesquisaProducaoInfoResponse filme = resultado.get(INDICE_PRIMEIRO_RESULTADO);
+        assertThat(filme.getOverview()).isEqualTo(OVERVIEW_MATRIX);
+        assertThat(filme.getGenero()).isEqualTo(GENERO_MATRIX);
+        assertThat(filme.getDataLancamento()).isEqualTo(matrix.getDataLancamento());
+        verify(atualizarFilmeInfoService).atualizar(matrix);
+        verify(adicionarFilmeService, never()).adicionarElenco(matrix);
     }
 
     @Test

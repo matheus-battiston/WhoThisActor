@@ -25,11 +25,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DetalhesProducaoComElencoMapperTest {
     private static final boolean ESTA_FAVORITADO = true;
     private static final boolean NAO_ESTA_FAVORITADO = false;
+    private static final String BACKDROP = "/backdrop.jpg";
+    private static final String GENERO = "Drama";
+    private static final String OVERVIEW = "Resumo da producao";
+    private static final Integer ANO_PRIMEIRA_TEMPORADA = 2008;
+    private static final Integer ANO_ULTIMA_TEMPORADA = 2013;
+    private static final Integer QUANTIDADE_TEMPORADAS = 5;
 
     @Test
     @DisplayName("Deve transformar filme em response com elenco")
     void transformarFilmeEmResponseComElenco() {
         Filme filme = getMatrixFilmeEntityComId();
+        filme.setBackdropPath(BACKDROP);
+        filme.setGenero(GENERO);
+        filme.setOverview(OVERVIEW);
         List<OpcaoPesquisaElencoResponse> elenco = of(getNeoOpcaoPesquisaElencoResponse());
         List<ProviderDto> providers = of(getNetflixProviderDto());
 
@@ -38,6 +47,10 @@ public class DetalhesProducaoComElencoMapperTest {
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
         assertEquals(filme.getImagem(), response.getImagem());
+        assertEquals(filme.getBackdropPath(), response.getBackdropPath());
+        assertEquals(filme.getDataLancamento(), response.getDataLancamento());
+        assertEquals(filme.getGenero(), response.getGenero());
+        assertEquals(filme.getOverview(), response.getOverview());
         assertEquals(TipoMidia.MOVIE, response.getTipoMidia());
         assertEquals(elenco, response.getElenco());
         assertEquals(providers, response.getProviders());
@@ -48,6 +61,12 @@ public class DetalhesProducaoComElencoMapperTest {
     @DisplayName("Deve transformar serie em response com elenco")
     void transformarSerieEmResponseComElenco() {
         Serie serie = getBreakingBadSerieEntityComId();
+        serie.setBackdropPath(BACKDROP);
+        serie.setAnoPrimeiraTemporada(ANO_PRIMEIRA_TEMPORADA);
+        serie.setAnoUltimaTemporada(ANO_ULTIMA_TEMPORADA);
+        serie.setQuantidadeTemporadas(QUANTIDADE_TEMPORADAS);
+        serie.setGenero(GENERO);
+        serie.setOverview(OVERVIEW);
         List<OpcaoPesquisaElencoResponse> elenco = of(getNeoOpcaoPesquisaElencoResponse());
         List<ProviderDto> providers = of(getNetflixProviderDto());
 
@@ -56,6 +75,12 @@ public class DetalhesProducaoComElencoMapperTest {
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
         assertEquals(serie.getImagem(), response.getImagem());
+        assertEquals(serie.getBackdropPath(), response.getBackdropPath());
+        assertEquals(serie.getAnoPrimeiraTemporada(), response.getAnoPrimeiraTemporada());
+        assertEquals(serie.getAnoUltimaTemporada(), response.getAnoUltimaTemporada());
+        assertEquals(serie.getQuantidadeTemporadas(), response.getQuantidadeTemporadas());
+        assertEquals(serie.getGenero(), response.getGenero());
+        assertEquals(serie.getOverview(), response.getOverview());
         assertEquals(TipoMidia.TV, response.getTipoMidia());
         assertEquals(elenco, response.getElenco());
         assertEquals(providers, response.getProviders());

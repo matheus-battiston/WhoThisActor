@@ -2,7 +2,9 @@ package com.MovieParticipations.MovieParticipations.service;
 
 import com.MovieParticipations.MovieParticipations.dto.BuscarIdFilmePorNomeDTO;
 import com.MovieParticipations.MovieParticipations.dto.BuscarIdSeriePorNomeDTO;
+import com.MovieParticipations.MovieParticipations.dto.FilmeDetalhesTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.FilmeTMDBDto;
+import com.MovieParticipations.MovieParticipations.dto.SerieDetalhesTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.SerieTMDBDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +24,10 @@ import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.BuscarIdFilmePorNomeDTOFactory.getBuscarIdFilmePorNomeDTO;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.BuscarIdSeriePorNomeDTOFactory.getBuscarIdSeriePorNomeDTO;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeDetalhesTMDBDtoFactory.getMatrixFilmeDetalhesTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getMatrixFilmeTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.FilmeTMDBDtoFactory.getMatrixRevolutionsFilmeTMDBDto;
+import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieDetalhesTMDBDtoFactory.getBreakingBadSerieDetalhesTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieTMDBDtoFactory.getBreakingBadAtualizadoSerieTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieTMDBDtoFactory.getBreakingBadSerieTMDBDto;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.SerieTMDBDtoFactory.getSerieTMDBDtoSemNomeOriginal;
@@ -46,6 +50,10 @@ class BuscarProducaoPorNomeTMBDServiceTest {
     private static final String URL_BUSCA_SERIE = "https://api.themoviedb.org/3/search/tv";
     private static final String QUERY = "query";
     private static final String API_KEY_PARAM = "api_key";
+    private static final String URL_DETALHE_FILME = "https://api.themoviedb.org/3/movie/123";
+    private static final String URL_DETALHE_SERIE = "https://api.themoviedb.org/3/tv/456";
+    private static final Long ID_TMDB_MATRIX = 123L;
+    private static final Long ID_TMDB_BREAKING_BAD = 456L;
     private static final String NOME_THE_MATRIX = "the matrix";
     private static final String NOME_BREAKING_BAD = "breaking bad";
     private static final String FILME_NAO_ENCONTRADO = "Filme nao foi encontrado, verifique o nome e tente novamente";
@@ -98,6 +106,36 @@ class BuscarProducaoPorNomeTMBDServiceTest {
         assertThat(resultado).containsExactly(breakingBad);
         verify(restTemplate).exchange(urlCaptor.capture(), eq(GET), eq(EMPTY), eq(BuscarIdSeriePorNomeDTO.class));
         assertUrlDeBusca(urlCaptor.getValue(), URL_BUSCA_SERIE, NOME_BREAKING_BAD);
+    }
+
+    @Test
+    @DisplayName("Deve consultar endpoint de detalhes de filme por ID TMDB")
+    void deveConsultarEndpointDeDetalhesDeFilmePorIdTmdb() {
+        FilmeDetalhesTMDBDto response = getMatrixFilmeDetalhesTMDBDto();
+
+        when(restTemplate.exchange(anyString(), eq(GET), eq(EMPTY), eq(FilmeDetalhesTMDBDto.class)))
+                .thenReturn(ok(response));
+
+        FilmeDetalhesTMDBDto resultado = buscarProducaoPorNomeTMBDService.buscarDetalhesFilmePorId(ID_TMDB_MATRIX);
+
+        assertThat(resultado).isSameAs(response);
+        verify(restTemplate).exchange(urlCaptor.capture(), eq(GET), eq(EMPTY), eq(FilmeDetalhesTMDBDto.class));
+        assertUrlDeDetalhe(urlCaptor.getValue(), URL_DETALHE_FILME);
+    }
+
+    @Test
+    @DisplayName("Deve consultar endpoint de detalhes de serie por ID TMDB")
+    void deveConsultarEndpointDeDetalhesDeSeriePorIdTmdb() {
+        SerieDetalhesTMDBDto response = getBreakingBadSerieDetalhesTMDBDto();
+
+        when(restTemplate.exchange(anyString(), eq(GET), eq(EMPTY), eq(SerieDetalhesTMDBDto.class)))
+                .thenReturn(ok(response));
+
+        SerieDetalhesTMDBDto resultado = buscarProducaoPorNomeTMBDService.buscarDetalhesSeriePorId(ID_TMDB_BREAKING_BAD);
+
+        assertThat(resultado).isSameAs(response);
+        verify(restTemplate).exchange(urlCaptor.capture(), eq(GET), eq(EMPTY), eq(SerieDetalhesTMDBDto.class));
+        assertUrlDeDetalhe(urlCaptor.getValue(), URL_DETALHE_SERIE);
     }
 
     @Test
@@ -272,6 +310,13 @@ class BuscarProducaoPorNomeTMBDServiceTest {
         assertThat(uri.toUriString()).startsWith(endpointEsperado);
         assertThat(uri.getQueryParams().getFirst(QUERY))
                 .isEqualTo(UriUtils.encodeQueryParam(nomeEsperado, UTF_8));
+        assertThat(uri.getQueryParams().getFirst(API_KEY_PARAM)).isEqualTo(API_KEY);
+    }
+
+    private void assertUrlDeDetalhe(String url, String endpointEsperado) {
+        var uri = UriComponentsBuilder.fromUriString(url).build();
+
+        assertThat(uri.toUriString()).startsWith(endpointEsperado);
         assertThat(uri.getQueryParams().getFirst(API_KEY_PARAM)).isEqualTo(API_KEY);
     }
 }

@@ -27,12 +27,19 @@ class ListarProducoesFavoritasServiceTest {
 
     private static final int PRIMEIRA_PRODUCAO = 0;
     private static final int QUANTIDADE_UMA_PRODUCAO = 1;
+    private static final String GENERO_MATRIX = "Ficcao cientifica";
 
     @Mock
     private FavoritaSerieRepository favoritaSerieRepository;
 
     @Mock
     private FavoritaFilmeRepository favoritaFilmeRepository;
+
+    @Mock
+    private AtualizarSerieInfoService atualizarSerieInfoService;
+
+    @Mock
+    private AtualizarFilmeInfoService atualizarFilmeInfoService;
 
     @InjectMocks
     private ListarProducoesFavoritasService service;
@@ -43,6 +50,7 @@ class ListarProducoesFavoritasServiceTest {
         UsuarioAutenticado usuarioAutenticado = getUsuarioAutenticadoDto();
         Serie serie = getBreakingBadSerieEntityComId();
         Filme filme = getMatrixFilmeEntityComId();
+        filme.setGenero(GENERO_MATRIX);
 
         when(favoritaSerieRepository.findSeriesByAuthUserId(usuarioAutenticado.getId())).thenReturn(of(serie));
         when(favoritaFilmeRepository.findFilmesByAuthUserId(usuarioAutenticado.getId())).thenReturn(of(filme));
@@ -52,9 +60,15 @@ class ListarProducoesFavoritasServiceTest {
         assertEquals(QUANTIDADE_UMA_PRODUCAO, resultado.getSeries().size());
         assertEquals(serie.getId(), resultado.getSeries().get(PRIMEIRA_PRODUCAO).getId());
         assertEquals(serie.getTitulo(), resultado.getSeries().get(PRIMEIRA_PRODUCAO).getNome());
+        assertEquals(serie.getGenero(), resultado.getSeries().get(PRIMEIRA_PRODUCAO).getGenero());
+        assertEquals(serie.getOverview(), resultado.getSeries().get(PRIMEIRA_PRODUCAO).getOverview());
+        assertEquals(serie.getAnoPrimeiraTemporada(), resultado.getSeries().get(PRIMEIRA_PRODUCAO).getAno());
         assertEquals(QUANTIDADE_UMA_PRODUCAO, resultado.getFilmes().size());
         assertEquals(filme.getId(), resultado.getFilmes().get(PRIMEIRA_PRODUCAO).getId());
         assertEquals(filme.getTitulo(), resultado.getFilmes().get(PRIMEIRA_PRODUCAO).getNome());
+        assertEquals(filme.getGenero(), resultado.getFilmes().get(PRIMEIRA_PRODUCAO).getGenero());
+        assertEquals(filme.getOverview(), resultado.getFilmes().get(PRIMEIRA_PRODUCAO).getOverview());
+        assertEquals(filme.getDataLancamento().getYear(), resultado.getFilmes().get(PRIMEIRA_PRODUCAO).getAno());
         verify(favoritaSerieRepository).findSeriesByAuthUserId(usuarioAutenticado.getId());
         verify(favoritaFilmeRepository).findFilmesByAuthUserId(usuarioAutenticado.getId());
     }
@@ -105,5 +119,23 @@ class ListarProducoesFavoritasServiceTest {
         assertEquals(QUANTIDADE_UMA_PRODUCAO, resultado.getSeries().size());
         assertEquals(serie.getId(), resultado.getSeries().get(PRIMEIRA_PRODUCAO).getId());
         assertEquals(of(), resultado.getFilmes());
+    }
+
+    @Test
+    @DisplayName("Deve atualizar informações de produções favoritas antes de montar response quando necessário")
+    void deveAtualizarInformacoesDeProducoesFavoritasAntesDeMontarResponseQuandoNecessario() {
+        UsuarioAutenticado usuarioAutenticado = getUsuarioAutenticadoDto();
+        Serie serie = getBreakingBadSerieEntityComId();
+        Filme filme = getMatrixFilmeEntityComId();
+        serie.setInfoAtualizado(false);
+        filme.setInfoAtualizado(false);
+
+        when(favoritaSerieRepository.findSeriesByAuthUserId(usuarioAutenticado.getId())).thenReturn(of(serie));
+        when(favoritaFilmeRepository.findFilmesByAuthUserId(usuarioAutenticado.getId())).thenReturn(of(filme));
+
+        service.listaDeFavoritos(usuarioAutenticado);
+
+        verify(atualizarSerieInfoService).atualizar(serie);
+        verify(atualizarFilmeInfoService).atualizar(filme);
     }
 }

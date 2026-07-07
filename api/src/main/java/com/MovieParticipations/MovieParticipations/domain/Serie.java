@@ -26,5 +26,13 @@ public class Serie {
     private Long idTmdb;
     private LocalDate ultimaAtualizacao;
     private Double popularidade;
-    private Boolean inicializado;
+    private Boolean elencoInicializado;
+    private Boolean infoAtualizado;
+    private String backdropPath;
+    private Integer anoPrimeiraTemporada;
+    private Integer anoUltimaTemporada;
+    private Integer quantidadeTemporadas;
+    private String genero;
+    @Column(length = 4000)
+    private String overview;
 }

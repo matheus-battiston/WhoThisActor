@@ -124,6 +124,7 @@ class PesquisarElencoFilmeServiceTest {
         assertThat(resultado.getId()).isEqualTo(ID_FILME);
         assertThat(resultado.getNome()).isEqualTo(NOME_MATRIX);
         assertThat(resultado.getImagem()).isEqualTo(IMAGEM_MATRIX);
+        assertThat(resultado.getDataLancamento()).isEqualTo(filme.getDataLancamento());
         assertThat(resultado.getElenco()).containsExactly(opcao);
         assertThat(resultado.getProviders()).containsExactly(provider);
         assertThat(resultado.getEstaFavoritado()).isTrue();

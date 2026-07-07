@@ -1,0 +1,130 @@
+.camera-action-card {
+  display: flex;
+  width: min(100%, 360px);
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid rgba(64, 131, 255, 0.36);
+  border-radius: 22px;
+  box-sizing: border-box;
+  color: #fff;
+  background:
+    radial-gradient(circle at 78% 22%, rgba(95, 232, 255, 0.12), transparent 42%),
+    rgba(11, 22, 79, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(95, 232, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.camera-action-card-principal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.camera-action-card-icone {
+  display: flex;
+  flex: 0 0 58px;
+  min-width: 58px;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 0;
+  border: 1px solid rgba(95, 232, 255, 0.46);
+  border-radius: 18px;
+  color: #5fe8ff;
+  background: rgba(39, 73, 178, 0.22);
+  box-shadow:
+    inset 0 0 22px rgba(95, 232, 255, 0.12),
+    0 0 20px rgba(45, 91, 255, 0.2);
+  cursor: pointer;
+}
+
+.camera-action-card-icone:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.camera-action-card-icone svg {
+  font-size: 30px;
+  stroke-width: 1.4;
+}
+
+.camera-action-card-texto {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.camera-action-card-texto strong {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.camera-action-card-texto small {
+  color: rgba(220, 226, 255, 0.72);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.camera-action-card-favoritos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(136, 155, 231, 0.18);
+  color: rgba(220, 226, 255, 0.82);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.camera-action-card-favoritos-ativo {
+  color: #5fe8ff;
+}
+
+.camera-action-card-favoritos input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.camera-action-card-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: 1px solid rgba(136, 155, 231, 0.32);
+  border-radius: 10px;
+  color: rgba(220, 226, 255, 0.76);
+  background: rgba(12, 14, 64, 0.45);
+}
+
+.camera-action-card-check svg {
+  font-size: 20px;
+}
+
+.camera-action-card-favoritos input:checked + .camera-action-card-check {
+  border-color: rgba(95, 232, 255, 0.62);
+  color: #5fe8ff;
+  background: rgba(95, 232, 255, 0.12);
+  box-shadow: 0 0 18px rgba(95, 232, 255, 0.18);
+}
+
+.camera-action-card-favoritos-ativo .camera-action-card-favoritos-texto {
+  color: #5fe8ff;
+}
+
+@media (max-width: 380px) {
+  .camera-action-card {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .camera-action-card-texto strong {
+    font-size: 18px;
+  }
+}

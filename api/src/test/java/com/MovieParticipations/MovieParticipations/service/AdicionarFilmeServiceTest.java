@@ -12,6 +12,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
@@ -27,16 +28,34 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("AdicionarFilmeService")
 class AdicionarFilmeServiceTest {
+    private static final int INDICE_PRIMEIRO_FILME = 0;
     private static final Long ID_TMDB_MATRIX = 123L;
     private static final String TITULO_MATRIX = "Matrix";
     private static final String TITULO_NORMALIZADO_MATRIX = "matrix";
     private static final String IMAGEM_MATRIX = "/matrix.jpg";
     private static final Double POPULARIDADE_MATRIX = 10.0;
+    private static final int ANO_LANCAMENTO_MATRIX = 2011;
+    private static final int MES_LANCAMENTO_MATRIX = 2;
+    private static final int DIA_LANCAMENTO_MATRIX = 10;
+    private static final LocalDate DATA_LANCAMENTO_MATRIX = LocalDate.of(
+            ANO_LANCAMENTO_MATRIX,
+            MES_LANCAMENTO_MATRIX,
+            DIA_LANCAMENTO_MATRIX
+    );
     private static final String NAO_TEM_ELENCO = "Nao tem elenco";
+    private static final String ERRO_AO_PROCESSAR = "Erro ao processar";
     private static final String TITULO_ATUALIZADO = "Matrix Revolutions";
     private static final String TITULO_ATUALIZADO_NORMALIZADO = "matrix revolutions";
     private static final String IMAGEM_ATUALIZADA = "/matrix-revolutions.jpg";
     private static final Double POPULARIDADE_ATUALIZADA = 20.0;
+    private static final int ANO_LANCAMENTO_ATUALIZADO = 2021;
+    private static final int MES_LANCAMENTO_ATUALIZADO = 12;
+    private static final int DIA_LANCAMENTO_ATUALIZADO = 22;
+    private static final LocalDate DATA_LANCAMENTO_ATUALIZADA = LocalDate.of(
+            ANO_LANCAMENTO_ATUALIZADO,
+            MES_LANCAMENTO_ATUALIZADO,
+            DIA_LANCAMENTO_ATUALIZADO
+    );
     private static final Long ID_TMDB_KEANU_REEVES = 6384L;
     private static final String PERSONAGEM_NEO_MAIS_COMPLETO = "Neo / The One";
     private static final String PERSONAGEM_NEO_MENOR = "N";
@@ -82,13 +101,14 @@ class AdicionarFilmeServiceTest {
         assertThat(resultado).containsExactly(filmeSalvo);
         verify(filmeRepository).saveAll(filmesCaptor.capture());
 
-        Filme filmeMapeado = filmesCaptor.getValue().get(0);
+        Filme filmeMapeado = filmesCaptor.getValue().get(INDICE_PRIMEIRO_FILME);
         assertThat(filmeMapeado.getIdTmdb()).isEqualTo(ID_TMDB_MATRIX);
         assertThat(filmeMapeado.getTitulo()).isEqualTo(TITULO_MATRIX);
         assertThat(filmeMapeado.getTituloNormalizado()).isEqualTo(TITULO_NORMALIZADO_MATRIX);
         assertThat(filmeMapeado.getImagem()).isEqualTo(IMAGEM_MATRIX);
         assertThat(filmeMapeado.getPopularidade()).isEqualTo(POPULARIDADE_MATRIX);
-        assertThat(filmeMapeado.getInicializado()).isFalse();
+        assertThat(filmeMapeado.getDataLancamento()).isEqualTo(DATA_LANCAMENTO_MATRIX);
+        assertThat(filmeMapeado.getElencoInicializado()).isFalse();
         assertThat(filmeMapeado.getUltimaAtualizacao()).isNotNull();
     }
 
@@ -102,7 +122,7 @@ class AdicionarFilmeServiceTest {
 
         adicionarFilmeService.adicionarElenco(filme);
 
-        assertThat(filme.getInicializado()).isTrue();
+        assertThat(filme.getElencoInicializado()).isTrue();
 
         InOrder inOrder = inOrder(
                 buscarElencoService,
@@ -160,7 +180,7 @@ class AdicionarFilmeServiceTest {
     @DisplayName("Deve lancar erro quando filme nao tiver elenco")
     void deveLancarErroQuandoFilmeNaoTiverElenco() {
         Filme filme = getMatrixFilmeEntityComId();
-        filme.setInicializado(false);
+        filme.setElencoInicializado(false);
 
         when(buscarElencoService.pesquisaElencoFilme(ID_TMDB_MATRIX)).thenReturn(of());
 
@@ -170,7 +190,7 @@ class AdicionarFilmeServiceTest {
         );
 
         assertThat(erro.getReason()).isEqualTo(NAO_TEM_ELENCO);
-        assertThat(filme.getInicializado()).isFalse();
+        assertThat(filme.getElencoInicializado()).isFalse();
         verifyNoInteractions(processamentoFilmeService, recarregarCacheClassificacaoService);
         verify(filmeRepository, never()).save(filme);
     }
@@ -179,9 +199,9 @@ class AdicionarFilmeServiceTest {
     @DisplayName("Deve propagar erro e nao salvar quando processamento do elenco falhar")
     void devePropagarErroENaoSalvarQuandoProcessamentoDoElencoFalhar() {
         Filme filme = getMatrixFilmeEntityComId();
-        filme.setInicializado(false);
+        filme.setElencoInicializado(false);
         List<AtorTMDBMovieDto> atores = of(getKeanuReevesAtorTMDBMovieDto());
-        ResponseStatusException erro = new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Erro ao processar");
+        ResponseStatusException erro = new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, ERRO_AO_PROCESSAR);
 
         when(buscarElencoService.pesquisaElencoFilme(ID_TMDB_MATRIX)).thenReturn(atores);
         doThrow(erro).when(processamentoFilmeService).processarElenco(filme, atores);
@@ -192,7 +212,7 @@ class AdicionarFilmeServiceTest {
         );
 
         assertThat(erroLancado).isSameAs(erro);
-        assertThat(filme.getInicializado()).isFalse();
+        assertThat(filme.getElencoInicializado()).isFalse();
         verify(filmeRepository, never()).save(filme);
         verifyNoInteractions(recarregarCacheClassificacaoService);
     }
@@ -213,13 +233,14 @@ class AdicionarFilmeServiceTest {
 
         assertThat(idsCaptor.getValue()).containsExactly(ID_TMDB_MATRIX);
 
-        Filme filmeSalvo = filmesCaptor.getValue().get(0);
+        Filme filmeSalvo = filmesCaptor.getValue().get(INDICE_PRIMEIRO_FILME);
         assertThat(filmeSalvo.getIdTmdb()).isEqualTo(ID_TMDB_MATRIX);
         assertThat(filmeSalvo.getTitulo()).isEqualTo(TITULO_MATRIX);
         assertThat(filmeSalvo.getTituloNormalizado()).isEqualTo(TITULO_NORMALIZADO_MATRIX);
         assertThat(filmeSalvo.getImagem()).isEqualTo(IMAGEM_MATRIX);
         assertThat(filmeSalvo.getPopularidade()).isEqualTo(POPULARIDADE_MATRIX);
-        assertThat(filmeSalvo.getInicializado()).isFalse();
+        assertThat(filmeSalvo.getDataLancamento()).isEqualTo(DATA_LANCAMENTO_MATRIX);
+        assertThat(filmeSalvo.getElencoInicializado()).isFalse();
         assertThat(filmeSalvo.getUltimaAtualizacao()).isNotNull();
     }
 
@@ -237,14 +258,15 @@ class AdicionarFilmeServiceTest {
 
         verify(filmeRepository).saveAll(filmesCaptor.capture());
 
-        Filme filmeAtualizado = filmesCaptor.getValue().get(0);
+        Filme filmeAtualizado = filmesCaptor.getValue().get(INDICE_PRIMEIRO_FILME);
         assertThat(filmeAtualizado).isSameAs(filmeExistente);
         assertThat(filmeAtualizado.getTitulo()).isEqualTo(TITULO_ATUALIZADO);
         assertThat(filmeAtualizado.getTituloNormalizado()).isEqualTo(TITULO_ATUALIZADO_NORMALIZADO);
         assertThat(filmeAtualizado.getImagem()).isEqualTo(IMAGEM_ATUALIZADA);
         assertThat(filmeAtualizado.getPopularidade()).isEqualTo(POPULARIDADE_ATUALIZADA);
+        assertThat(filmeAtualizado.getDataLancamento()).isEqualTo(DATA_LANCAMENTO_ATUALIZADA);
         assertThat(filmeAtualizado.getUltimaAtualizacao()).isEqualTo(now());
-        assertThat(filmeAtualizado.getInicializado()).isTrue();
+        assertThat(filmeAtualizado.getElencoInicializado()).isTrue();
     }
 
     @Test

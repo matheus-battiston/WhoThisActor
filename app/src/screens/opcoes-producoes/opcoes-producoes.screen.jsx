@@ -1,11 +1,14 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-import ExibeProducao from "../../components/exibe-producao/exibe-producao.component";
-import "./opcoes-producoes.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useIsMobile } from "../../hooks/use-is-mobile/use-is-mobile.hook";
+import OpcoesProducoesMobileLayout from "./layouts/opcoes-producoes-mobile.layout";
+import OpcoesProducoesWebLayout from "./layouts/opcoes-producoes-web.layout";
 
 export function OpcoesProducoesScreen() {
+  const navigate = useNavigate();
   const location = useLocation();
-  const { opcoes, tipoMidia } = location.state || {};
+  const { opcoes = [], tipoMidia } = location.state || {};
+  const isMobile = useIsMobile();
 
   const mapearProducao = (item) => {
     return {
@@ -19,17 +22,30 @@ export function OpcoesProducoesScreen() {
   const mapearTipo = (item) =>
     (item.tipoMidia || tipoMidia) === "MOVIE" ? "FILME" : "SERIE";
 
-  return (
-    <div className="containerOpcoesProducoes">
-      <div className="opcoesProducoes">
-        {opcoes?.map((item, index) => (
-          <ExibeProducao
-            key={`${item.id}-${index}`}
-            producao={mapearProducao(item)}
-            tipo={mapearTipo(item)}
-          />
-        ))}
-      </div>
-    </div>
+  const obterTipoMidia = (item) => item.tipoMidia || tipoMidia || "TV";
+
+  const abrirProducao = (item) => {
+    navigate(`/exibirElenco/${obterTipoMidia(item)}/${item.id}`);
+  };
+
+  const tipoReferencia = tipoMidia || opcoes?.[0]?.tipoMidia || "TV";
+  const textoTipo = tipoReferencia === "MOVIE" ? "filme" : "série";
+  const artigoTipo = tipoReferencia === "MOVIE" ? "um" : "uma";
+  const artigoSelecao = tipoReferencia === "MOVIE" ? "o" : "a";
+
+  return isMobile ? (
+    <OpcoesProducoesMobileLayout
+      opcoes={opcoes}
+      tipoMidia={tipoMidia}
+      abrirProducao={abrirProducao}
+      introTitle={`Encontramos mais de ${artigoTipo} ${textoTipo} com esse nome`}
+      introSubtitle={`Selecione ${artigoSelecao} ${textoTipo} que você deseja.`}
+    />
+  ) : (
+    <OpcoesProducoesWebLayout
+      opcoes={opcoes}
+      mapearProducao={mapearProducao}
+      mapearTipo={mapearTipo}
+    />
   );
 }

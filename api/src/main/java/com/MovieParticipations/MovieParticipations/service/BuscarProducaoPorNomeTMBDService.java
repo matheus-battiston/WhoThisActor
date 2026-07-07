@@ -2,7 +2,9 @@ package com.MovieParticipations.MovieParticipations.service;
 
 import com.MovieParticipations.MovieParticipations.dto.BuscarIdFilmePorNomeDTO;
 import com.MovieParticipations.MovieParticipations.dto.BuscarIdSeriePorNomeDTO;
+import com.MovieParticipations.MovieParticipations.dto.FilmeDetalhesTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.FilmeTMDBDto;
+import com.MovieParticipations.MovieParticipations.dto.SerieDetalhesTMDBDto;
 import com.MovieParticipations.MovieParticipations.dto.SerieTMDBDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -24,6 +26,7 @@ public class BuscarProducaoPorNomeTMBDService {
     private static final String SERIE_NAO_ENCONTRADA = "Serie nao foi encontrada, verifique o nome e tente novamente";
     private static final String FILME_NAO_ENCONTRADO = "Filme nao foi encontrado, verifique o nome e tente novamente";
     private static final String TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search";
+    private static final String TMDB_DETAILS_URL = "https://api.themoviedb.org/3";
     private static final String MOVIE = "/movie";
     private static final String TV = "/tv";
     private static final String QUERY = "query";
@@ -49,6 +52,26 @@ public class BuscarProducaoPorNomeTMBDService {
                 .queryParam(API_KEY, apiKey)
                 .toUriString();
         return buscarSerie(url, nome);
+    }
+
+    public FilmeDetalhesTMDBDto buscarDetalhesFilmePorId(Long idTmdb) {
+        String url = UriComponentsBuilder.fromUriString(TMDB_DETAILS_URL + MOVIE + "/" + idTmdb)
+                .queryParam(API_KEY, apiKey)
+                .toUriString();
+
+        return restTemplate.exchange(
+                url, GET, HttpEntity.EMPTY, FilmeDetalhesTMDBDto.class
+        ).getBody();
+    }
+
+    public SerieDetalhesTMDBDto buscarDetalhesSeriePorId(Long idTmdb) {
+        String url = UriComponentsBuilder.fromUriString(TMDB_DETAILS_URL + TV + "/" + idTmdb)
+                .queryParam(API_KEY, apiKey)
+                .toUriString();
+
+        return restTemplate.exchange(
+                url, GET, HttpEntity.EMPTY, SerieDetalhesTMDBDto.class
+        ).getBody();
     }
 
     private List<FilmeTMDBDto> buscarFilme(String url, String nome) {

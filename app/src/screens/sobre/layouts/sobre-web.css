@@ -1,0 +1,22 @@
+.sobre-web {
+  display: flex;
+  width: 100vw;
+  height: 100svh;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--app-background);
+}
+
+.sobre-web-conteudo {
+  display: flex;
+  width: min(100%, 760px);
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-self: center;
+  gap: 16px;
+  padding: 24px 24px 40px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

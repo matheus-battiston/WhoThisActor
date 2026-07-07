@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./formLogin.css";
 import { GoogleButtonCustom } from "../google-button/google-button.component";
-import Loading from "../loading/loading.component";
 
-export function FormLogin() {
+export function FormLogin({ onLoadingChange }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const FRASE_CARREGAENTO = "Logando";
 
-  return loading ? (
-    <Loading frase={FRASE_CARREGAENTO} />
-  ) : (
+  const alterarLoading = (value) => {
+    onLoadingChange?.(value);
+  };
+
+  return (
     <div className="login-content">
       <button
         className="login-back-button"
@@ -37,7 +35,7 @@ export function FormLogin() {
       </div>
 
       <div className="login-google-section">
-        <GoogleButtonCustom setLoading={setLoading} />
+        <GoogleButtonCustom setLoading={alterarLoading} />
       </div>
 
       <div className="login-note">

@@ -1,0 +1,43 @@
+.opcoes-atores-mobile {
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--app-background);
+}
+
+.opcoes-atores-mobile-conteudo {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 20px;
+  padding: 16px 18px var(--mobile-footer-space, 112px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.opcoes-atores-mobile-lista {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 380px) {
+  .opcoes-atores-mobile-conteudo {
+    gap: 18px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .opcoes-atores-mobile-lista {
+    gap: 12px;
+  }
+}

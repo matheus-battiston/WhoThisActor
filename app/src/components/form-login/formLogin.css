@@ -24,21 +24,21 @@
 }
 
 .login-back-button:hover {
-  color: #36bafe;
+  color: #5fe8ff;
   transform: translateX(-2px);
 }
 
 .login-back-button:focus-visible {
-  outline: 2px solid rgba(54, 186, 254, 0.7);
+  outline: 2px solid rgba(95, 232, 255, 0.7);
   outline-offset: 4px;
 }
 
 .login-badge {
   align-self: flex-start;
-  background: rgba(54, 186, 254, 0.12);
-  border: 1px solid rgba(54, 186, 254, 0.28);
+  background: rgba(95, 232, 255, 0.12);
+  border: 1px solid rgba(95, 232, 255, 0.28);
   border-radius: 999px;
-  color: #36bafe;
+  color: #5fe8ff;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -53,16 +53,15 @@
 }
 
 .login-eyebrow {
-  color: #36bafe;
+  color: #5fe8ff;
   font-size: 0.95rem;
   margin: 0;
 }
 
 .login-title {
   color: white;
-  font-family: Georgia, "Times New Roman", serif;
   font-size: 45px;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   line-height: 1;
   margin: 0;
   max-width: 10ch;
@@ -91,11 +90,16 @@
 }
 
 @media (max-width: 450px) {
-  .login-title{
+  .login-content {
+    gap: 18px;
+    padding: 24px;
+  }
+
+  .login-title {
     font-size: 35px;
   }
 
-  .login-note{
+  .login-note {
     font-size: 12px;
   }
 

@@ -11,6 +11,20 @@
   align-items: center;
 }
 
+.pesquisa-com-icone {
+  position: relative;
+}
+
+.pesquisa-icone {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  color: rgba(220, 226, 255, 0.72);
+  font-size: 28px;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
 .input {
   height: 50px;
   border-radius: 10px;

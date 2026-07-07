@@ -25,6 +25,9 @@ public class PesquisaFilmeMapperTest {
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
         assertEquals(filme.getImagem(), response.getImagem());
+        assertEquals(filme.getDataLancamento(), response.getDataLancamento());
+        assertEquals(filme.getOverview(), response.getOverview());
+        assertEquals(filme.getGenero(), response.getGenero());
         assertEquals(MOVIE, response.getTipoMidia());
         assertEquals(filme.getPopularidade(), response.getPopularidade());
     }

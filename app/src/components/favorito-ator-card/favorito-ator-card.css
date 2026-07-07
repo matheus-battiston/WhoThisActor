@@ -1,0 +1,77 @@
+.favorito-ator-card {
+  display: flex;
+  width: var(--favorito-ator-card-width, 148px);
+  min-width: var(--favorito-ator-card-width, 148px);
+  padding: 0;
+  border: 1px solid rgba(70, 94, 172, 0.48);
+  border-radius: 16px;
+  flex-direction: column;
+  overflow: hidden;
+  color: #fff;
+  text-align: left;
+  background: rgba(11, 22, 79, 0.62);
+  box-shadow:
+    0 0 0 1px rgba(95, 232, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.favorito-ator-card:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.favorito-ator-card-imagem-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.favorito-ator-card-imagem {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.favorito-ator-card-img {
+  object-fit: cover;
+}
+
+.favorito-ator-card-rodape {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 10px;
+  box-sizing: border-box;
+}
+
+.favorito-ator-card-rodape strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.16;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.favorito-ator-card-favorito.MuiIconButton-root {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+@media (max-width: 380px) {
+  .favorito-ator-card-rodape {
+    min-height: 42px;
+    padding: 8px;
+  }
+
+  .favorito-ator-card-rodape strong {
+    font-size: 13px;
+  }
+}

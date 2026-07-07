@@ -1,0 +1,123 @@
+.elenco-mobile-card {
+  display: grid;
+  width: 100%;
+  min-height: 94px;
+  grid-template-columns: 58px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(220, 226, 255, 0.24);
+  border-radius: 14px;
+  color: #fff;
+  text-align: left;
+  background: rgba(21, 20, 88, 0.48);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 36px rgba(1, 4, 28, 0.22);
+}
+
+.elenco-mobile-foto {
+  width: 58px;
+  height: 74px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.elenco-mobile-foto-img {
+  object-fit: cover;
+}
+
+.elenco-mobile-texto {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.elenco-mobile-texto strong,
+.elenco-mobile-texto span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.elenco-mobile-texto strong {
+  color: #f7f9ff;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.12;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.elenco-mobile-texto span {
+  color: #5fe8ff;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.2;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.elenco-mobile-seta {
+  justify-self: end;
+  color: #5fe8ff;
+  font-size: 26px;
+}
+
+@media (max-width: 380px) {
+  .elenco-mobile-card {
+    min-height: 88px;
+    grid-template-columns: 54px minmax(0, 1fr) 20px;
+    gap: 10px;
+    padding: 9px 10px;
+  }
+
+  .elenco-mobile-foto {
+    width: 54px;
+    height: 70px;
+  }
+
+  .elenco-mobile-texto strong {
+    font-size: 15.5px;
+  }
+
+  .elenco-mobile-texto span {
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 340px) {
+  .elenco-mobile-card {
+    min-height: 82px;
+    grid-template-columns: 50px minmax(0, 1fr) 18px;
+    gap: 9px;
+    padding: 8px 9px;
+    border-radius: 12px;
+  }
+
+  .elenco-mobile-foto {
+    width: 50px;
+    height: 64px;
+    border-radius: 10px;
+  }
+
+  .elenco-mobile-texto strong {
+    font-size: 15px;
+  }
+
+  .elenco-mobile-texto span {
+    font-size: 12px;
+  }
+
+  .elenco-mobile-seta {
+    font-size: 22px;
+  }
+}

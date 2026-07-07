@@ -44,6 +44,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("AdicionarSerieService")
 class AdicionarSerieServiceTest {
+    private static final int INDICE_PRIMEIRA_SERIE = 0;
+    private static final int INDICE_PRIMEIRO_ATOR = 0;
+    private static final int INDICE_PRIMEIRO_PAPEL = 0;
+    private static final int QUANTIDADE_ATORES_PROCESSADOS = 2;
     private static final Long ID_TMDB_BREAKING_BAD = 456L;
     private static final String TITULO_BREAKING_BAD = "Breaking Bad";
     private static final String TITULO_NORMALIZADO_BREAKING_BAD = "breaking bad";
@@ -57,6 +61,7 @@ class AdicionarSerieServiceTest {
     private static final Long ID_TMDB_AARON_PAUL = 84497L;
     private static final String PERSONAGEM_WALTER_WHITE = "Walter White";
     private static final String PERSONAGEM_WALTER_WHITE_HEISENBERG = "Walter White / Heisenberg";
+    private static final String ERRO_AO_PROCESSAR = "Erro ao processar";
 
     @Mock
     private SerieRepository serieRepository;
@@ -98,13 +103,13 @@ class AdicionarSerieServiceTest {
         assertThat(resultado).containsExactly(serieSalva);
         verify(serieRepository).saveAll(seriesCaptor.capture());
 
-        Serie serieMapeada = seriesCaptor.getValue().get(0);
+        Serie serieMapeada = seriesCaptor.getValue().get(INDICE_PRIMEIRA_SERIE);
         assertThat(serieMapeada.getIdTmdb()).isEqualTo(ID_TMDB_BREAKING_BAD);
         assertThat(serieMapeada.getTitulo()).isEqualTo(TITULO_BREAKING_BAD);
         assertThat(serieMapeada.getTituloNormalizado()).isEqualTo(TITULO_NORMALIZADO_BREAKING_BAD);
         assertThat(serieMapeada.getImagem()).isEqualTo(IMAGEM_BREAKING_BAD);
         assertThat(serieMapeada.getPopularidade()).isEqualTo(POPULARIDADE_BREAKING_BAD);
-        assertThat(serieMapeada.getInicializado()).isFalse();
+        assertThat(serieMapeada.getElencoInicializado()).isFalse();
         assertThat(serieMapeada.getUltimaAtualizacao()).isNotNull();
     }
 
@@ -112,19 +117,19 @@ class AdicionarSerieServiceTest {
     @DisplayName("Deve buscar, deduplicar, processar e salvar elenco da serie")
     void deveBuscarDeduplicarProcessarESalvarElencoDaSerie() {
         Serie serie = getBreakingBadSerieEntityComId();
-        serie.setInicializado(false);
+        serie.setElencoInicializado(false);
         AtorTMDBSerieDto bryanCranston = getBryanCranstonAtorTMDBSerieDto();
         AtorTMDBSerieDto aaronPaul = getAaronPaulAtorTMDBSerieDto();
 
         when(buscarElencoService.pesquisaElencoSerie(ID_TMDB_BREAKING_BAD)).thenReturn(of(bryanCranston, aaronPaul));
         doAnswer(invocation -> {
-            assertThat(serie.getInicializado()).isFalse();
+            assertThat(serie.getElencoInicializado()).isFalse();
             return null;
         }).when(processamentoSerieService).processarElenco(eq(serie), anyList());
 
         adicionarSerieService.adicionarElenco(serie);
 
-        assertThat(serie.getInicializado()).isTrue();
+        assertThat(serie.getElencoInicializado()).isTrue();
 
         InOrder inOrder = inOrder(
                 buscarElencoService,
@@ -159,13 +164,13 @@ class AdicionarSerieServiceTest {
         verify(processamentoSerieService).processarElenco(eq(serie), atoresCaptor.capture());
 
         List<AtorTMDBSerieDto> atoresProcessados = atoresCaptor.getValue();
-        assertThat(atoresProcessados).hasSize(2);
+        assertThat(atoresProcessados).hasSize(QUANTIDADE_ATORES_PROCESSADOS);
         assertThat(atoresProcessados)
                 .extracting(AtorTMDBSerieDto::getId)
                 .containsExactlyInAnyOrder(ID_TMDB_BRYAN_CRANSTON, ID_TMDB_AARON_PAUL);
         assertThat(atoresProcessados).contains(bryanCranstonComPersonagemMaior);
         assertThat(atoresProcessados).doesNotContain(bryanCranston);
-        assertThat(bryanCranstonComPersonagemMaior.getPapeis().get(0).getPersonagem())
+        assertThat(bryanCranstonComPersonagemMaior.getPapeis().get(INDICE_PRIMEIRO_PAPEL).getPersonagem())
                 .isEqualTo(PERSONAGEM_WALTER_WHITE_HEISENBERG);
     }
 
@@ -184,7 +189,11 @@ class AdicionarSerieServiceTest {
         verify(processamentoSerieService).processarElenco(eq(serie), atoresCaptor.capture());
 
         assertThat(atoresCaptor.getValue()).containsExactly(bryanCranston);
-        assertThat(atoresCaptor.getValue().get(0).getPapeis().get(0).getPersonagem())
+        assertThat(atoresCaptor.getValue()
+                .get(INDICE_PRIMEIRO_ATOR)
+                .getPapeis()
+                .get(INDICE_PRIMEIRO_PAPEL)
+                .getPersonagem())
                 .isEqualTo(PERSONAGEM_WALTER_WHITE);
     }
 
@@ -192,13 +201,13 @@ class AdicionarSerieServiceTest {
     @DisplayName("Deve nao processar nem inicializar serie quando nao houver elenco")
     void deveNaoProcessarNemInicializarSerieQuandoNaoHouverElenco() {
         Serie serie = getBreakingBadSerieEntityComId();
-        serie.setInicializado(false);
+        serie.setElencoInicializado(false);
 
         when(buscarElencoService.pesquisaElencoSerie(ID_TMDB_BREAKING_BAD)).thenReturn(of());
 
         adicionarSerieService.adicionarElenco(serie);
 
-        assertThat(serie.getInicializado()).isFalse();
+        assertThat(serie.getElencoInicializado()).isFalse();
         verifyNoInteractions(processamentoSerieService, recarregarCacheClassificacaoService);
         verify(serieRepository, never()).save(serie);
     }
@@ -207,9 +216,9 @@ class AdicionarSerieServiceTest {
     @DisplayName("Deve propagar erro e nao inicializar quando processamento do elenco falhar")
     void devePropagarErroENaoInicializarQuandoProcessamentoDoElencoFalhar() {
         Serie serie = getBreakingBadSerieEntityComId();
-        serie.setInicializado(false);
+        serie.setElencoInicializado(false);
         AtorTMDBSerieDto ator = getBryanCranstonAtorTMDBSerieDto();
-        ResponseStatusException erro = new ResponseStatusException(BAD_REQUEST, "Erro ao processar");
+        ResponseStatusException erro = new ResponseStatusException(BAD_REQUEST, ERRO_AO_PROCESSAR);
 
         when(buscarElencoService.pesquisaElencoSerie(ID_TMDB_BREAKING_BAD)).thenReturn(of(ator));
         doThrow(erro).when(processamentoSerieService).processarElenco(serie, of(ator));
@@ -220,7 +229,7 @@ class AdicionarSerieServiceTest {
         );
 
         assertThat(erroLancado).isSameAs(erro);
-        assertThat(serie.getInicializado()).isFalse();
+        assertThat(serie.getElencoInicializado()).isFalse();
         verify(serieRepository, never()).save(serie);
         verifyNoInteractions(recarregarCacheClassificacaoService);
     }
@@ -241,13 +250,13 @@ class AdicionarSerieServiceTest {
 
         assertThat(idsCaptor.getValue()).containsExactly(ID_TMDB_BREAKING_BAD);
 
-        Serie serieSalva = seriesCaptor.getValue().get(0);
+        Serie serieSalva = seriesCaptor.getValue().get(INDICE_PRIMEIRA_SERIE);
         assertThat(serieSalva.getIdTmdb()).isEqualTo(ID_TMDB_BREAKING_BAD);
         assertThat(serieSalva.getTitulo()).isEqualTo(TITULO_BREAKING_BAD);
         assertThat(serieSalva.getTituloNormalizado()).isEqualTo(TITULO_NORMALIZADO_BREAKING_BAD);
         assertThat(serieSalva.getImagem()).isEqualTo(IMAGEM_BREAKING_BAD);
         assertThat(serieSalva.getPopularidade()).isEqualTo(POPULARIDADE_BREAKING_BAD);
-        assertThat(serieSalva.getInicializado()).isFalse();
+        assertThat(serieSalva.getElencoInicializado()).isFalse();
         assertThat(serieSalva.getUltimaAtualizacao()).isNotNull();
     }
 
@@ -265,14 +274,14 @@ class AdicionarSerieServiceTest {
 
         verify(serieRepository).saveAll(seriesCaptor.capture());
 
-        Serie serieAtualizada = seriesCaptor.getValue().get(0);
+        Serie serieAtualizada = seriesCaptor.getValue().get(INDICE_PRIMEIRA_SERIE);
         assertThat(serieAtualizada).isSameAs(serieExistente);
         assertThat(serieAtualizada.getTitulo()).isEqualTo(TITULO_ATUALIZADO);
         assertThat(serieAtualizada.getTituloNormalizado()).isEqualTo(TITULO_ATUALIZADO_NORMALIZADO);
         assertThat(serieAtualizada.getImagem()).isEqualTo(IMAGEM_ATUALIZADA);
         assertThat(serieAtualizada.getPopularidade()).isEqualTo(POPULARIDADE_ATUALIZADA);
         assertThat(serieAtualizada.getUltimaAtualizacao()).isEqualTo(LocalDate.now());
-        assertThat(serieAtualizada.getInicializado()).isTrue();
+        assertThat(serieAtualizada.getElencoInicializado()).isTrue();
     }
 
     @Test

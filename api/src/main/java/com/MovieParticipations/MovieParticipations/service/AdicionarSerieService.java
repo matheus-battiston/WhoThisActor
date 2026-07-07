@@ -48,7 +48,7 @@ public class AdicionarSerieService {
         if (atoresSemDuplicado.isEmpty()) return;
 
         processamentoSerieService.processarElenco(serieEntity, atoresSemDuplicado);
-        serieEntity.setInicializado(true);
+        serieEntity.setElencoInicializado(true);
         serieRepository.save(serieEntity);
         recarregarCacheClassificacaoService.recarregarCacheAtoresPorProducao();
     }
