@@ -21,9 +21,6 @@
 }
 
 .producao-mobile-card-poster {
-  width: 150px;
-  aspect-ratio: 2 / 3;
-  overflow: hidden;
   border: 1px solid rgba(220, 226, 255, 0.18);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.08);
@@ -62,7 +59,7 @@
   white-space: nowrap;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 394px) {
   .producao-mobile-card-info {
     padding-top: 8px;
   }
@@ -74,4 +71,17 @@
   .producao-mobile-card-info span {
     font-size: 12px;
   }
+
+  .producao-mobile-card {
+    width: 150px;
+  }
 }
+
+@media (max-width: 343px) {
+
+  .producao-mobile-card {
+    width: 130px;
+  }
+}
+
+

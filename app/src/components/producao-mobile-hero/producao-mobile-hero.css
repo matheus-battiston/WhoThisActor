@@ -1,5 +1,6 @@
 .producao-mobile-hero {
   position: relative;
+  z-index: 11;
   flex: 0 0 auto;
   padding: 18px 20px 24px;
   color: #fff;
@@ -37,57 +38,28 @@
   transform: scale(1.03);
 }
 
-.producao-mobile-voltar {
-  position: relative;
-  z-index: 2;
-}
-
-.producao-mobile-logo {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  width: fit-content;
-  margin: -34px auto 34px;
-  padding: 0;
-  border: 0;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  color: #fff;
-  font-size: 15px;
-  line-height: 1;
-  background: transparent;
-  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
-  cursor: pointer;
-}
-
-.producao-mobile-logo img {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-}
-
-.producao-mobile-logo span {
-  color: #59e8ff;
-}
-
 .producao-mobile-info {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: 132px minmax(0, 1fr);
-  gap: 16px;
+  display: flex;
+  gap: 14px;
   align-items: center;
+}
+
+.producao-mobile-hero .mobile-page-header {
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .producao-mobile-poster-wrapper {
   position: relative;
   min-width: 0;
+  width: 140px;
+  flex-shrink: 0;
 }
 
 .producao-mobile-poster {
   width: 100%;
-  aspect-ratio: 2 / 3;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.1);
   box-shadow: 0 28px 48px rgba(0, 0, 0, 0.34);
@@ -108,6 +80,7 @@
 
 .producao-mobile-texto {
   min-width: 0;
+  width: 100%;
 }
 
 .producao-mobile-texto h1 {
@@ -172,9 +145,7 @@
 
 .producao-mobile-providers img {
   width: 34px;
-  height: 34px;
   border-radius: 9px;
-  object-fit: contain;
 }
 
 .producao-mobile-overview-modal {
@@ -274,15 +245,6 @@
     padding: 16px 18px 22px;
   }
 
-  .producao-mobile-logo {
-    margin-bottom: 32px;
-  }
-
-  .producao-mobile-info {
-    grid-template-columns: 118px minmax(0, 1fr);
-    gap: 14px;
-  }
-
   .producao-mobile-texto h1 {
     margin-bottom: 10px;
     font-size: 28px;
@@ -306,16 +268,10 @@
 
   .producao-mobile-providers img {
     width: 32px;
-    height: 32px;
   }
 }
 
 @media (max-width: 380px) {
-  .producao-mobile-info {
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 12px;
-  }
-
   .producao-mobile-texto h1 {
     font-size: 24px;
   }
@@ -324,15 +280,6 @@
 @media (max-width: 340px) {
   .producao-mobile-hero {
     padding: 16px 14px 20px;
-  }
-
-  .producao-mobile-logo {
-    margin-bottom: 26px;
-  }
-
-  .producao-mobile-info {
-    grid-template-columns: 88px minmax(0, 1fr);
-    gap: 10px;
   }
 
   .producao-mobile-texto h1 {
@@ -367,7 +314,26 @@
 
   .producao-mobile-providers img {
     width: 28px;
-    height: 28px;
     border-radius: 8px;
+  }
+}
+
+@media (max-height: 670px) {
+  .producao-mobile-info {
+    height: 170px;
+  }
+
+  .producao-mobile-poster-wrapper {
+    width: 110px;
+  }
+
+  .producao-mobile-metadados {
+    gap: 3px 10px;
+    font-size: 11px;
+  }
+
+  .producao-mobile-overview {
+    font-size: 12px;
+    margin: 5px;
   }
 }

@@ -1,5 +1,6 @@
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
 import OpcaoProducaoCard from "../../../components/opcao-producao-card/opcao-producao-card.component";
+import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import ResultadoPesquisaOpcao from "../../../components/search-result-intro/search-result-intro.component";
 import "./opcoes-producoes-mobile.css";
 
@@ -12,6 +13,8 @@ export default function OpcoesProducoesMobileLayout({
 }) {
   return (
     <div className="opcoes-producoes-mobile">
+      <ScrollFade />
+
       <MobilePageHeader />
 
       <main className="opcoes-producoes-mobile-conteudo">

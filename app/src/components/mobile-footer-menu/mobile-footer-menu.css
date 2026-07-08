@@ -8,6 +8,14 @@
   left: 14px;
   display: none;
   pointer-events: none;
+  transition:
+    opacity 500ms ease,
+    transform 500ms ease;
+}
+
+.mobile-footer-menu-oculto {
+  opacity: 0;
+  transform: translateY(calc(100% + var(--mobile-footer-bottom) + 18px));
 }
 
 .mobile-footer-menu-interno {

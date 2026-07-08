@@ -1,43 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
-import MobilePageHeader from "../../components/mobile-page-header/mobile-page-header.component";
-import MobileSegmentedControl from "../../components/mobile-segmented-control/mobile-segmented-control.component";
-import InputSearch from "../../components/pesquisa/pesquisa.component";
-import CardAtorBusca from "../../components/card-ator-busca/card-ator-busca.component";
-import BuscaProducaoCard from "../../components/busca-producao-card/busca-producao-card.component";
+import { useIsMobile } from "../../hooks/use-is-mobile/use-is-mobile.hook";
 import Loading from "../../components/loading/loading.component";
-import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import {
   pesquisarAtorPorNome,
   pesquisarFilmePorNome,
   pesquisarSeriePorNome,
   useBuscarInformacoesIniciaisBusca,
 } from "../../api/generated/api";
+import BuscarMobileLayout from "./layouts/buscar-mobile.layout";
+import BuscarWebLayout from "./layouts/buscar-web.layout";
 import "./buscar.css";
-
-const CATEGORIAS = [
-  { label: "Pessoas", value: "PESSOAS", Icone: PersonOutlineOutlinedIcon },
-  { label: "Series", value: "SERIES", Icone: TvOutlinedIcon },
-  { label: "Filmes", value: "FILMES", Icone: MovieOutlinedIcon },
-];
-
-function obterPlaceholder(categoria) {
-  if (categoria === "PESSOAS") return "Buscar pessoa...";
-  if (categoria === "FILMES") return "Buscar filme...";
-
-  return "Buscar serie...";
-}
-
-function montarImagem(path) {
-  return path ? `${URL_BASE_IMAGEM_TMDB}${path}` : undefined;
-}
 
 export function BuscarScreen() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [categoria, setCategoria] = useState("PESSOAS");
   const [termoBusca, setTermoBusca] = useState("");
   const [loadingManual, setLoadingManual] = useState(false);
@@ -138,87 +116,27 @@ export function BuscarScreen() {
     pesquisaSerie.mutate();
   };
 
+  const layoutProps = {
+    categoria,
+    setCategoria,
+    termoBusca,
+    setTermoBusca,
+    pesquisar,
+    dadosBuscaInicial,
+    abrirAtor: (pessoa) => navigate(`/ator/${pessoa.id}`),
+    abrirFilme: (filme) => navigate(`/exibirElenco/MOVIE/${filme.id}`),
+    abrirSerie: (serie) => navigate(`/exibirElenco/TV/${serie.id}`),
+  };
+
   return (
-    <div className="page-buscar">
-      <MobilePageHeader />
-
-      <main className="buscar-conteudo">
-        <h1>Buscar</h1>
-
-        <form className="buscar-form" onSubmit={pesquisar}>
-          <InputSearch
-            value={termoBusca}
-            onChange={(event) => setTermoBusca(event.target.value)}
-            placeholder={obterPlaceholder(categoria)}
-            wrapperClassName="buscar-input-wrapper"
-            inputClassName="buscar-input"
-            mostrarIcone
-            ariaLabel="Buscar"
-          />
-        </form>
-
-        <MobileSegmentedControl
-          options={CATEGORIAS}
-          value={categoria}
-          onChange={setCategoria}
-        />
-
-        <div className="buscar-resultados">
-          <section className="buscar-secao">
-            <h2>
-              <PersonOutlineOutlinedIcon />
-              Pessoas
-            </h2>
-            {dadosBuscaInicial?.pessoas?.map((pessoa) => (
-              <CardAtorBusca
-                key={pessoa.id}
-                titulo={pessoa.nome}
-                imagem={montarImagem(pessoa.urlImagem)}
-                formato="pessoa"
-                onClick={() => navigate(`/ator/${pessoa.id}`)}
-              />
-            ))}
-          </section>
-
-          <section className="buscar-secao">
-            <h2>
-              <MovieOutlinedIcon />
-              Filmes
-            </h2>
-            <div className="buscar-grid-producoes">
-              {dadosBuscaInicial?.filmes?.map((filme) => (
-                <BuscaProducaoCard
-                  key={filme.id}
-                  titulo={filme.nomeProducao}
-                  descricao={filme.overview}
-                  imagem={montarImagem(filme.urlImagem)}
-                  onClick={() => navigate(`/exibirElenco/MOVIE/${filme.id}`)}
-                />
-              ))}
-            </div>
-          </section>
-
-          <section className="buscar-secao">
-            <h2>
-              <TvOutlinedIcon />
-              Series
-            </h2>
-            <div className="buscar-grid-producoes">
-              {dadosBuscaInicial?.series?.map((serie) => (
-                <BuscaProducaoCard
-                  key={serie.id}
-                  titulo={serie.nomeProducao}
-                  descricao={serie.overview}
-                  imagem={montarImagem(serie.urlImagem)}
-                  onClick={() => navigate(`/exibirElenco/TV/${serie.id}`)}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
-      </main>
+    <>
+      {isMobile ? (
+        <BuscarMobileLayout {...layoutProps} />
+      ) : (
+        <BuscarWebLayout {...layoutProps} />
+      )}
 
       {exibirLoading ? <Loading frase={fraseLoading} /> : null}
-    </div>
+    </>
   );
 }

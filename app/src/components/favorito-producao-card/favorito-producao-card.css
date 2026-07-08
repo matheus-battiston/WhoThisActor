@@ -1,8 +1,7 @@
 .favorito-producao-card {
   position: relative;
   display: flex;
-  width: var(--favorito-producao-card-width, 188px);
-  min-width: var(--favorito-producao-card-width, 188px);
+  width: 150px;
   padding: 0;
   border: 1px solid rgba(70, 94, 172, 0.44);
   border-radius: 18px;
@@ -25,13 +24,7 @@
   filter: brightness(1.04);
 }
 
-.favorito-producao-card-poster-wrapper {
-  position: relative;
-}
-
 .favorito-producao-card-poster {
-  width: 100%;
-  aspect-ratio: 2 / 3;
   background: rgba(255, 255, 255, 0.08);
 }
 

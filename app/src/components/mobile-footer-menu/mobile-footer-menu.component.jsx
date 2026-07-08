@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
@@ -48,9 +49,76 @@ export default function MobileFooterMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { abrirCamera } = useCameraCapture();
+  const [oculto, setOculto] = useState(false);
+  const posicoesScroll = useRef(new WeakMap());
+
+  useEffect(() => {
+    setOculto(false);
+    posicoesScroll.current = new WeakMap();
+  }, [pathname]);
+
+  useEffect(() => {
+    function obterDadosScroll(target) {
+      if (target === document || target === window) {
+        const elemento = document.scrollingElement || document.documentElement;
+
+        return {
+          elemento,
+          scrollTop: window.scrollY || elemento.scrollTop,
+          scrollHeight: elemento.scrollHeight,
+          clientHeight: window.innerHeight,
+        };
+      }
+
+      if (!(target instanceof Element)) return null;
+
+      return {
+        elemento: target,
+        scrollTop: target.scrollTop,
+        scrollHeight: target.scrollHeight,
+        clientHeight: target.clientHeight,
+      };
+    }
+
+    function aoScroll(event) {
+      const dados = obterDadosScroll(event.target);
+
+      if (!dados || dados.scrollHeight <= dados.clientHeight) return;
+
+      const ultimoScrollTop = posicoesScroll.current.get(dados.elemento) ?? 0;
+      const diferenca = dados.scrollTop - ultimoScrollTop;
+
+      if (dados.scrollTop <= 8) {
+        setOculto(false);
+        posicoesScroll.current.set(dados.elemento, dados.scrollTop);
+        return;
+      }
+
+      if (Math.abs(diferenca) < 4) return;
+
+      setOculto(diferenca > 0);
+      posicoesScroll.current.set(dados.elemento, dados.scrollTop);
+    }
+
+    document.addEventListener("scroll", aoScroll, {
+      capture: true,
+      passive: true,
+    });
+
+    return () => {
+      document.removeEventListener("scroll", aoScroll, true);
+    };
+  }, []);
+
+  const navClassName = [
+    "mobile-footer-menu",
+    oculto ? "mobile-footer-menu-oculto" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <nav className="mobile-footer-menu" aria-label="Navegacao principal">
+    <nav className={navClassName} aria-label="Navegacao principal">
       <div className="mobile-footer-menu-interno">
         {itensMenu.map(({ label, path, Icone, destaque, exact }) => {
           const ativo = itemAtivo({ path, destaque, exact }, pathname);

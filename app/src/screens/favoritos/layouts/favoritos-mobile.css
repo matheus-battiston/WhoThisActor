@@ -9,14 +9,15 @@
 
 .favoritos-mobile-conteudo {
   display: flex;
-  min-height: 0;
-  flex: 1;
+  height: 100dvh;
   flex-direction: column;
   gap: 16px;
-  padding: 12px 18px var(--mobile-footer-space, 96px);
+  padding: 0 18px 20px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
 
 .favoritos-mobile-titulo {
   margin: 0;
@@ -31,20 +32,7 @@
   flex-shrink: 0;
 }
 
-.favoritos-mobile-painel {
-  display: flex;
-  min-height: 0;
-  flex: 1;
-  flex-direction: column;
-  gap: 12px;
-  padding: 14px;
-  border: 1px solid rgba(70, 94, 172, 0.34);
-  border-radius: 18px;
-  background: rgba(4, 8, 45, 0.18);
-  overflow: hidden;
-}
-
-.favoritos-mobile-painel-header {
+.favoritos-mobile-secao-header {
   display: flex;
   flex-shrink: 0;
   align-items: center;
@@ -53,7 +41,7 @@
   color: #fff;
 }
 
-.favoritos-mobile-painel-header span {
+.favoritos-mobile-secao-header span {
   display: inline-flex;
   min-width: 0;
   align-items: center;
@@ -63,7 +51,7 @@
   line-height: 1;
 }
 
-.favoritos-mobile-painel-header svg {
+.favoritos-mobile-secao-header svg {
   width: 27px;
   height: 27px;
   color: #5fe8ff;
@@ -73,27 +61,22 @@
 .favoritos-mobile-grid-producoes,
 .favoritos-mobile-grid-atores {
   display: flex;
-  min-height: 0;
-  flex: 1;
   flex-wrap: wrap;
   align-content: flex-start;
   justify-content: flex-start;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  -webkit-overflow-scrolling: touch;
+}
+
+.favoritos-mobile-grid-producoes:has(> :nth-child(2)),
+.favoritos-mobile-grid-atores:has(> :nth-child(2)) {
+  justify-content: space-evenly;
 }
 
 .favoritos-mobile-grid-producoes {
-  --favorito-producao-card-width: 154px;
-  justify-content: space-around;
   gap: 12px;
 }
 
 .favoritos-mobile-grid-atores {
-  --favorito-ator-card-width: 148px;
-  justify-content: space-around;
-  gap: 14px;
+  gap: 12px;
 }
 
 @media (max-width: 380px) {
@@ -107,17 +90,11 @@
     font-size: 30px;
   }
 
-  .favoritos-mobile-painel {
-    gap: 12px;
-    padding: 12px;
-    border-radius: 16px;
-  }
-
-  .favoritos-mobile-painel-header span {
+  .favoritos-mobile-secao-header span {
     font-size: 17px;
   }
 
-  .favoritos-mobile-painel-header svg {
+  .favoritos-mobile-secao-header svg {
     width: 24px;
     height: 24px;
   }

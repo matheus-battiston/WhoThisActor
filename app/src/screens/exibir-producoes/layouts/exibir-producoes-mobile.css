@@ -9,13 +9,13 @@
 
 .exibir-producoes-mobile-conteudo {
   display: flex;
-  min-height: 0;
-  flex: 1;
+  height: 100dvh;
   flex-direction: column;
   gap: 16px;
-  padding: 18px 18px var(--mobile-footer-space, 112px);
+  padding: 0 18px var(--mobile-footer-space, 112px);
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .exibir-producoes-mobile-tabs {
@@ -24,16 +24,11 @@
 
 .exibir-producoes-mobile-lista {
   display: flex;
-  min-height: 0;
-  flex: 1;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 14px 0;
+  gap: 14px 20px;
   align-content: flex-start;
   justify-content: space-around;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 380px) {
@@ -44,6 +39,6 @@
   }
 
   .exibir-producoes-mobile-lista {
-    gap: 10px;
+    gap: 15px;
   }
 }

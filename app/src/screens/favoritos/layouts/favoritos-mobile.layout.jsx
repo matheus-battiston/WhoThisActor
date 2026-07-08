@@ -4,6 +4,7 @@ import TheatersOutlinedIcon from "@mui/icons-material/TheatersOutlined";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
 import MobileSegmentedControl from "../../../components/mobile-segmented-control/mobile-segmented-control.component";
+import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import FavoritoAtorCard from "../../../components/favorito-ator-card/favorito-ator-card.component";
 import FavoritoProducaoCard from "../../../components/favorito-producao-card/favorito-producao-card.component";
 import TipoProducaoToggle from "../../../components/tipo-producao-toggle/tipo-producao-toggle.component";
@@ -43,9 +44,11 @@ export default function FavoritosMobileLayout({
 
   return (
     <div className="favoritos-mobile">
-      <MobilePageHeader />
+      <ScrollFade />
 
       <main className="favoritos-mobile-conteudo">
+        <MobilePageHeader />
+
         <h1 className="favoritos-mobile-titulo">Favoritos</h1>
 
         <MobileSegmentedControl
@@ -55,45 +58,43 @@ export default function FavoritosMobileLayout({
           className="favoritos-mobile-abas"
         />
 
-        <section className="favoritos-mobile-painel">
-          <header className="favoritos-mobile-painel-header">
-            <span>
-              <IconeSecao />
-              {obterTituloSecao(aba, tipoProducao)}
-            </span>
-            {aba === "PRODUCOES" ? (
-              <TipoProducaoToggle
-                tipoProducao={tipoProducao}
-                onChange={setTipoProducao}
-              />
-            ) : null}
-          </header>
+        <header className="favoritos-mobile-secao-header">
+          <span>
+            <IconeSecao />
+            {obterTituloSecao(aba, tipoProducao)}
+          </span>
+          {aba === "PRODUCOES" ? (
+            <TipoProducaoToggle
+              tipoProducao={tipoProducao}
+              onChange={setTipoProducao}
+            />
+          ) : null}
+        </header>
 
-          {aba === "ATORES" ? (
-            <div className="favoritos-mobile-grid-atores">
-              {atores.map((ator) => (
-                <FavoritoAtorCard
-                  key={ator.id}
-                  ator={ator}
-                  removendo={removendoFavorito}
-                  onRemoverFavorito={removerAtorFavorito}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="favoritos-mobile-grid-producoes">
-              {listaProducoes.map((producao) => (
-                <FavoritoProducaoCard
-                  key={producao.id}
-                  producao={producao}
-                  tipoMidia={tipoProducao === "filmes" ? "MOVIE" : "TV"}
-                  removendo={removendoFavorito}
-                  onRemoverFavorito={removerProducaoFavorita}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        {aba === "ATORES" ? (
+          <div className="favoritos-mobile-grid-atores">
+            {atores.map((ator) => (
+              <FavoritoAtorCard
+                key={ator.id}
+                ator={ator}
+                removendo={removendoFavorito}
+                onRemoverFavorito={removerAtorFavorito}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="favoritos-mobile-grid-producoes">
+            {listaProducoes.map((producao) => (
+              <FavoritoProducaoCard
+                key={producao.id}
+                producao={producao}
+                tipoMidia={tipoProducao === "filmes" ? "MOVIE" : "TV"}
+                removendo={removendoFavorito}
+                onRemoverFavorito={removerProducaoFavorita}
+              />
+            ))}
+          </div>
+        )}
       </main>
 
       {loading ? <Loading frase="Carregando favoritos" /> : null}

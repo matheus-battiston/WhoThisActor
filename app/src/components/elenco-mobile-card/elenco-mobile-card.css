@@ -1,8 +1,8 @@
 .elenco-mobile-card {
-  display: grid;
+  display: flex;
+  flex-shrink: 0;
+  height: 100px;
   width: 100%;
-  min-height: 94px;
-  grid-template-columns: 58px minmax(0, 1fr) 22px;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -17,8 +17,7 @@
 }
 
 .elenco-mobile-foto {
-  width: 58px;
-  height: 74px;
+  height: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 11px;
   background: rgba(255, 255, 255, 0.08);
@@ -30,6 +29,7 @@
 
 .elenco-mobile-texto {
   display: flex;
+  flex: 1 1 auto;
   min-width: 0;
   flex-direction: column;
   gap: 5px;
@@ -49,7 +49,6 @@
     Arial, sans-serif;
   font-size: 17px;
   font-weight: 650;
-  line-height: 1.12;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
@@ -61,28 +60,24 @@
     Arial, sans-serif;
   font-size: 14px;
   font-weight: 450;
-  line-height: 1.2;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
 
 .elenco-mobile-seta {
-  justify-self: end;
+  flex: 0 0 22px;
   color: #5fe8ff;
   font-size: 26px;
 }
 
 @media (max-width: 380px) {
   .elenco-mobile-card {
-    min-height: 88px;
-    grid-template-columns: 54px minmax(0, 1fr) 20px;
     gap: 10px;
-    padding: 9px 10px;
+    padding: 5px 10px;
   }
 
-  .elenco-mobile-foto {
-    width: 54px;
-    height: 70px;
+  .elenco-mobile-seta {
+    flex-basis: 20px;
   }
 
   .elenco-mobile-texto strong {
@@ -97,16 +92,9 @@
 @media (max-width: 340px) {
   .elenco-mobile-card {
     min-height: 82px;
-    grid-template-columns: 50px minmax(0, 1fr) 18px;
     gap: 9px;
     padding: 8px 9px;
     border-radius: 12px;
-  }
-
-  .elenco-mobile-foto {
-    width: 50px;
-    height: 64px;
-    border-radius: 10px;
   }
 
   .elenco-mobile-texto strong {
@@ -118,6 +106,14 @@
   }
 
   .elenco-mobile-seta {
+    flex-basis: 18px;
     font-size: 22px;
   }
+}
+
+@media (max-height: 670px) {
+  .elenco-mobile-card {
+    height: 80px;
+  }
+
 }

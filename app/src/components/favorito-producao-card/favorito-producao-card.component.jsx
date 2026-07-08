@@ -34,7 +34,7 @@ export default function FavoritoProducaoCard({
       onClick={abrirProducao}
       onKeyDown={abrirProducaoComTeclado}
     >
-      <div className="favorito-producao-card-poster-wrapper">
+      <div>
         <LoadingImage
           src={montarImagem(producao.imagem)}
           alt={producao.nome}

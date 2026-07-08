@@ -1,5 +1,6 @@
 .mobile-page-header {
   position: relative;
+  z-index: 11;
   display: flex;
   width: 100%;
   min-height: 64px;
@@ -12,6 +13,7 @@
 
 .mobile-page-header-back {
   position: absolute;
+  z-index: 12;
   left: 18px;
   top: 50%;
   transform: translateY(-50%);

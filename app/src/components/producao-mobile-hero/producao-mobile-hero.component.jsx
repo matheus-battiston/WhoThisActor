@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
-import logoImage from "../../assets/images/WhoThisActorLogoNoText.png";
 import {
   URL_BASE_BACKDROP_TMDB,
   URL_BASE_IMAGEM_TMDB,
 } from "../../constants/image-tmdb";
 import { obterAnoLancamento } from "../../utils/formatar-data-lancamento";
-import BotaoVoltar from "../back-button/back-button.component";
 import FavoritoIcon from "../favorito-icon/favorito-icon.component";
 import { LoadingImage } from "../loading-image/loading-image.component";
+import MobilePageHeader from "../mobile-page-header/mobile-page-header.component";
 import "./producao-mobile-hero.css";
 
 function montarUrlImagem(path, base = URL_BASE_IMAGEM_TMDB) {
@@ -52,7 +50,6 @@ export default function ProducaoMobileHero({
   favoritar,
 }) {
   const [overviewAberto, setOverviewAberto] = useState(false);
-  const navigate = useNavigate();
   const backdrop = montarUrlImagem(
     producao.backdropPath,
     URL_BASE_BACKDROP_TMDB,
@@ -68,19 +65,7 @@ export default function ProducaoMobileHero({
         style={backdrop ? { backgroundImage: `url(${backdrop})` } : undefined}
       />
 
-      <BotaoVoltar className="producao-mobile-voltar" />
-
-      <button
-        type="button"
-        className="producao-mobile-logo"
-        onClick={() => navigate("/")}
-        aria-label="Ir para a home"
-      >
-        <img src={logoImage} alt="WhoThis" />
-        <strong>
-          Who<span>This</span>
-        </strong>
-      </button>
+      <MobilePageHeader />
 
       <div className="producao-mobile-info">
         <div className="producao-mobile-poster-wrapper">

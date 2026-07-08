@@ -1,8 +1,7 @@
 .ator-busca-card {
-  display: grid;
+  display: flex;
   width: 100%;
-  min-height: 84px;
-  grid-template-columns: 54px minmax(0, 1fr) 22px;
+  height: 100px;
   align-items: center;
   gap: 10px;
   padding: 9px 11px;
@@ -15,26 +14,15 @@
 }
 
 .ator-busca-card-imagem {
-  width: 54px;
-  height: 66px;
+  height: 100%;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
 }
 
-.busca-placeholder-card-imagem-pessoa {
-  border-radius: 13px;
-}
-
-.busca-placeholder-card-imagem-poster {
-  border-radius: 10px;
-}
-
-.busca-placeholder-card-img {
-  object-fit: cover;
-}
-
 .ator-busca-card-texto {
   display: flex;
+  flex: 1 1 auto;
   min-width: 0;
   flex-direction: column;
   gap: 4px;
@@ -63,7 +51,7 @@
 }
 
 .ator-busca-card-seta {
-  justify-self: end;
+  flex: 0 0 22px;
   color: #5fe8ff;
   font-size: 24px;
 }
