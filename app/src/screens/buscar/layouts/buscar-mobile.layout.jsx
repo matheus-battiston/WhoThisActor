@@ -2,7 +2,7 @@ import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
-import MobileSegmentedControl from "../../../components/mobile-segmented-control/mobile-segmented-control.component";
+import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
 import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import InputSearch from "../../../components/pesquisa/pesquisa.component";
 import CardAtorBusca from "../../../components/card-ator-busca/card-ator-busca.component";
@@ -58,7 +58,7 @@ export default function BuscarMobileLayout({
           />
         </form>
 
-        <MobileSegmentedControl
+        <SegmentedControl
           options={CATEGORIAS}
           value={categoria}
           onChange={setCategoria}

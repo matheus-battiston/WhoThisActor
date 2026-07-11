@@ -13,7 +13,6 @@ import ExibirElencoWebLayout from "./layouts/exibir-elenco-web.layout";
 import "./exibir-elenco.css";
 
 const FRASE_CARREGAMENTO = "Carregando elenco";
-const PLACEHOLDER_PERSONAGEM = "Alex Dunphy";
 
 export function ExibirElencoScreen() {
   const { changePersonagem, personagemNome } = useNomePersonagem();
@@ -84,10 +83,7 @@ export function ExibirElencoScreen() {
       ) : isMobile ? (
         <ExibirElencoMobileLayout {...layoutProps} />
       ) : (
-        <ExibirElencoWebLayout
-          {...layoutProps}
-          placeholderPesquisa={PLACEHOLDER_PERSONAGEM}
-        />
+        <ExibirElencoWebLayout {...layoutProps} />
       )}
     </div>
   );

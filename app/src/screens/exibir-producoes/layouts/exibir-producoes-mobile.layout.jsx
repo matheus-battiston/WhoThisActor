@@ -2,7 +2,7 @@ import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
 import AtorMobileCard from "../../../components/ator-mobile-card/ator-mobile-card.component";
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
-import MobileSegmentedControl from "../../../components/mobile-segmented-control/mobile-segmented-control.component";
+import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
 import ProducaoMobileCard from "../../../components/producao-mobile-card/producao-mobile-card.component";
 import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import "./exibir-producoes-mobile.css";
@@ -45,7 +45,7 @@ export default function ExibirProducoesMobileLayout({
           favoritar={favoritar}
         />
 
-        <MobileSegmentedControl
+        <SegmentedControl
           options={TABS}
           value={tab}
           onChange={setTab}

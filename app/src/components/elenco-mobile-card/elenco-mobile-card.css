@@ -1,7 +1,7 @@
 .elenco-mobile-card {
   display: flex;
   flex-shrink: 0;
-  height: 100px;
+  height: 120px;
   width: 100%;
   align-items: center;
   gap: 12px;

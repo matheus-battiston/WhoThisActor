@@ -9,14 +9,81 @@
 
 .sobre-web-conteudo {
   display: flex;
-  width: min(100%, 760px);
   min-height: 0;
   flex: 1;
   flex-direction: column;
   align-self: center;
   gap: 16px;
-  padding: 24px 24px 40px;
+  margin: 0 115px;
+  padding: 32px 18px 40px;
   box-sizing: border-box;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+.sobre-web-conteudo .sobre-hero {
+  max-width: 920px;
+}
+
+.sobre-web-conteudo .sobre-hero h1 {
+  font-size: 40px;
+}
+
+.sobre-web-conteudo .sobre-hero p {
+  max-width: 760px;
+  font-size: 16px;
+}
+
+.sobre-web-conteudo .sobre-fluxo {
+  gap: 18px;
+}
+
+.sobre-web-conteudo .sobre-secao-titulo h2 {
+  font-size: 28px;
+}
+
+.sobre-web-conteudo .sobre-passos {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.sobre-web-conteudo .sobre-passo {
+  flex: 1 1 240px;
+  min-width: 240px;
+  max-width: 340px;
+  min-height: 180px;
+  padding: 0 18px 0 0;
+  border-right: 1px solid rgba(136, 155, 231, 0.18);
+  border-bottom: 0;
+}
+
+.sobre-web-conteudo .sobre-passo:last-child {
+  padding-right: 0;
+}
+
+@media (max-width: 1199px) {
+  .sobre-web-conteudo {
+    margin: 0 57.5px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .sobre-web-conteudo {
+    margin: 0 28.75px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .sobre-web-conteudo {
+    margin: 0;
+  }
+}
+
+.sobre-web-conteudo .sobre-cards {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.sobre-web-conteudo .sobre-card {
+  flex: 1 1 0;
 }

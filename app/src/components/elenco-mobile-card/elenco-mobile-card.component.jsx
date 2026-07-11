@@ -4,7 +4,7 @@ import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import { LoadingImage } from "../loading-image/loading-image.component";
 import "./elenco-mobile-card.css";
 
-export default function ElencoMobileCard({ pessoa }) {
+export default function ElencoMobileCard({ pessoa, className = "" }) {
   const navigate = useNavigate();
   const foto = pessoa.urlImagem
     ? `${URL_BASE_IMAGEM_TMDB}${pessoa.urlImagem}`
@@ -13,7 +13,7 @@ export default function ElencoMobileCard({ pessoa }) {
   return (
     <button
       type="button"
-      className="elenco-mobile-card"
+      className={["elenco-mobile-card", className].filter(Boolean).join(" ")}
       onClick={() => navigate(`/ator/${pessoa.id}`)}
     >
       <LoadingImage

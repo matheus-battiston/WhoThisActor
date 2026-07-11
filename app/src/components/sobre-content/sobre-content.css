@@ -6,6 +6,7 @@
 }
 
 .sobre-hero span,
+.sobre-secao-titulo span,
 .sobre-card span {
   color: #5fe8ff;
   font-size: 12px;
@@ -22,13 +23,77 @@
   line-height: 1.1;
 }
 
+.sobre-secao-titulo h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.14;
+}
+
 .sobre-hero p,
+.sobre-passo p,
 .sobre-card p {
   margin: 0;
   color: rgba(220, 226, 255, 0.78);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.45;
+}
+
+.sobre-fluxo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sobre-secao-titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sobre-passos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sobre-passo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(136, 155, 231, 0.18);
+  color: #fff;
+}
+
+.sobre-passo:last-child {
+  border-bottom: 0;
+}
+
+.sobre-passo strong {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(95, 232, 255, 0.34);
+  color: #fff;
+  border-radius: 50%;
+  background: rgba(95, 232, 255, 0.08);
+  color: #5fe8ff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.sobre-passo h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.14;
 }
 
 .sobre-card {
@@ -45,6 +110,12 @@
   box-shadow:
     0 0 0 1px rgba(95, 232, 255, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.sobre-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .sobre-card-cabecalho {

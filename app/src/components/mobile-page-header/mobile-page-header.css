@@ -18,29 +18,3 @@
   top: 50%;
   transform: translateY(-50%);
 }
-
-.mobile-page-header-logo {
-  display: flex;
-  width: fit-content;
-  padding: 0;
-  border: 0;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  color: #fff;
-  font-size: 15px;
-  line-height: 1;
-  background: transparent;
-  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
-  cursor: pointer;
-}
-
-.mobile-page-header-logo img {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-}
-
-.mobile-page-header-logo span {
-  color: #59e8ff;
-}

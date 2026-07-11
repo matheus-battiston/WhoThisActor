@@ -3,7 +3,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import TheatersOutlinedIcon from "@mui/icons-material/TheatersOutlined";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
-import MobileSegmentedControl from "../../../components/mobile-segmented-control/mobile-segmented-control.component";
+import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
 import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import FavoritoAtorCard from "../../../components/favorito-ator-card/favorito-ator-card.component";
 import FavoritoProducaoCard from "../../../components/favorito-producao-card/favorito-producao-card.component";
@@ -51,7 +51,7 @@ export default function FavoritosMobileLayout({
 
         <h1 className="favoritos-mobile-titulo">Favoritos</h1>
 
-        <MobileSegmentedControl
+        <SegmentedControl
           options={ABAS}
           value={aba}
           onChange={setAba}

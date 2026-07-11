@@ -17,6 +17,9 @@ export function OpcoesAtoresScreen() {
   const layoutProps = {
     opcoes,
     abrirAtor,
+    introTitle: "Encontramos mais de uma pessoa possível",
+    introSubtitle:
+      "Selecione quem corresponde melhor ao resultado para continuar.",
   };
 
   return isMobile ? (

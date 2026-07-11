@@ -5,7 +5,11 @@ import { useAuth } from "../../hooks/use-auth/use-auth.hook";
 import { useCameraCapture } from "../camera-capture/camera-capture.context";
 import "./camera-action-card.css";
 
-export default function CameraActionCard() {
+export default function CameraActionCard({
+  className = "",
+  titulo = "Reconhecer pela câmera",
+  descricao = "Envie uma foto para encontrar o ator.",
+}) {
   const { isAuthenticated } = useAuth();
   const {
     abrirCamera,
@@ -22,7 +26,9 @@ export default function CameraActionCard() {
     .join(" ");
 
   return (
-    <section className="camera-action-card">
+    <section
+      className={["camera-action-card", className].filter(Boolean).join(" ")}
+    >
       <div className="camera-action-card-principal">
         <button
           type="button"
@@ -34,8 +40,8 @@ export default function CameraActionCard() {
           <CameraAltOutlinedIcon />
         </button>
         <span className="camera-action-card-texto">
-          <strong>Reconhecer pela câmera</strong>
-          <small>Envie uma foto para encontrar o ator.</small>
+          <strong>{titulo}</strong>
+          <small>{descricao}</small>
         </span>
       </div>
 

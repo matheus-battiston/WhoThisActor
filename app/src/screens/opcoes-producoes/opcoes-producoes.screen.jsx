@@ -10,18 +10,6 @@ export function OpcoesProducoesScreen() {
   const { opcoes = [], tipoMidia } = location.state || {};
   const isMobile = useIsMobile();
 
-  const mapearProducao = (item) => {
-    return {
-      id: item.id,
-      nomeProducao: item.nome,
-      posterLink: item.imagem,
-      nomePersonagem: "",
-    };
-  };
-
-  const mapearTipo = (item) =>
-    (item.tipoMidia || tipoMidia) === "MOVIE" ? "FILME" : "SERIE";
-
   const obterTipoMidia = (item) => item.tipoMidia || tipoMidia || "TV";
 
   const abrirProducao = (item) => {
@@ -32,20 +20,17 @@ export function OpcoesProducoesScreen() {
   const textoTipo = tipoReferencia === "MOVIE" ? "filme" : "série";
   const artigoTipo = tipoReferencia === "MOVIE" ? "um" : "uma";
   const artigoSelecao = tipoReferencia === "MOVIE" ? "o" : "a";
+  const layoutProps = {
+    opcoes,
+    tipoMidia,
+    abrirProducao,
+    introTitle: `Encontramos mais de ${artigoTipo} ${textoTipo} com esse nome`,
+    introSubtitle: `Selecione ${artigoSelecao} ${textoTipo} que você deseja.`,
+  };
 
   return isMobile ? (
-    <OpcoesProducoesMobileLayout
-      opcoes={opcoes}
-      tipoMidia={tipoMidia}
-      abrirProducao={abrirProducao}
-      introTitle={`Encontramos mais de ${artigoTipo} ${textoTipo} com esse nome`}
-      introSubtitle={`Selecione ${artigoSelecao} ${textoTipo} que você deseja.`}
-    />
+    <OpcoesProducoesMobileLayout {...layoutProps} />
   ) : (
-    <OpcoesProducoesWebLayout
-      opcoes={opcoes}
-      mapearProducao={mapearProducao}
-      mapearTipo={mapearTipo}
-    />
+    <OpcoesProducoesWebLayout {...layoutProps} />
   );
 }

@@ -1,9 +1,13 @@
-import { useSwipeable } from "react-swipeable";
-import AtorInfo from "../../../components/ator-info/ator-info.component";
-import Cabecalho from "../../../components/cabecalho/cabecalho.component";
-import ListProducoes from "../../../components/list-producoes/list-producoes.component";
-import Tab from "../../../components/tab/tab.component";
+import AtorWebCard from "../../../components/ator-web-card/ator-web-card.component";
+import MediaTypeToggle from "../../../components/media-type-toggle/media-type-toggle.component";
+import ProducaoAtorWebCard from "../../../components/producao-ator-web-card/producao-ator-web-card.component";
 import "./exibir-producoes-web.css";
+
+function obterProducoes(ator, tab) {
+  if (tab === "FILME") return ator.producoes?.filmes || [];
+
+  return ator.producoes?.series || [];
+}
 
 export default function ExibirProducoesWebLayout({
   ator,
@@ -14,18 +18,12 @@ export default function ExibirProducoesWebLayout({
   favoritoPendente,
   favoritar,
 }) {
-  const handleSwipe = useSwipeable({
-    onSwipedLeft: () => setTab("TV"),
-    onSwipedRight: () => setTab("FILME"),
-    trackMouse: true,
-  });
+  const producoes = obterProducoes(ator, tab);
 
   return (
     <div className="exibir-producoes-web">
-      <Cabecalho />
-
-      <div className="exibir-producoes-web-ator-info">
-        <AtorInfo
+      <main className="exibir-producoes-web-conteudo">
+        <AtorWebCard
           nome={ator.nome}
           imagem={ator.urlFoto}
           logado={isAuthenticated}
@@ -33,11 +31,23 @@ export default function ExibirProducoesWebLayout({
           favoritar={favoritar}
           favoritoPendente={favoritoPendente}
         />
-      </div>
 
-      <Tab setTab={setTab} estado={tab} tabs={["FILME", "TV"]} />
+        <MediaTypeToggle
+          value={tab}
+          onChange={setTab}
+          className="exibir-producoes-web-tabs"
+        />
 
-      <ListProducoes producoes={ator} handleSwipe={handleSwipe} tab={tab} />
+        <div className="exibir-producoes-web-lista">
+          {producoes.map((producao) => (
+            <ProducaoAtorWebCard
+              key={`${tab}-${producao.id}-${producao.nomePersonagem}`}
+              producao={producao}
+              tipo={tab}
+            />
+          ))}
+        </div>
+      </main>
     </div>
   );
 }

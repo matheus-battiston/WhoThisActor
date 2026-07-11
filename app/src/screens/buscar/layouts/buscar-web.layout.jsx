@@ -1,11 +1,10 @@
 import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
-import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
-import MobileSegmentedControl from "../../../components/mobile-segmented-control/mobile-segmented-control.component";
+import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
 import InputSearch from "../../../components/pesquisa/pesquisa.component";
-import CardAtorBusca from "../../../components/card-ator-busca/card-ator-busca.component";
-import BuscaProducaoCard from "../../../components/busca-producao-card/busca-producao-card.component";
+import BuscaProducaoWebCard from "../../../components/busca-producao-web-card/busca-producao-web-card.component";
+import PessoaWebCard from "../../../components/pessoa-web-card/pessoa-web-card.component";
 import { URL_BASE_IMAGEM_TMDB } from "../../../constants/image-tmdb";
 
 const CATEGORIAS = [
@@ -37,10 +36,8 @@ export default function BuscarWebLayout({
   abrirSerie,
 }) {
   return (
-    <div className="page-buscar">
+    <div className="page-buscar page-buscar-web">
       <main className="buscar-conteudo">
-        <MobilePageHeader />
-
         <h1>Buscar</h1>
 
         <form className="buscar-form" onSubmit={pesquisar}>
@@ -55,7 +52,7 @@ export default function BuscarWebLayout({
           />
         </form>
 
-        <MobileSegmentedControl
+        <SegmentedControl
           options={CATEGORIAS}
           value={categoria}
           onChange={setCategoria}
@@ -67,15 +64,16 @@ export default function BuscarWebLayout({
               <PersonOutlineOutlinedIcon />
               Pessoas
             </h2>
-            {dadosBuscaInicial?.pessoas?.map((pessoa) => (
-              <CardAtorBusca
-                key={pessoa.id}
-                titulo={pessoa.nome}
-                imagem={montarImagem(pessoa.urlImagem)}
-                formato="pessoa"
-                onClick={() => abrirAtor(pessoa)}
-              />
-            ))}
+            <div className="buscar-grid-pessoas">
+              {dadosBuscaInicial?.pessoas?.map((pessoa) => (
+                <PessoaWebCard
+                  key={pessoa.id}
+                  nome={pessoa.nome}
+                  imagem={montarImagem(pessoa.urlImagem)}
+                  onClick={() => abrirAtor(pessoa)}
+                />
+              ))}
+            </div>
           </section>
 
           <section className="buscar-secao">
@@ -85,7 +83,7 @@ export default function BuscarWebLayout({
             </h2>
             <div className="buscar-grid-producoes">
               {dadosBuscaInicial?.filmes?.map((filme) => (
-                <BuscaProducaoCard
+                <BuscaProducaoWebCard
                   key={filme.id}
                   titulo={filme.nomeProducao}
                   descricao={filme.overview}
@@ -103,7 +101,7 @@ export default function BuscarWebLayout({
             </h2>
             <div className="buscar-grid-producoes">
               {dadosBuscaInicial?.series?.map((serie) => (
-                <BuscaProducaoCard
+                <BuscaProducaoWebCard
                   key={serie.id}
                   titulo={serie.nomeProducao}
                   descricao={serie.overview}

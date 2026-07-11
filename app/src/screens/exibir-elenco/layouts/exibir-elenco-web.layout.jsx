@@ -1,15 +1,12 @@
-import Cabecalho from "../../../components/cabecalho/cabecalho.component";
-import ExibePessoaPersonagem from "../../../components/exibe-pessoa-personagem/exibe-pessoa-personagem.component";
+import ElencoWebCard from "../../../components/elenco-web-card/elenco-web-card.component";
 import InputSearch from "../../../components/pesquisa/pesquisa.component";
-import SerieInfo from "../../../components/serie-info/serie-info.component";
-import { URL_BASE_IMAGEM_TMDB } from "../../../constants/image-tmdb";
+import ProducaoWebHero from "../../../components/producao-web-hero/producao-web-hero.component";
 import "./exibir-elenco-web.css";
 
 export default function ExibirElencoWebLayout({
   detalhesProducao,
   elenco,
   onPesquisarPersonagem,
-  placeholderPesquisa,
   isAuthenticated,
   favoritado,
   favoritoPendente,
@@ -17,33 +14,30 @@ export default function ExibirElencoWebLayout({
 }) {
   return (
     <div className="exibir-elenco-web">
-      <Cabecalho />
+      <ProducaoWebHero
+        producao={detalhesProducao}
+        isAuthenticated={isAuthenticated}
+        favoritado={favoritado}
+        favoritoPendente={favoritoPendente}
+        favoritar={favoritar}
+      />
 
-      <div className="exibir-elenco-web-serie-info-input">
-        <SerieInfo
-          imagem={URL_BASE_IMAGEM_TMDB + detalhesProducao.imagem}
-          nome={detalhesProducao.nome}
-          providers={detalhesProducao.providers}
-          isAuthenticated={isAuthenticated}
-          favoritado={favoritado}
-          favoritoPendente={favoritoPendente}
-          favoritar={favoritar}
+      <main className="exibir-elenco-web-conteudo">
+        <InputSearch
+          onChange={onPesquisarPersonagem}
+          placeholder="Buscar no elenco..."
+          wrapperClassName="pesquisa-web-elenco"
+          inputClassName="input-web-elenco"
+          mostrarIcone
+          ariaLabel="Buscar no elenco"
         />
 
-        <div className="exibir-elenco-web-input-personagem">
-          <InputSearch
-            onChange={onPesquisarPersonagem}
-            texto={"Pesquise seu personagem"}
-            placeholder={placeholderPesquisa}
-          />
+        <div className="exibir-elenco-web-lista-personagens">
+          {elenco.map((item) => (
+            <ElencoWebCard key={item.id} pessoa={item} />
+          ))}
         </div>
-      </div>
-
-      <div className="exibir-elenco-web-lista-personagens">
-        {elenco.map((item) => (
-          <ExibePessoaPersonagem key={item.id} pessoa={item} />
-        ))}
-      </div>
+      </main>
     </div>
   );
 }
