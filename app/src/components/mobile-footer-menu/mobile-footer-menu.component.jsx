@@ -87,6 +87,8 @@ export default function MobileFooterMenu() {
 
       const ultimoScrollTop = posicoesScroll.current.get(dados.elemento) ?? 0;
       const diferenca = dados.scrollTop - ultimoScrollTop;
+      const distanciaDoFim =
+        dados.scrollHeight - dados.clientHeight - dados.scrollTop;
 
       if (dados.scrollTop <= 8) {
         setOculto(false);
@@ -95,6 +97,11 @@ export default function MobileFooterMenu() {
       }
 
       if (Math.abs(diferenca) < 4) return;
+
+      if (distanciaDoFim <= 12 && diferenca < 0) {
+        posicoesScroll.current.set(dados.elemento, dados.scrollTop);
+        return;
+      }
 
       setOculto(diferenca > 0);
       posicoesScroll.current.set(dados.elemento, dados.scrollTop);

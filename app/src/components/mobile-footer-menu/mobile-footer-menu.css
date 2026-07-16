@@ -1,10 +1,8 @@
 .mobile-footer-menu {
-  --mobile-footer-bottom: max(12px, env(safe-area-inset-bottom));
-
   position: fixed;
   z-index: 1200;
   right: 14px;
-  bottom: var(--mobile-footer-bottom);
+  bottom: 14px;
   left: 14px;
   display: none;
   pointer-events: none;
@@ -15,7 +13,7 @@
 
 .mobile-footer-menu-oculto {
   opacity: 0;
-  transform: translateY(calc(100% + var(--mobile-footer-bottom) + 18px));
+  transform: translateY(calc(100% + 32px));
 }
 
 .mobile-footer-menu-interno {
