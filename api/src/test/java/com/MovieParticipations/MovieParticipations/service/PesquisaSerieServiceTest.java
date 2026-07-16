@@ -19,6 +19,7 @@ import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -76,7 +77,7 @@ class PesquisaSerieServiceTest {
         PesquisaProducaoInfoResponse serie = resultado.get(INDICE_PRIMEIRO_RESULTADO);
         assertThat(serie.getId()).isEqualTo(ID_SERIE);
         assertThat(serie.getNome()).isEqualTo(TITULO_BREAKING_BAD);
-        assertThat(serie.getImagem()).isEqualTo(IMAGEM_BREAKING_BAD);
+        assertThat(serie.getImagem()).isEqualTo(normalizar(IMAGEM_BREAKING_BAD));
         assertThat(serie.getOverview()).isEqualTo(OVERVIEW_BREAKING_BAD);
         assertThat(serie.getGenero()).isEqualTo(GENERO_BREAKING_BAD);
         assertThat(serie.getAnoPrimeiraTemporada()).isEqualTo(ANO_PRIMEIRA_TEMPORADA_BREAKING_BAD);

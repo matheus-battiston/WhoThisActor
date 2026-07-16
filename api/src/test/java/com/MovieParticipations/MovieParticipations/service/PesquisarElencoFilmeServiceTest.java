@@ -127,7 +127,10 @@ class PesquisarElencoFilmeServiceTest {
         assertThat(resultado.getNome()).isEqualTo(NOME_MATRIX);
         assertThat(resultado.getImagem()).isEqualTo(normalizar(IMAGEM_MATRIX));
         assertThat(resultado.getDataLancamento()).isEqualTo(filme.getDataLancamento());
-        assertThat(resultado.getElenco()).containsExactly(opcao);
+        assertThat(resultado.getElenco()).hasSize(1);
+        assertThat(resultado.getElenco().get(0).getNome()).isEqualTo(opcao.getNome());
+        assertThat(resultado.getElenco().get(0).getNomePersonagem()).isEqualTo(opcao.getNomePersonagem());
+        assertThat(resultado.getElenco().get(0).getUrlImagem()).isEqualTo(normalizar(opcao.getUrlImagem()));
         assertThat(resultado.getProviders()).containsExactly(provider);
         assertThat(resultado.getEstaFavoritado()).isTrue();
         verify(providersService).buscarProviders(ID_TMDB_MATRIX, MOVIE);

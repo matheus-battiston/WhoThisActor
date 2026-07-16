@@ -127,7 +127,10 @@ class PesquisarElencoSerieServiceTest {
         assertThat(resultado.getNome()).isEqualTo(NOME_BREAKING_BAD);
         assertThat(resultado.getImagem()).isEqualTo(normalizar(IMAGEM_BREAKING_BAD));
         assertThat(resultado.getTipoMidia()).isEqualTo(TV);
-        assertThat(resultado.getElenco()).containsExactly(opcao);
+        assertThat(resultado.getElenco()).hasSize(1);
+        assertThat(resultado.getElenco().get(0).getNome()).isEqualTo(opcao.getNome());
+        assertThat(resultado.getElenco().get(0).getNomePersonagem()).isEqualTo(opcao.getNomePersonagem());
+        assertThat(resultado.getElenco().get(0).getUrlImagem()).isEqualTo(normalizar(opcao.getUrlImagem()));
         assertThat(resultado.getProviders()).containsExactly(provider);
         assertThat(resultado.getEstaFavoritado()).isFalse();
     }

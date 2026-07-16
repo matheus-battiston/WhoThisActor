@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
 import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static java.time.LocalDate.now;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,7 +75,7 @@ class PesquisarFilmeServiceTest {
         PesquisaProducaoInfoResponse filme = resultado.get(INDICE_PRIMEIRO_RESULTADO);
         assertThat(filme.getId()).isEqualTo(ID_FILME);
         assertThat(filme.getNome()).isEqualTo(TITULO_MATRIX);
-        assertThat(filme.getImagem()).isEqualTo(IMAGEM_MATRIX);
+        assertThat(filme.getImagem()).isEqualTo(normalizar(IMAGEM_MATRIX));
         assertThat(filme.getDataLancamento()).isEqualTo(matrix.getDataLancamento());
         assertThat(filme.getPopularidade()).isEqualTo(POPULARIDADE_MATRIX);
         assertThat(filme.getTipoMidia()).isEqualTo(MOVIE);

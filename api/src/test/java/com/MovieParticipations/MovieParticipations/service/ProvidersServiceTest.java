@@ -89,6 +89,22 @@ class ProvidersServiceTest {
     }
 
     @Test
+    @DisplayName("Deve retornar nulo quando resultados da busca forem nulos")
+    void deveRetornarNuloQuandoResultadosDaBuscaForemNulos() {
+        BuscarProvidersDto resposta = BuscarProvidersDto.builder().resultados(null).build();
+
+        RestTemplate restTemplate = mock(RestTemplate.class);
+        ProvidersService service = criarService(restTemplate);
+        when(restTemplate.exchange(URL_PROVIDERS_FILME_MATRIX, GET, EMPTY, BuscarProvidersDto.class))
+                .thenReturn(ok(resposta));
+
+        List<ProviderDto> resultado = service.buscarProviders(ID_TMDB_MATRIX, MOVIE);
+
+        assertThat(resultado).isNull();
+        verify(restTemplate).exchange(URL_PROVIDERS_FILME_MATRIX, GET, EMPTY, BuscarProvidersDto.class);
+    }
+
+    @Test
     @DisplayName("Deve retornar nulo quando não houver providers no Brasil")
     void deveRetornarNuloQuandoNaoHouverProvidersNoBrasil() {
         BuscarProvidersDto resposta = BuscarProvidersDto.builder().resultados(Map.of()).build();
