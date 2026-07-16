@@ -66,11 +66,13 @@ export default function ProducaoMobileHero({
           {producao.overview ? (
             <button
               type="button"
-              className="producao-mobile-overview"
+              className="producao-mobile-overview-button"
               onClick={() => setOverviewAberto(true)}
               aria-expanded={overviewAberto}
             >
-              {producao.overview}
+              <span className="producao-mobile-overview">
+                {producao.overview}
+              </span>
             </button>
           ) : null}
 

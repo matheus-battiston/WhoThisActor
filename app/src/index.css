@@ -16,7 +16,21 @@ body {
   margin: 0;
   padding: 0;
   background: var(--app-background);
+  background-color: var(--app-background-color);
 }
+
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: env(safe-area-inset-top);
+  background: var(--app-background-color);
+  pointer-events: none;
+}
+
 body {
   margin: 0;
   font-family:

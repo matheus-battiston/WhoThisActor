@@ -114,19 +114,24 @@
   color: rgba(209, 218, 255, 0.88);
 }
 
-.producao-mobile-overview {
-  display: -webkit-box;
+.producao-mobile-overview-button {
   width: 100%;
   margin: 12px 0 16px;
   padding: 0;
   border: 0;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.producao-mobile-overview {
+  display: -webkit-box;
+  width: 100%;
   overflow: hidden;
   color: rgba(246, 248, 255, 0.9);
   font-size: 15px;
   line-height: 1.4;
   text-align: left;
-  background: transparent;
-  cursor: pointer;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
 }
@@ -163,8 +168,11 @@
     font-size: 13px;
   }
 
-  .producao-mobile-overview {
+  .producao-mobile-overview-button {
     margin: 12px 0 16px;
+  }
+
+  .producao-mobile-overview {
     font-size: 14px;
     -webkit-line-clamp: 3;
   }
@@ -209,8 +217,11 @@
     height: 15px;
   }
 
-  .producao-mobile-overview {
+  .producao-mobile-overview-button {
     margin: 10px 0 14px;
+  }
+
+  .producao-mobile-overview {
     font-size: 13px;
     line-height: 1.34;
     -webkit-line-clamp: 3;
@@ -242,6 +253,9 @@
 
   .producao-mobile-overview {
     font-size: 12px;
+  }
+
+  .producao-mobile-overview-button {
     margin: 5px;
   }
 }
