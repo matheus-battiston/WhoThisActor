@@ -1,6 +1,6 @@
 .ator-busca-card {
   display: flex;
-  width: 100%;
+  width: auto;
   height: 100px;
   align-items: center;
   gap: 10px;
@@ -15,6 +15,7 @@
 
 .ator-busca-card-imagem {
   height: 100%;
+  aspect-ratio: 2 / 3;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);

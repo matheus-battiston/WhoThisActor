@@ -26,9 +26,12 @@
 
 .favorito-producao-card-poster {
   background: rgba(255, 255, 255, 0.08);
+  height: 100%;
+  aspect-ratio: 2 / 3;
 }
 
 .favorito-producao-card-img {
+  aspect-ratio: 2 / 3;
   object-fit: cover;
 }
 

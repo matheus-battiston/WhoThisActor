@@ -18,8 +18,8 @@
 }
 
 .pessoa-web-card-imagem {
-  width: 88px;
   height: 100%;
+  aspect-ratio: 2 / 3;
   flex: 0 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 11px;

@@ -6,6 +6,7 @@
 
 .loading-image {
   height: 100%;
+  aspect-ratio: 2 / 3;
   display: block;
 }
 

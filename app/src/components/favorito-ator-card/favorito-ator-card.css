@@ -32,7 +32,8 @@
 
 .favorito-ator-card-imagem {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 2 / 3;
+  height: auto;
   background: rgba(255, 255, 255, 0.08);
 }
 
