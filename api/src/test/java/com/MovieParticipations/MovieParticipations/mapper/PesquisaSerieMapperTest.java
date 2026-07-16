@@ -25,6 +25,10 @@ public class PesquisaSerieMapperTest {
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
         assertEquals(serie.getImagem(), response.getImagem());
+        assertEquals(serie.getOverview(), response.getOverview());
+        assertEquals(serie.getGenero(), response.getGenero());
+        assertEquals(serie.getAnoPrimeiraTemporada(), response.getAnoPrimeiraTemporada());
+        assertEquals(serie.getAnoUltimaTemporada(), response.getAnoUltimaTemporada());
         assertEquals(TV, response.getTipoMidia());
         assertEquals(serie.getPopularidade(), response.getPopularidade());
     }

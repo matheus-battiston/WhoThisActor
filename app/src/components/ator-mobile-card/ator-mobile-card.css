@@ -1,0 +1,105 @@
+.ator-mobile-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 4px 2px 18px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.ator-mobile-card::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  left: 4px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(95, 232, 255, 0.72) 18%,
+    rgba(56, 122, 255, 0.52) 58%,
+    transparent 100%
+  );
+  box-shadow: 0 0 16px rgba(95, 232, 255, 0.34);
+}
+
+.ator-mobile-card-foto-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.ator-mobile-card-foto {
+  width: 108px;
+  height: auto;
+  overflow: hidden;
+  border: 1px solid rgba(220, 226, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.26),
+    0 0 22px rgba(95, 232, 255, 0.14);
+}
+
+.ator-mobile-card-img {
+  object-fit: cover;
+}
+
+.ator-mobile-card-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ator-mobile-card-info h1 {
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+}
+
+.ator-mobile-card-favorito {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ator-mobile-card-favorito .favorito-icon.MuiIconButton-root {
+  width: 34px;
+  height: 34px;
+}
+
+.ator-mobile-card-favorito .favorito-icon svg {
+  font-size: 25px;
+}
+
+@media (max-width: 380px) {
+  .ator-mobile-card {
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+
+  .ator-mobile-card-foto {
+    width: 96px;
+  }
+
+  .ator-mobile-card-favorito {
+    top: 5px;
+    right: 5px;
+  }
+
+  .ator-mobile-card-info h1 {
+    font-size: 24px;
+  }
+}

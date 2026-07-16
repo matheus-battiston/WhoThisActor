@@ -1,0 +1,142 @@
+.opcoes-atores-ajuda {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(95, 232, 255, 0.22);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(21, 20, 88, 0.72), rgba(12, 15, 72, 0.5)),
+    rgba(9, 13, 57, 0.66);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 38px rgba(1, 4, 28, 0.22);
+}
+
+.opcoes-atores-ajuda-cabecalho {
+  display: flex;
+  max-width: 760px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcoes-atores-ajuda-etiqueta {
+  width: fit-content;
+  padding: 5px 9px;
+  border: 1px solid rgba(95, 232, 255, 0.28);
+  border-radius: 999px;
+  color: #5fe8ff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  background: rgba(95, 232, 255, 0.08);
+}
+
+.opcoes-atores-ajuda h2,
+.opcoes-atores-ajuda h3,
+.opcoes-atores-ajuda p {
+  margin: 0;
+}
+
+.opcoes-atores-ajuda h2 {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.opcoes-atores-ajuda p {
+  color: rgba(220, 226, 255, 0.76);
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.42;
+}
+
+.opcoes-atores-ajuda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.opcoes-atores-ajuda-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(220, 226, 255, 0.16);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.opcoes-atores-ajuda-card-titulo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+}
+
+.opcoes-atores-ajuda-card-titulo svg {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  color: #5fe8ff;
+}
+
+.opcoes-atores-ajuda-card h3 {
+  min-width: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.opcoes-atores-ajuda-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(220, 226, 255, 0.78);
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.32;
+}
+
+.opcoes-atores-ajuda-card li::marker {
+  color: #5fe8ff;
+}
+
+@media (max-width: 767px) {
+  .opcoes-atores-ajuda {
+    gap: 14px;
+    padding: 15px;
+    border-radius: 18px;
+  }
+
+  .opcoes-atores-ajuda h2 {
+    font-size: 20px;
+  }
+
+  .opcoes-atores-ajuda p {
+    font-size: 13px;
+  }
+
+  .opcoes-atores-ajuda-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .opcoes-atores-ajuda-card {
+    padding: 13px;
+    border-radius: 14px;
+  }
+
+  .opcoes-atores-ajuda-card h3 {
+    font-size: 15px;
+  }
+
+  .opcoes-atores-ajuda-card ul {
+    font-size: 13px;
+  }
+}

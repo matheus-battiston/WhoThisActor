@@ -51,7 +51,7 @@ public class AdicionarFilmeService {
         if (atoresSemDuplicado.isEmpty()) throw new ResponseStatusException(BAD_REQUEST, NAO_TEM_ELENCO);
 
         processamentoFilmeService.processarElenco(filmeEntity, atoresSemDuplicado);
-        filmeEntity.setInicializado(true);
+        filmeEntity.setElencoInicializado(true);
         filmeRepository.save(filmeEntity);
         recarregarCacheClassificacaoService.recarregarCacheAtoresPorProducao();
     }
@@ -110,6 +110,7 @@ public class AdicionarFilmeService {
         filme.setTituloNormalizado(normalizar(producao.getTitulo()));
         filme.setImagem(producao.getImagemPoster());
         filme.setPopularidade(producao.getPopularidade());
+        filme.setDataLancamento(producao.getDataLancamento());
         filme.setUltimaAtualizacao(LocalDate.now());
         return filme;
     }

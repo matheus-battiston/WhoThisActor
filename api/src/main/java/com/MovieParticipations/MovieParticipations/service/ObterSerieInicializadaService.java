@@ -16,12 +16,15 @@ public class ObterSerieInicializadaService {
 
     private final SerieRepository serieRepository;
     private final AdicionarSerieService adicionarSerieService;
+    private final DeveAtualizarSerieService deveAtualizarSerieService;
+    private final AtualizarSerieInfoService atualizarSerieInfoService;
 
     public Serie obter(Long idSerie) {
         Serie serie = serieRepository.findById(idSerie)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, SERIE_NAO_ENCONTRADA));
 
-        if (!serie.getInicializado()) adicionarSerieService.adicionarElenco(serie);
+        if (deveAtualizarSerieService.deveAtualizar(serie)) atualizarSerieInfoService.atualizar(serie);
+        if (!Boolean.TRUE.equals(serie.getElencoInicializado())) adicionarSerieService.adicionarElenco(serie);
         return serie;
     }
 }

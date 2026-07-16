@@ -1,0 +1,51 @@
+.media-type-toggle {
+  display: flex;
+  width: min(100%, 420px);
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(136, 155, 231, 0.24);
+  border-radius: 15px;
+  background: rgba(12, 14, 64, 0.68);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.media-type-toggle-item {
+  display: inline-flex;
+  min-width: 0;
+  height: 38px;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: rgba(220, 226, 255, 0.72);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  background: transparent;
+  cursor: pointer;
+}
+
+.media-type-toggle-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke-width: 1.6;
+}
+
+.media-type-toggle-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.media-type-toggle-item-ativo {
+  border-color: #5fe8ff;
+  color: #5fe8ff;
+  background: rgba(95, 232, 255, 0.08);
+  box-shadow:
+    0 0 16px rgba(95, 232, 255, 0.24),
+    inset 0 0 14px rgba(95, 232, 255, 0.08);
+}

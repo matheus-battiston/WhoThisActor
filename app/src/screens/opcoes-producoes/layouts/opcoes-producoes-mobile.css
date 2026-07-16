@@ -1,0 +1,42 @@
+.opcoes-producoes-mobile {
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--app-background);
+}
+
+.opcoes-producoes-mobile-conteudo {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 22px;
+  padding: 16px 18px var(--mobile-footer-space, 112px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.opcoes-producoes-mobile-lista {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 380px) {
+  .opcoes-producoes-mobile-conteudo {
+    gap: 18px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .opcoes-producoes-mobile-lista {
+    gap: 12px;
+  }
+}

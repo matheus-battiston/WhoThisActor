@@ -1,656 +1,1065 @@
-openapi: "3.1.0"
-info:
-  title: "api API"
-  description: "api API"
-  version: "1.0.0"
-servers:
-  - url: "https://api"
-paths:
-  /hello:
-    post:
-      summary: "POST hello"
-      operationId: "Hello"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/UsuarioHelloResponse"
-  /classificar:
-    post:
-      summary: "Classificar imagem de ator"
-      description: ""
-      operationId: "classificarImagem"
-      parameters:
-        - name: "tipoMidia"
-          in: "query"
-          required: true
-          schema:
-            type: "string"
-            enum:
-              - "TV"
-              - "MOVIE"
-        - name: "filtrarPorFavoritos"
-          in: "query"
-          required: false
-          schema:
-            type: "boolean"
-            default: "false"
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: "object"
-              required:
-                - "image"
-              properties:
-                image:
-                  type: "string"
-                  format: "binary"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/OpcoesAtoresParecidosResponse"
-  /atores:
-    get:
-      summary: "Buscar ator e produções pelo nome"
-      description: ""
-      operationId: "pesquisarAtorPorNome"
-      parameters:
-        - name: "nome"
-          in: "query"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/PesquisaAtorResponse"
-  /atores/{id}:
-    get:
-      summary: "Buscar ator pelo ID"
-      description: ""
-      operationId: "pesquisarAtorPorId"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/AtorEProducoesResponse"
-  /series/{id}:
-    get:
-      summary: "Pegar informações basicas de uma produção usando id"
-      description: ""
-      operationId: "getSerieInfoPorId"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProducaoInfoResponse"
-  /series/{id}/detalhes:
-    get:
-      summary: "Pesquisar elenco de uma produção por nome, tipo de mídia e filtro\
-        \ opcional por personagem"
-      description: ""
-      operationId: "pesquisarDetalhesSerieComElenco"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-        - name: "personagem"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/DetalhesProducaoComElenco"
-  /series/pesquisa:
-    get:
-      summary: "Pesquisa series por nome, retornando todas que tenham nome exato"
-      description: ""
-      operationId: "pesquisarSeriePorNome"
-      parameters:
-        - name: "nome"
-          in: "query"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PesquisaProducaoInfoResponse"
-  /filmes/{id}:
-    get:
-      summary: "Pegar informações basicas de um filme usando id"
-      description: ""
-      operationId: "getFilmeInfoPorId"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProducaoInfoResponse"
-  /filmes/{id}/detalhes:
-    get:
-      summary: "Pesquisar elenco de um filme por id e opcionalmente filtrando por\
-        \ personagem"
-      description: ""
-      operationId: "pesquisarDetalhesFilmeComElenco"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-        - name: "personagem"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/DetalhesProducaoComElenco"
-  /filmes/pesquisa:
-    get:
-      summary: "Pesquisa filmes por nome retornando todos que tem nome exato"
-      description: ""
-      operationId: "pesquisarFilmePorNome"
-      parameters:
-        - name: "nome"
-          in: "query"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PesquisaProducaoInfoResponse"
-  /atores/{id}/favorito:
-    post:
-      summary: "Favoritar um ator"
-      description: ""
-      operationId: "favoritarAtor"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "204":
-          description: "No Content"
-    delete:
-      summary: "Remover favorito de um ator"
-      description: ""
-      operationId: "desfavoritarAtor"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "204":
-          description: "No Content"
-    get:
-      summary: "Checar se ator está favoritado"
-      description: ""
-      operationId: "atorEstaFavoritado"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "boolean"
-  /favoritos/atores:
-    get:
-      summary: "Listar atores favoritos do usuário"
-      description: ""
-      operationId: "listarAtoresFavoritos"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/InfoAtorResponse"
-  /favoritos/producoes:
-    get:
-      summary: "Listar produções favoritas do usuário"
-      description: ""
-      operationId: "listarProducoesFavoritas"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProducoesFavoritasResponse"
-  /series/{id}/favorito:
-    post:
-      summary: "Favoritar uma série"
-      description: ""
-      operationId: "favoritarSerie"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "204":
-          description: "No Content"
-    delete:
-      summary: "Remover favorito de uma série"
-      description: ""
-      operationId: "desfavoritarSerie"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "204":
-          description: "No Content"
-    get:
-      summary: "Checar se série está favoritada"
-      description: ""
-      operationId: "serieEstaFavoritada"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "boolean"
-  /filmes/{id}/favorito:
-    post:
-      summary: "Favoritar um filme"
-      description: ""
-      operationId: "favoritarFilme"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "204":
-          description: "No Content"
-    delete:
-      summary: "Remover favorito de um filme"
-      description: ""
-      operationId: "desfavoritarFilme"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "204":
-          description: "No Content"
-    get:
-      summary: "Checar se filme está favoritado"
-      description: ""
-      operationId: "filmeEstaFavoritado"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "boolean"
-components:
-  schemas:
-    UsuarioHelloResponse:
-      type: "object"
-      properties:
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        nome:
-          type: "string"
-          nullable: true
-        email:
-          type: "string"
-          nullable: true
-        primeiroLogin:
-          type: "boolean"
-          nullable: true
-    OpcoesAtoresParecidosResponse:
-      type: "object"
-      properties:
-        identity:
-          type: "string"
-          nullable: true
-        averageDistance:
-          type: "number"
-          format: "double"
-          nullable: true
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        imagem:
-          type: "string"
-          nullable: true
-        idTmdb:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        popularity:
-          type: "number"
-          format: "double"
-          nullable: true
-    InfoAtorResponse:
-      type: "object"
-      properties:
-        nome:
-          type: "string"
-          nullable: true
-        urlImagem:
-          type: "string"
-          nullable: true
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        popularity:
-          type: "number"
-          format: "double"
-          nullable: true
-    PesquisaAtorResponse:
-      type: "object"
-      properties:
-        contratoResposta:
-          type: "string"
-          nullable: true
-          enum:
-            - "UNIQUE_MATCH"
-            - "MULTIPLE_MATCH"
-            - "NOT_FOUND"
-        atores:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/InfoAtorResponse"
-    ProducaoComPersonagemResponse:
-      type: "object"
-      properties:
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        nomeProducao:
-          type: "string"
-          nullable: true
-        nomePersonagem:
-          type: "string"
-          nullable: true
-        posterLink:
-          type: "string"
-          nullable: true
-    ProducaoAtorResponse:
-      type: "object"
-      properties:
-        filmes:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProducaoComPersonagemResponse"
-        series:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProducaoComPersonagemResponse"
-    AtorEProducoesResponse:
-      type: "object"
-      properties:
-        nome:
-          type: "string"
-          nullable: true
-        urlFoto:
-          type: "string"
-          nullable: true
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        producoes:
-          nullable: true
-          $ref: "#/components/schemas/ProducaoAtorResponse"
-        favoritado:
-          type: "boolean"
-          nullable: true
-    ProviderDto:
-      type: "object"
-      properties:
-        logo_path:
-          type: "string"
-          nullable: true
-        provider_id:
-          type: "integer"
-          format: "int32"
-          nullable: true
-        provider_name:
-          type: "string"
-          nullable: true
-        display_priority:
-          type: "integer"
-          format: "int32"
-          nullable: true
-    ProducaoInfoResponse:
-      type: "object"
-      properties:
-        nome:
-          type: "string"
-          nullable: true
-        imagem:
-          type: "string"
-          nullable: true
-        tipoMidia:
-          type: "string"
-          nullable: true
-          enum:
-            - "TV"
-            - "MOVIE"
-        providers:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProviderDto"
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-    OpcaoPesquisaElencoResponse:
-      type: "object"
-      properties:
-        nome:
-          type: "string"
-          nullable: true
-        urlImagem:
-          type: "string"
-          nullable: true
-        nomePersonagem:
-          type: "string"
-          nullable: true
-        popularity:
-          type: "number"
-          format: "double"
-          nullable: true
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-    DetalhesProducaoComElenco:
-      type: "object"
-      properties:
-        elenco:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/OpcaoPesquisaElencoResponse"
-        nome:
-          type: "string"
-          nullable: true
-        imagem:
-          type: "string"
-          nullable: true
-        tipoMidia:
-          type: "string"
-          nullable: true
-          enum:
-            - "TV"
-            - "MOVIE"
-        providers:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProviderDto"
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        estaFavoritado:
-          type: "boolean"
-          nullable: true
-    PesquisaProducaoInfoResponse:
-      type: "object"
-      properties:
-        nome:
-          type: "string"
-          nullable: true
-        imagem:
-          type: "string"
-          nullable: true
-        tipoMidia:
-          type: "string"
-          nullable: true
-          enum:
-            - "TV"
-            - "MOVIE"
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-        popularidade:
-          type: "number"
-          format: "double"
-          nullable: true
-    ProducaoResponse:
-      type: "object"
-      properties:
-        nome:
-          type: "string"
-          nullable: true
-        imagem:
-          type: "string"
-          nullable: true
-        id:
-          type: "integer"
-          format: "int64"
-          nullable: true
-    ProducoesFavoritasResponse:
-      type: "object"
-      properties:
-        series:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProducaoResponse"
-        filmes:
-          type: "array"
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProducaoResponse"
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/series/{id}/favorito": {
+      "get": {
+        "tags": [
+          "favorito-serie-controller"
+        ],
+        "summary": "Checar se série está favoritada",
+        "operationId": "serieEstaFavoritada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "favorito-serie-controller"
+        ],
+        "summary": "Favoritar uma série",
+        "operationId": "favoritarSerie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "favorito-serie-controller"
+        ],
+        "summary": "Remover favorito de uma série",
+        "operationId": "desfavoritarSerie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/hello": {
+      "post": {
+        "tags": [
+          "hello-app-controller"
+        ],
+        "operationId": "Hello",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioHelloResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filmes/{id}/favorito": {
+      "get": {
+        "tags": [
+          "favorito-filme-controller"
+        ],
+        "summary": "Checar se filme está favoritado",
+        "operationId": "filmeEstaFavoritado",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "favorito-filme-controller"
+        ],
+        "summary": "Favoritar um filme",
+        "operationId": "favoritarFilme",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "favorito-filme-controller"
+        ],
+        "summary": "Remover favorito de um filme",
+        "operationId": "desfavoritarFilme",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/classificar": {
+      "post": {
+        "tags": [
+          "classifica-ator-controller"
+        ],
+        "summary": "Classificar imagem de ator",
+        "operationId": "classificarImagem",
+        "parameters": [
+          {
+            "name": "filtrarPorFavoritos",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "image"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificarImagemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "logout-controller"
+        ],
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/atores/{id}/favorito": {
+      "get": {
+        "tags": [
+          "favorito-ator-controller"
+        ],
+        "summary": "Checar se ator está favoritado",
+        "operationId": "atorEstaFavoritado",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "favorito-ator-controller"
+        ],
+        "summary": "Favoritar um ator",
+        "operationId": "favoritarAtor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "favorito-ator-controller"
+        ],
+        "summary": "Remover favorito de um ator",
+        "operationId": "desfavoritarAtor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/series/{id}/detalhes": {
+      "get": {
+        "tags": [
+          "serie-info-controller"
+        ],
+        "summary": "Pesquisar elenco de uma produção por nome, tipo de mídia e filtro opcional por personagem",
+        "operationId": "pesquisarDetalhesSerieComElenco",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "personagem",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetalhesProducaoComElenco"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/series/pesquisa": {
+      "get": {
+        "tags": [
+          "serie-info-controller"
+        ],
+        "summary": "Pesquisa series por nome, retornando todas que tenham nome exato",
+        "operationId": "pesquisarSeriePorNome",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PesquisaProducaoInfoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth2/callback": {
+      "get": {
+        "tags": [
+          "o-auth-2-callback-controller"
+        ],
+        "operationId": "authCallback",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": [
+          "info-usuario-controller"
+        ],
+        "operationId": "testAuth",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filmes/{id}/detalhes": {
+      "get": {
+        "tags": [
+          "filme-info-controller"
+        ],
+        "summary": "Pesquisar elenco de um filme por id e opcionalmente filtrando por personagem",
+        "operationId": "pesquisarDetalhesFilmeComElenco",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "personagem",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetalhesProducaoComElenco"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filmes/pesquisa": {
+      "get": {
+        "tags": [
+          "filme-info-controller"
+        ],
+        "summary": "Pesquisa filmes por nome retornando todos que tem nome exato",
+        "operationId": "pesquisarFilmePorNome",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PesquisaProducaoInfoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favoritos/producoes": {
+      "get": {
+        "tags": [
+          "favoritos-controller"
+        ],
+        "summary": "Listar produções favoritas do usuário",
+        "operationId": "listarProducoesFavoritas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProducoesFavoritasResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favoritos/atores": {
+      "get": {
+        "tags": [
+          "favorito-ator-controller"
+        ],
+        "summary": "Listar atores favoritos do usuário",
+        "operationId": "listarAtoresFavoritos",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InfoAtorResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/busca/inicial": {
+      "get": {
+        "tags": [
+          "busca-inicial-controller"
+        ],
+        "summary": "Buscar informações iniciais da tela de busca",
+        "operationId": "buscarInformacoesIniciaisBusca",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuscaInicialResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/atores": {
+      "get": {
+        "tags": [
+          "pesquisa-ator-controller"
+        ],
+        "summary": "Buscar opçoes de ator por nome",
+        "operationId": "pesquisarAtorPorNome",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PesquisaAtorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/atores/{id}": {
+      "get": {
+        "tags": [
+          "pesquisa-ator-controller"
+        ],
+        "summary": "Buscar ator pelo ID",
+        "operationId": "pesquisarAtorPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtorEProducoesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UsuarioHelloResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "primeiroLogin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ClassificarImagemResponse": {
+        "type": "object",
+        "properties": {
+          "resultado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpcoesAtoresParecidosResponse"
+            }
+          }
+        }
+      },
+      "OpcoesAtoresParecidosResponse": {
+        "type": "object",
+        "properties": {
+          "identidade": {
+            "type": "string"
+          },
+          "distanciaMedia": {
+            "type": "number",
+            "format": "double"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "imagem": {
+            "type": "string"
+          },
+          "idTmdb": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "popularidade": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "DetalhesProducaoComElenco": {
+        "type": "object",
+        "properties": {
+          "elenco": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpcaoPesquisaElencoResponse"
+            }
+          },
+          "nome": {
+            "type": "string"
+          },
+          "imagem": {
+            "type": "string"
+          },
+          "backdropPath": {
+            "type": "string"
+          },
+          "dataLancamento": {
+            "type": "string",
+            "format": "date"
+          },
+          "anoPrimeiraTemporada": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "anoUltimaTemporada": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantidadeTemporadas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "genero": {
+            "type": "string"
+          },
+          "overview": {
+            "type": "string"
+          },
+          "tipoMidia": {
+            "type": "string",
+            "enum": [
+              "TV",
+              "MOVIE"
+            ]
+          },
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderDto"
+            }
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "estaFavoritado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OpcaoPesquisaElencoResponse": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "urlImagem": {
+            "type": "string"
+          },
+          "nomePersonagem": {
+            "type": "string"
+          },
+          "popularity": {
+            "type": "number",
+            "format": "double"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProviderDto": {
+        "type": "object",
+        "properties": {
+          "logo_path": {
+            "type": "string"
+          },
+          "provider_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "provider_name": {
+            "type": "string"
+          },
+          "display_priority": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PesquisaProducaoInfoResponse": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "imagem": {
+            "type": "string"
+          },
+          "dataLancamento": {
+            "type": "string",
+            "format": "date"
+          },
+          "overview": {
+            "type": "string"
+          },
+          "genero": {
+            "type": "string"
+          },
+          "anoPrimeiraTemporada": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "anoUltimaTemporada": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tipoMidia": {
+            "type": "string",
+            "enum": [
+              "TV",
+              "MOVIE"
+            ]
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "popularidade": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "UsuarioResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "ProducaoResponse": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "imagem": {
+            "type": "string"
+          },
+          "genero": {
+            "type": "string"
+          },
+          "overview": {
+            "type": "string"
+          },
+          "ano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProducoesFavoritasResponse": {
+        "type": "object",
+        "properties": {
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProducaoResponse"
+            }
+          },
+          "filmes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProducaoResponse"
+            }
+          }
+        }
+      },
+      "InfoAtorResponse": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "urlImagem": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "popularity": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "BuscaInicialPessoaResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "urlImagem": {
+            "type": "string"
+          }
+        }
+      },
+      "BuscaInicialProducaoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nomeProducao": {
+            "type": "string"
+          },
+          "urlImagem": {
+            "type": "string"
+          },
+          "overview": {
+            "type": "string"
+          }
+        }
+      },
+      "BuscaInicialResponse": {
+        "type": "object",
+        "properties": {
+          "pessoas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuscaInicialPessoaResponse"
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuscaInicialProducaoResponse"
+            }
+          },
+          "filmes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuscaInicialProducaoResponse"
+            }
+          }
+        }
+      },
+      "PesquisaAtorResponse": {
+        "type": "object",
+        "properties": {
+          "contratoResposta": {
+            "type": "string",
+            "enum": [
+              "UNIQUE_MATCH",
+              "MULTIPLE_MATCH"
+            ]
+          },
+          "atores": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InfoAtorResponse"
+            }
+          }
+        }
+      },
+      "AtorEProducoesResponse": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "urlFoto": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "producoes": {
+            "$ref": "#/components/schemas/ProducaoAtorResponse"
+          },
+          "favoritado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProducaoAtorResponse": {
+        "type": "object",
+        "properties": {
+          "filmes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProducaoComPersonagemResponse"
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProducaoComPersonagemResponse"
+            }
+          }
+        }
+      },
+      "ProducaoComPersonagemResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nomeProducao": {
+            "type": "string"
+          },
+          "nomePersonagem": {
+            "type": "string"
+          },
+          "posterLink": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

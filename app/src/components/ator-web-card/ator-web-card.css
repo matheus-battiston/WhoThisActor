@@ -1,0 +1,84 @@
+.ator-web-card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 0 0 24px;
+}
+
+.ator-web-card::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  left: 4px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(95, 232, 255, 0.72) 18%,
+    rgba(56, 122, 255, 0.52) 58%,
+    transparent 100%
+  );
+  box-shadow: 0 0 16px rgba(95, 232, 255, 0.34);
+}
+
+.ator-web-card-foto-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.ator-web-card-foto {
+  width: 120px;
+  height: auto;
+  overflow: hidden;
+  border: 1px solid rgba(220, 226, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.26),
+    0 0 22px rgba(95, 232, 255, 0.14);
+}
+
+.ator-web-card-img {
+  object-fit: cover;
+}
+
+.ator-web-card-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ator-web-card-info h1 {
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+}
+
+.ator-web-card-favorito {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ator-web-card-favorito .favorito-icon.MuiIconButton-root {
+  width: 34px;
+  height: 34px;
+}
+
+.ator-web-card-favorito .favorito-icon svg {
+  font-size: 25px;
+}

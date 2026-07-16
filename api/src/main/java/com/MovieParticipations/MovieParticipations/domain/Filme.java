@@ -25,7 +25,13 @@ public class Filme {
     private String tituloNormalizado;
     private Long idTmdb;
     private LocalDate ultimaAtualizacao;
+    private LocalDate dataLancamento;
     private Double popularidade;
-    private Boolean inicializado;
+    private Boolean elencoInicializado;
+    private Boolean infoAtualizado;
+    private String backdropPath;
+    private String genero;
+    @Column(length = 4000)
+    private String overview;
 
 }

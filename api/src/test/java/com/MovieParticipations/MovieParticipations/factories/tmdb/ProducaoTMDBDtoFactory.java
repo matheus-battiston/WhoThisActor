@@ -2,12 +2,22 @@ package com.MovieParticipations.MovieParticipations.factories.tmdb;
 
 import com.MovieParticipations.MovieParticipations.dto.ProducaoTMDBDto;
 
+import java.time.LocalDate;
+
 public class ProducaoTMDBDtoFactory {
     private static final Long ID_MATRIX = 123L;
     private static final String TITULO_MATRIX = "Matrix";
     private static final String TIPO_MIDIA_MOVIE = "movie";
     private static final Double POPULARIDADE_MATRIX = 10.0;
     private static final String IMAGEM_POSTER_MATRIX = "/matrix.jpg";
+    private static final int ANO_LANCAMENTO_MATRIX = 2011;
+    private static final int MES_LANCAMENTO_MATRIX = 2;
+    private static final int DIA_LANCAMENTO_MATRIX = 10;
+    private static final LocalDate DATA_LANCAMENTO_MATRIX = LocalDate.of(
+            ANO_LANCAMENTO_MATRIX,
+            MES_LANCAMENTO_MATRIX,
+            DIA_LANCAMENTO_MATRIX
+    );
     private static final String PERSONAGEM_NEO = "Neo";
     private static final Long ORDEM_MATRIX = 1L;
     private static final Long ID_BREAKING_BAD = 456L;
@@ -34,6 +44,7 @@ public class ProducaoTMDBDtoFactory {
                 .tipoMidia(TIPO_MIDIA_MOVIE)
                 .popularidade(POPULARIDADE_MATRIX)
                 .imagemPoster(IMAGEM_POSTER_MATRIX)
+                .dataLancamento(DATA_LANCAMENTO_MATRIX)
                 .personagem(PERSONAGEM_NEO)
                 .ordem(ORDEM_MATRIX)
                 .build();

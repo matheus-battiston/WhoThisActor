@@ -2,12 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --mobile-footer-space: 96px;
+  --app-background-color: #06083a;
+  --app-background:
+    radial-gradient(circle at 50% 0%, rgba(95, 232, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, #080b42 0%, #06083a 100%);
+}
+
 html,
 body {
   height: 100svh;
   margin: 0;
   padding: 0;
-  background-color: rgb(15, 9, 94);
+  background: var(--app-background);
 }
 body {
   margin: 0;
@@ -23,7 +31,10 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE e Edge */
 }

@@ -1,0 +1,93 @@
+.opcao-producao-web-card {
+  display: flex;
+  width: 49%;
+  min-height: 230px;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px 14px 14px;
+  border: 1px solid rgba(64, 131, 255, 0.36);
+  border-radius: 22px;
+  color: #fff;
+  text-align: left;
+  background:
+    radial-gradient(circle at 90% 30%, rgba(95, 232, 255, 0.08), transparent 38%),
+    rgba(11, 22, 79, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(95, 232, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.opcao-producao-web-card:hover {
+  border-color: rgba(95, 232, 255, 0.62);
+  background:
+    radial-gradient(circle at 90% 30%, rgba(95, 232, 255, 0.12), transparent 38%),
+    rgba(12, 27, 93, 0.86);
+}
+
+.opcao-producao-web-card-imagem {
+  width: 132px;
+  height: 200px;
+  flex: 0 0 132px;
+  overflow: hidden;
+  border: 1px solid rgba(95, 232, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+}
+
+.opcao-producao-web-card-img {
+  object-fit: cover;
+}
+
+.opcao-producao-web-card-conteudo {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.opcao-producao-web-card-conteudo strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.opcao-producao-web-card-periodo {
+  color: #44c9ff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.opcao-producao-web-card-genero {
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 5px 10px;
+  border: 1px solid rgba(95, 232, 255, 0.12);
+  border-radius: 999px;
+  color: #9eb6ff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(61, 84, 226, 0.18);
+}
+
+.opcao-producao-web-card-overview {
+  display: -webkit-box;
+  overflow: hidden;
+  color: rgba(220, 226, 255, 0.76);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.42;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}

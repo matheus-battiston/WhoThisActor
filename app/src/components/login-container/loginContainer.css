@@ -3,29 +3,24 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(22px);
-  background: linear-gradient(
-    180deg,
-    rgba(15, 9, 94, 0.92) 0%,
-    rgba(20, 20, 54, 0.92) 100%
-  );
-  border: 1px solid rgba(54, 186, 254, 0.18);
+  background:
+    radial-gradient(circle at 88% 18%, rgba(95, 232, 255, 0.1), transparent 38%),
+    rgba(11, 22, 79, 0.76);
+  border: 1px solid rgba(64, 131, 255, 0.34);
   border-radius: 32px;
   box-shadow:
-    0 24px 80px rgba(6, 4, 40, 0.5),
+    0 24px 80px rgba(2, 6, 23, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   max-width: 520px;
-  height: 640px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
   position: relative;
   width: min(100%, 520px);
   z-index: 1;
 }
 
 .login-shell::before {
-  background: linear-gradient(
-    135deg,
-    rgba(54, 186, 254, 0.18),
-    transparent 45%
-  );
+  background: linear-gradient(135deg, rgba(95, 232, 255, 0.1), transparent 46%);
   border-radius: inherit;
   content: "";
   inset: 0;

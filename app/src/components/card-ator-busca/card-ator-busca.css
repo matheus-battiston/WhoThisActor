@@ -1,0 +1,57 @@
+.ator-busca-card {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid rgba(220, 226, 255, 0.18);
+  border-radius: 14px;
+  color: #fff;
+  text-align: left;
+  background: rgba(21, 20, 88, 0.46);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.ator-busca-card-imagem {
+  height: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ator-busca-card-texto {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ator-busca-card-texto strong,
+.ator-busca-card-texto span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ator-busca-card-texto strong {
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.12;
+  white-space: nowrap;
+}
+
+.ator-busca-card-texto span {
+  display: -webkit-box;
+  color: rgba(220, 226, 255, 0.72);
+  font-size: 12.5px;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ator-busca-card-seta {
+  flex: 0 0 22px;
+  color: #5fe8ff;
+  font-size: 24px;
+}

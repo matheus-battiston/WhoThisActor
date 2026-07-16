@@ -1,0 +1,184 @@
+.producao-web-hero {
+  position: relative;
+  z-index: 11;
+  flex: 0 0 auto;
+  padding: 100px 10px 43px;
+  color: #fff;
+  background: #070b3e;
+  overflow: hidden;
+}
+
+.producao-web-hero::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      #070b3e 0%,
+      rgba(5, 7, 36, 0.68) 12%,
+      rgba(8, 10, 48, 0.26) 24%,
+      rgba(7, 11, 62, 0.72) 90%,
+      #070b3e 100%
+    ),
+    linear-gradient(90deg, rgba(7, 11, 62, 0.42), rgba(7, 11, 62, 0.1));
+}
+
+.producao-web-backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: -10px -10px 0;
+  background-color: #070b3e;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(5px);
+  transform: scale(1.03);
+}
+
+.producao-web-info {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  box-sizing: border-box;
+  align-items: flex-end;
+  gap: 24px;
+  margin: 0 115px;
+}
+
+.producao-web-poster-wrapper {
+  position: relative;
+  width: 190px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.producao-web-poster {
+  width: 100%;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 28px 48px rgba(0, 0, 0, 0.34);
+}
+
+.producao-web-poster img {
+  object-fit: cover;
+}
+
+.producao-web-favorito {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.producao-web-texto {
+  min-width: 0;
+  width: 100%;
+}
+
+.producao-web-texto h1 {
+  max-width: 780px;
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: 42px;
+  line-height: 1.08;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.producao-web-metadados {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  color: rgba(236, 240, 255, 0.92);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.producao-web-metadados span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.producao-web-metadados svg {
+  width: 18px;
+  height: 18px;
+  color: rgba(209, 218, 255, 0.88);
+}
+
+.producao-web-overview {
+  display: -webkit-box;
+  width: 100%;
+  max-width: 760px;
+  margin: 12px 0 16px;
+  overflow: hidden;
+  color: rgba(246, 248, 255, 0.9);
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: left;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.producao-web-providers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.producao-web-providers div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.producao-web-providers img {
+  width: 34px;
+  border-radius: 9px;
+}
+
+@media (max-width: 980px) {
+  .producao-web-info {
+    align-items: flex-end;
+  }
+
+  .producao-web-texto h1 {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .producao-web-info {
+    margin: 0 28.75px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .producao-web-info {
+    margin: 0;
+  }
+}
+
+@media (max-width: 1199px) {
+  .producao-web-info {
+    margin: 0 57.5px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .producao-web-info {
+    margin: 0 28.75px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .producao-web-info {
+    margin: 0;
+  }
+}

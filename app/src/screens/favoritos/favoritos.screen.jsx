@@ -1,54 +1,97 @@
 import React, { useState } from "react";
-import Cabecalho from "../../components/cabecalho/cabecalho.component";
-
-import "./favoritos.css";
-import Tab from "../../components/tab/tab.component";
-import { FavoritosProducao } from "../../components/favoritos-producao/favoritos-producao.component";
-import { FavoritosAtor } from "../../components/favoritos-ator/favoritos-ator.component";
-import Loading from "../../components/loading/loading.component";
+import { useQueryClient } from "@tanstack/react-query";
+import { useIsMobile } from "../../hooks/use-is-mobile/use-is-mobile.hook";
 import {
+  getListarAtoresFavoritosQueryKey,
+  getListarProducoesFavoritasQueryKey,
+  useDesfavoritarAtor,
+  useDesfavoritarFilme,
+  useDesfavoritarSerie,
   useListarAtoresFavoritos,
   useListarProducoesFavoritas,
 } from "../../api/generated/api";
+import FavoritosMobileLayout from "./layouts/favoritos-mobile.layout";
+import FavoritosWebLayout from "./layouts/favoritos-web.layout";
 
 export default function FavoritosScreen() {
-  const [tipo, setTipo] = useState("PRODUÇÃO");
-  const FRASE_CARREGAMENTO = "Carregando favoritos";
-  const atoresFavoritos = useListarAtoresFavoritos({
-    query: { enabled: true },
+  const [aba, setAba] = useState("PRODUCOES");
+  const [tipoProducao, setTipoProducao] = useState("series");
+  const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
+
+  const atoresFavoritos = useListarAtoresFavoritos();
+  const producoesFavoritas = useListarProducoesFavoritas();
+  const desfavoritarAtor = useDesfavoritarAtor({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: getListarAtoresFavoritosQueryKey(),
+        });
+      },
+    },
+  });
+  const desfavoritarSerie = useDesfavoritarSerie({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: getListarProducoesFavoritasQueryKey(),
+        });
+      },
+    },
+  });
+  const desfavoritarFilme = useDesfavoritarFilme({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: getListarProducoesFavoritasQueryKey(),
+        });
+      },
+    },
   });
 
-  const producoesFavoritas = useListarProducoesFavoritas({
-    query: { enabled: true },
-  });
+  const loading = atoresFavoritos.isLoading || producoesFavoritas.isLoading;
+  const producoes = producoesFavoritas.data?.data || {};
+  const atores = atoresFavoritos.data?.data || [];
+  const listaProducoes =
+    tipoProducao === "filmes" ? producoes.filmes || [] : producoes.series || [];
+  const removendoFavorito =
+    desfavoritarAtor.isPending ||
+    desfavoritarSerie.isPending ||
+    desfavoritarFilme.isPending;
 
-  const loading = producoesFavoritas.isLoading || producoesFavoritas.isLoading;
+  const removerProducaoFavorita = (producao) => {
+    if (!producao.id) return;
 
-  return (
-    <div className="page-favoritos">
-      {loading ? (
-        <Loading frase={FRASE_CARREGAMENTO} />
-      ) : (
-        <>
-          <Cabecalho />
-          <div className="container-favoritos">
-            <h1 className="title-favoritos">Favoritos</h1>
-            <Tab
-              setTab={setTipo}
-              estado={tipo}
-              tabs={["PRODUÇÃO", "ATORES"]}
-              tamanho="pequeno"
-            />
-            {tipo === "PRODUÇÃO" ? (
-              <FavoritosProducao
-                producoesFavoritas={producoesFavoritas.data?.data}
-              />
-            ) : (
-              <FavoritosAtor atoresFavoritos={atoresFavoritos.data?.data} />
-            )}
-          </div>
-        </>
-      )}
-    </div>
+    if (tipoProducao === "filmes") {
+      desfavoritarFilme.mutate({ id: producao.id });
+      return;
+    }
+
+    desfavoritarSerie.mutate({ id: producao.id });
+  };
+
+  const removerAtorFavorito = (ator) => {
+    if (!ator.id) return;
+
+    desfavoritarAtor.mutate({ id: ator.id });
+  };
+
+  const layoutProps = {
+    aba,
+    setAba,
+    tipoProducao,
+    setTipoProducao,
+    atores,
+    listaProducoes,
+    loading,
+    removendoFavorito,
+    removerAtorFavorito,
+    removerProducaoFavorita,
+  };
+
+  return isMobile ? (
+    <FavoritosMobileLayout {...layoutProps} />
+  ) : (
+    <FavoritosWebLayout {...layoutProps} />
   );
 }

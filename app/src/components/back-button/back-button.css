@@ -1,0 +1,18 @@
+.botao-voltar {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(95, 223, 255, 0.36);
+  border-radius: 14px;
+  color: #5fe8ff;
+  background: rgba(21, 25, 91, 0.54);
+  box-shadow: inset 0 0 18px rgba(95, 232, 255, 0.12);
+  cursor: pointer;
+}
+
+.botao-voltar svg {
+  font-size: 24px;
+}

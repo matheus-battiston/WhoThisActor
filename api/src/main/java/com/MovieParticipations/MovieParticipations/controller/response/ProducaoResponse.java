@@ -11,5 +11,8 @@ import lombok.*;
 public class ProducaoResponse {
     String nome;
     String imagem;
+    String genero;
+    String overview;
+    Integer ano;
     Long id;
 }

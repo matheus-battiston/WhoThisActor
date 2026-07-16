@@ -1,0 +1,44 @@
+.exibir-producoes-mobile {
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--app-background);
+}
+
+.exibir-producoes-mobile-conteudo {
+  display: flex;
+  height: 100dvh;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 18px var(--mobile-footer-space, 112px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.exibir-producoes-mobile-tabs {
+  flex-shrink: 0;
+}
+
+.exibir-producoes-mobile-lista {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-content: flex-start;
+  justify-content: space-around;
+}
+
+@media (max-width: 380px) {
+  .exibir-producoes-mobile-conteudo {
+    gap: 14px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .exibir-producoes-mobile-lista {
+    gap: 15px;
+  }
+}

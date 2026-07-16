@@ -26,6 +26,12 @@ public class ProvidersService {
     private final RestTemplate restTemplate;
     private final static String URL_BRASIL = "BR";
 
+    private static final List<String> TERMOS_BLOQUEADOS = List.of(
+            "with ads",
+            "ads",
+            "Amazon Channel"
+    );
+
     public ProvidersService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -43,7 +49,11 @@ public class ProvidersService {
         if (providersBrasil == null || providersBrasil.getFlatrate() == null)
             return null;
 
-        return providersBrasil.getFlatrate();
+        return providersBrasil.getFlatrate()
+                .stream()
+                .filter(provider -> TERMOS_BLOQUEADOS.stream()
+                        .noneMatch(termo -> provider.getNomeProvider().toLowerCase().contains(termo.toLowerCase())))
+                .toList();
     }
 
     private String gerarUrl(Long id, TipoMidia tipo){

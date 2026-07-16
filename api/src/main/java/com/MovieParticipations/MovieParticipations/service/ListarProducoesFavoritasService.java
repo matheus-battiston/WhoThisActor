@@ -10,6 +10,7 @@ import com.MovieParticipations.MovieParticipations.repository.FavoritaSerieRepos
 import com.matheus.libauth.security.dto.UsuarioAutenticado;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,11 +19,30 @@ import java.util.List;
 public class ListarProducoesFavoritasService {
     private final FavoritaSerieRepository favoritaSerieRepository;
     private final FavoritaFilmeRepository favoritaFilmeRepository;
+    private final AtualizarSerieInfoService atualizarSerieInfoService;
+    private final AtualizarFilmeInfoService atualizarFilmeInfoService;
 
+    @Transactional
     public ProducoesFavoritasResponse listaDeFavoritos(UsuarioAutenticado usuarioAutenticado) {
-        List<Serie> seriesFavoritas = favoritaSerieRepository.findSeriesByAuthUserId(usuarioAutenticado.getId());
-        List<Filme> filmesFavoritos = favoritaFilmeRepository.findFilmesByAuthUserId(usuarioAutenticado.getId());
+        List<Serie> seriesFavoritas = favoritaSerieRepository.findSeriesByAuthUserId(usuarioAutenticado.getId())
+                .stream()
+                .map(this::prepararSerie)
+                .toList();
+        List<Filme> filmesFavoritos = favoritaFilmeRepository.findFilmesByAuthUserId(usuarioAutenticado.getId())
+                .stream()
+                .map(this::prepararFilme)
+                .toList();
 
         return ListaFavoritosMapper.toResponse(seriesFavoritas, filmesFavoritos);
+    }
+
+    private Serie prepararSerie(Serie serie) {
+        if (!Boolean.TRUE.equals(serie.getInfoAtualizado())) atualizarSerieInfoService.atualizar(serie);
+        return serie;
+    }
+
+    private Filme prepararFilme(Filme filme) {
+        if (!Boolean.TRUE.equals(filme.getInfoAtualizado())) atualizarFilmeInfoService.atualizar(filme);
+        return filme;
     }
 }

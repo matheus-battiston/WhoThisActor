@@ -1,0 +1,24 @@
+.auth-action-botao {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid rgba(95, 232, 255, 0.32);
+  border-radius: 999px;
+  color: #5fe8ff;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  background: rgba(12, 14, 64, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.auth-action-botao:hover {
+  border-color: rgba(95, 232, 255, 0.58);
+  background: rgba(95, 232, 255, 0.1);
+}
+
+.auth-action-botao svg {
+  font-size: 18px;
+}

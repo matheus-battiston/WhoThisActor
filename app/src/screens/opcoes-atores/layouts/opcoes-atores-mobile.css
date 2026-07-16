@@ -1,0 +1,34 @@
+.opcoes-atores-mobile {
+  display: flex;
+  width: 100vw;
+  min-height: 100dvh;
+  flex-direction: column;
+  background: var(--app-background);
+}
+
+.opcoes-atores-mobile-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 20px;
+  padding: 16px 18px 10px;
+  box-sizing: border-box;
+}
+
+.opcoes-atores-mobile-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (max-width: 380px) {
+  .opcoes-atores-mobile-conteudo {
+    gap: 18px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .opcoes-atores-mobile-lista {
+    gap: 12px;
+  }
+}

@@ -1,0 +1,45 @@
+.opcoes-producoes-web {
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  background: var(--app-background);
+}
+
+.opcoes-producoes-web-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 0 115px;
+  padding: 32px 18px 36px;
+  box-sizing: border-box;
+}
+
+.opcoes-producoes-web-lista {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 16px;
+  padding: 0;
+}
+
+@media (max-width: 1199px) {
+  .opcoes-producoes-web-conteudo {
+    margin: 0 57.5px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .opcoes-producoes-web-conteudo {
+    margin: 0 28.75px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .opcoes-producoes-web-conteudo {
+    margin: 0;
+  }
+}

@@ -63,6 +63,7 @@ auth:
     - /actuator/health
     - /actuator/health/**
     - /oauth2/callback
+    - /busca/inicial
   enabled: true
 
 server:
