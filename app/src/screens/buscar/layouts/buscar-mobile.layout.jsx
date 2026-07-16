@@ -3,7 +3,6 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
 import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
-import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import InputSearch from "../../../components/pesquisa/pesquisa.component";
 import CardAtorBusca from "../../../components/card-ator-busca/card-ator-busca.component";
 import BuscaProducaoCard from "../../../components/busca-producao-card/busca-producao-card.component";
@@ -39,8 +38,6 @@ export default function BuscarMobileLayout({
 }) {
   return (
     <div className="page-buscar">
-      <ScrollFade />
-
       <main className="buscar-conteudo">
         <MobilePageHeader />
 

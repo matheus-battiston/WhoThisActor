@@ -4,7 +4,6 @@ import AtorMobileCard from "../../../components/ator-mobile-card/ator-mobile-car
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
 import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
 import ProducaoMobileCard from "../../../components/producao-mobile-card/producao-mobile-card.component";
-import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import "./exibir-producoes-mobile.css";
 
 const TABS = [
@@ -31,8 +30,6 @@ export default function ExibirProducoesMobileLayout({
 
   return (
     <div className="exibir-producoes-mobile">
-      <ScrollFade />
-
       <main className="exibir-producoes-mobile-conteudo">
         <MobilePageHeader />
 

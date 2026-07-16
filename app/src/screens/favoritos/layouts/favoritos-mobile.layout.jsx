@@ -4,7 +4,6 @@ import TheatersOutlinedIcon from "@mui/icons-material/TheatersOutlined";
 import TvOutlinedIcon from "@mui/icons-material/TvOutlined";
 import MobilePageHeader from "../../../components/mobile-page-header/mobile-page-header.component";
 import SegmentedControl from "../../../components/segmented-control/segmented-control.component";
-import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import FavoritoAtorCard from "../../../components/favorito-ator-card/favorito-ator-card.component";
 import FavoritoProducaoCard from "../../../components/favorito-producao-card/favorito-producao-card.component";
 import TipoProducaoToggle from "../../../components/tipo-producao-toggle/tipo-producao-toggle.component";
@@ -44,8 +43,6 @@ export default function FavoritosMobileLayout({
 
   return (
     <div className="favoritos-mobile">
-      <ScrollFade />
-
       <main className="favoritos-mobile-conteudo">
         <MobilePageHeader />
 

@@ -1,7 +1,6 @@
 import InputSearch from "../../../components/pesquisa/pesquisa.component";
 import ElencoMobileCard from "../../../components/elenco-mobile-card/elenco-mobile-card.component";
 import ProducaoMobileHero from "../../../components/producao-mobile-hero/producao-mobile-hero.component";
-import ScrollFade from "../../../components/scroll-fade/scroll-fade.component";
 import "./exibir-elenco-mobile.css";
 
 export default function ExibirElencoMobileLayout({
@@ -15,8 +14,6 @@ export default function ExibirElencoMobileLayout({
 }) {
   return (
     <div className="exibir-elenco-mobile">
-      <ScrollFade />
-
       <ProducaoMobileHero
         producao={detalhesProducao}
         isAuthenticated={isAuthenticated}
