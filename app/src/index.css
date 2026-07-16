@@ -20,6 +20,14 @@ body,
   background-color: var(--app-background-color);
 }
 
+@media (display-mode: standalone) {
+  html,
+  body,
+  #root {
+    height: 100lvh;
+  }
+}
+
 body {
   margin: 0;
   font-family:
