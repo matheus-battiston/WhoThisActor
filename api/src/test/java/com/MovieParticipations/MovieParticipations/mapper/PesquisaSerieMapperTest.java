@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.PesquisaSerieMapper.toResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,7 +25,7 @@ public class PesquisaSerieMapperTest {
 
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
-        assertEquals(serie.getImagem(), response.getImagem());
+        assertEquals(normalizar(serie.getImagem()), response.getImagem());
         assertEquals(serie.getOverview(), response.getOverview());
         assertEquals(serie.getGenero(), response.getGenero());
         assertEquals(serie.getAnoPrimeiraTemporada(), response.getAnoPrimeiraTemporada());

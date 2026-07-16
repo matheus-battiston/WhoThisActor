@@ -23,7 +23,7 @@ public class AtorMapperTest {
     private static final Long ID_TMDB_KEANU_REEVES = 6384L;
     private static final Double POPULARIDADE_KEANU_REEVES = 10.0;
     private static final String IMAGEM_KEANU_REEVES = "/keanu.jpg";
-    private static final String LINK_IMAGEM = "https://image.tmdb.org/t/p/w200";
+    private static final String LINK_IMAGEM = "https://image.tmdb.org/t/p/w400";
 
     @Test
     @DisplayName("Deve transformar dto em entidade")

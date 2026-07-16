@@ -23,6 +23,7 @@ import static com.MovieParticipations.MovieParticipations.factories.domain.Filme
 import static com.MovieParticipations.MovieParticipations.factories.response.OpcaoPesquisaElencoResponseFactory.getNeoOpcaoPesquisaElencoResponse;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getNetflixProviderDto;
 import static com.MovieParticipations.MovieParticipations.factories.security.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -72,7 +73,8 @@ class PesquisarElencoFilmeServiceTest {
 
         List<OpcaoPesquisaElencoResponse> resultado = pesquisarElencoFilmeService.pesquisarElenco(ID_FILME_PESQUISA, null);
 
-        assertThat(resultado).containsExactly(opcao);
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getUrlImagem()).isEqualTo(normalizar(opcao.getUrlImagem()));
         verify(filmeAtorRepository).findElencoPorIdComPersonagem(
                 ID_FILME_PESQUISA,
                 FILTRO_VAZIO,
@@ -123,7 +125,7 @@ class PesquisarElencoFilmeServiceTest {
 
         assertThat(resultado.getId()).isEqualTo(ID_FILME);
         assertThat(resultado.getNome()).isEqualTo(NOME_MATRIX);
-        assertThat(resultado.getImagem()).isEqualTo(IMAGEM_MATRIX);
+        assertThat(resultado.getImagem()).isEqualTo(normalizar(IMAGEM_MATRIX));
         assertThat(resultado.getDataLancamento()).isEqualTo(filme.getDataLancamento());
         assertThat(resultado.getElenco()).containsExactly(opcao);
         assertThat(resultado.getProviders()).containsExactly(provider);

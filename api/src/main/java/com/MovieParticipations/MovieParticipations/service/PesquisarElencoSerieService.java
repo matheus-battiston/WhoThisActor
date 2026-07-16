@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.mapper.DetalhesProducaoComElencoMapper.toResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.springframework.data.domain.PageRequest.of;
 
 @RequiredArgsConstructor
@@ -36,7 +37,10 @@ public class PesquisarElencoSerieService {
 
         return serieAtorRepository
                 .findElencoPorIdComPersonagem(id, filtroNome, pageable)
-                .getContent();
+                .getContent()
+                .stream()
+                .map(PesquisarElencoSerieService::normalizarImagem)
+                .toList();
     }
 
     public DetalhesProducaoComElenco pesquisar(Long idSerie, String personagem, UsuarioAutenticado usuarioAutenticado) {
@@ -51,5 +55,15 @@ public class PesquisarElencoSerieService {
 
         return toResponse(elenco, serie, providers, estaFavoritado);
 
+    }
+
+    private static OpcaoPesquisaElencoResponse normalizarImagem(OpcaoPesquisaElencoResponse item) {
+        return OpcaoPesquisaElencoResponse.builder()
+                .nome(item.getNome())
+                .urlImagem(normalizar(item.getUrlImagem()))
+                .nomePersonagem(item.getNomePersonagem())
+                .popularity(item.getPopularity())
+                .id(item.getId())
+                .build();
     }
 }

@@ -39,11 +39,17 @@ public class PesquisarProducoesAtorService {
 
         List<ProducaoComPersonagemResponse> filmes = filmeAtorRepository
                 .findProducoesResponsePorAtor(id, pageable)
-                .getContent();
+                .getContent()
+                .stream()
+                .map(PesquisarProducoesAtorService::normalizarPoster)
+                .toList();
 
         List<ProducaoComPersonagemResponse> series = serieAtorRepository
                 .findProducoesResponsePorAtor(id, pageable)
-                .getContent();
+                .getContent()
+                .stream()
+                .map(PesquisarProducoesAtorService::normalizarPoster)
+                .toList();
 
         return ProducaoesAtorMapper.toResponse(filmes, series);
     }
@@ -87,5 +93,14 @@ public class PesquisarProducoesAtorService {
                 .replaceAll("[^a-zA-Z0-9 ]", "")
                 .toLowerCase()
                 .trim();
+    }
+
+    private static ProducaoComPersonagemResponse normalizarPoster(ProducaoComPersonagemResponse producao) {
+        return ProducaoComPersonagemResponse.builder()
+                .id(producao.getId())
+                .nomeProducao(producao.getNomeProducao())
+                .nomePersonagem(producao.getNomePersonagem())
+                .posterLink(TmdbImagemUrl.normalizar(producao.getPosterLink()))
+                .build();
     }
 }

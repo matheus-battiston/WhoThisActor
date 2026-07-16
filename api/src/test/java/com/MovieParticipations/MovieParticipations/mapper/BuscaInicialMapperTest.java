@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("BuscaInicialMapper")
 class BuscaInicialMapperTest {
-    private static final String URL_IMAGEM_KEANU_REEVES = "https://image.tmdb.org/t/p/w200/keanu.jpg";
-    private static final String URL_IMAGEM_MATRIX = "https://image.tmdb.org/t/p/w200/matrix.jpg";
-    private static final String URL_IMAGEM_BREAKING_BAD = "https://image.tmdb.org/t/p/w200/breaking-bad.jpg";
+    private static final String URL_IMAGEM_KEANU_REEVES = "https://image.tmdb.org/t/p/w400/keanu.jpg";
+    private static final String URL_IMAGEM_MATRIX = "https://image.tmdb.org/t/p/w400/matrix.jpg";
+    private static final String URL_IMAGEM_BREAKING_BAD = "https://image.tmdb.org/t/p/w400/breaking-bad.jpg";
 
     @Test
     @DisplayName("Deve transformar ator em response de pessoa")

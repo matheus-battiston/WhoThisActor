@@ -1,14 +1,10 @@
 import PessoaWebCard from "../../../components/pessoa-web-card/pessoa-web-card.component";
 import OpcoesAtoresAjuda from "../../../components/opcoes-atores-ajuda/opcoes-atores-ajuda.component";
 import ResultadoPesquisaOpcao from "../../../components/search-result-intro/search-result-intro.component";
-import { URL_BASE_IMAGEM_TMDB } from "../../../constants/image-tmdb";
 import "./opcoes-atores-web.css";
 
 function montarImagem(path) {
-  if (!path) return undefined;
-  if (path.startsWith("http")) return path;
-
-  return `${URL_BASE_IMAGEM_TMDB}${path}`;
+  return path || undefined;
 }
 
 export default function OpcoesAtoresWebLayout({

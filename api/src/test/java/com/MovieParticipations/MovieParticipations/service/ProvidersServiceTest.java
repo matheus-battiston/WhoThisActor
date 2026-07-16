@@ -15,6 +15,8 @@ import java.util.Map;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getNetflixProviderDto;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.TAMANHO_LOGO_PROVIDER;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -49,7 +51,8 @@ class ProvidersServiceTest {
 
         List<ProviderDto> resultado = service.buscarProviders(ID_TMDB_MATRIX, MOVIE);
 
-        assertThat(resultado).containsExactly(netflix);
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getImagemLogo()).isEqualTo(normalizar(netflix.getImagemLogo(), TAMANHO_LOGO_PROVIDER));
         verify(restTemplate).exchange(URL_PROVIDERS_FILME_MATRIX, GET, EMPTY, BuscarProvidersDto.class);
     }
 
@@ -66,7 +69,8 @@ class ProvidersServiceTest {
 
         List<ProviderDto> resultado = service.buscarProviders(ID_TMDB_BREAKING_BAD, TV);
 
-        assertThat(resultado).containsExactly(netflix);
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getImagemLogo()).isEqualTo(normalizar(netflix.getImagemLogo(), TAMANHO_LOGO_PROVIDER));
         verify(restTemplate).exchange(URL_PROVIDERS_SERIE_BREAKING_BAD, GET, EMPTY, BuscarProvidersDto.class);
     }
 

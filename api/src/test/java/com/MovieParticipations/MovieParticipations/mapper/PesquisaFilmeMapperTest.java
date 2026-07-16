@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
 import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.PesquisaFilmeMapper.toResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,7 +25,7 @@ public class PesquisaFilmeMapperTest {
 
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
-        assertEquals(filme.getImagem(), response.getImagem());
+        assertEquals(normalizar(filme.getImagem()), response.getImagem());
         assertEquals(filme.getDataLancamento(), response.getDataLancamento());
         assertEquals(filme.getOverview(), response.getOverview());
         assertEquals(filme.getGenero(), response.getGenero());

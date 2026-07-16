@@ -18,6 +18,7 @@ import static com.MovieParticipations.MovieParticipations.factories.response.Opc
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getNetflixProviderDto;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.DetalhesProducaoComElencoMapper.*;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static java.util.List.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -46,8 +47,8 @@ public class DetalhesProducaoComElencoMapperTest {
 
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
-        assertEquals(filme.getImagem(), response.getImagem());
-        assertEquals(filme.getBackdropPath(), response.getBackdropPath());
+        assertEquals(normalizar(filme.getImagem()), response.getImagem());
+        assertEquals(normalizar(filme.getBackdropPath()), response.getBackdropPath());
         assertEquals(filme.getDataLancamento(), response.getDataLancamento());
         assertEquals(filme.getGenero(), response.getGenero());
         assertEquals(filme.getOverview(), response.getOverview());
@@ -74,8 +75,8 @@ public class DetalhesProducaoComElencoMapperTest {
 
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
-        assertEquals(serie.getImagem(), response.getImagem());
-        assertEquals(serie.getBackdropPath(), response.getBackdropPath());
+        assertEquals(normalizar(serie.getImagem()), response.getImagem());
+        assertEquals(normalizar(serie.getBackdropPath()), response.getBackdropPath());
         assertEquals(serie.getAnoPrimeiraTemporada(), response.getAnoPrimeiraTemporada());
         assertEquals(serie.getAnoUltimaTemporada(), response.getAnoUltimaTemporada());
         assertEquals(serie.getQuantidadeTemporadas(), response.getQuantidadeTemporadas());

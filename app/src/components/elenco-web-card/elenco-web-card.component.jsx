@@ -1,14 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import { LoadingImage } from "../loading-image/loading-image.component";
 import "./elenco-web-card.css";
 
 export default function ElencoWebCard({ pessoa }) {
   const navigate = useNavigate();
-  const foto = pessoa.urlImagem
-    ? `${URL_BASE_IMAGEM_TMDB}${pessoa.urlImagem}`
-    : undefined;
+  const foto = pessoa.urlImagem || undefined;
 
   return (
     <button

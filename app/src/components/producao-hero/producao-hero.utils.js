@@ -1,15 +1,11 @@
-import {
-  URL_BASE_BACKDROP_TMDB,
-  URL_BASE_IMAGEM_TMDB,
-} from "../../constants/image-tmdb";
 import { obterAnoLancamento } from "../../utils/formatar-data-lancamento";
 
-export function montarUrlImagem(path, base = URL_BASE_IMAGEM_TMDB) {
-  return path ? `${base}${path}` : undefined;
+export function montarUrlImagem(path) {
+  return path || undefined;
 }
 
 export function montarUrlBackdrop(path) {
-  return montarUrlImagem(path, URL_BASE_BACKDROP_TMDB);
+  return montarUrlImagem(path);
 }
 
 export function montarPeriodo(producao) {

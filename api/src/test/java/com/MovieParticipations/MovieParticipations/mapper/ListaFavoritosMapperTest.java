@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.ListaFavoritosMapper.toResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static java.util.List.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,14 +36,14 @@ public class ListaFavoritosMapperTest {
         assertEquals(QUANTIDADE_FAVORITOS, response.getSeries().size());
         assertEquals(serie.getId(), response.getSeries().get(PRIMEIRO_ITEM).getId());
         assertEquals(serie.getTitulo(), response.getSeries().get(PRIMEIRO_ITEM).getNome());
-        assertEquals(serie.getImagem(), response.getSeries().get(PRIMEIRO_ITEM).getImagem());
+        assertEquals(normalizar(serie.getImagem()), response.getSeries().get(PRIMEIRO_ITEM).getImagem());
         assertEquals(serie.getGenero(), response.getSeries().get(PRIMEIRO_ITEM).getGenero());
         assertEquals(serie.getOverview(), response.getSeries().get(PRIMEIRO_ITEM).getOverview());
         assertEquals(serie.getAnoPrimeiraTemporada(), response.getSeries().get(PRIMEIRO_ITEM).getAno());
         assertEquals(QUANTIDADE_FAVORITOS, response.getFilmes().size());
         assertEquals(filme.getId(), response.getFilmes().get(PRIMEIRO_ITEM).getId());
         assertEquals(filme.getTitulo(), response.getFilmes().get(PRIMEIRO_ITEM).getNome());
-        assertEquals(filme.getImagem(), response.getFilmes().get(PRIMEIRO_ITEM).getImagem());
+        assertEquals(normalizar(filme.getImagem()), response.getFilmes().get(PRIMEIRO_ITEM).getImagem());
         assertEquals(filme.getGenero(), response.getFilmes().get(PRIMEIRO_ITEM).getGenero());
         assertEquals(filme.getOverview(), response.getFilmes().get(PRIMEIRO_ITEM).getOverview());
         assertEquals(filme.getDataLancamento().getYear(), response.getFilmes().get(PRIMEIRO_ITEM).getAno());

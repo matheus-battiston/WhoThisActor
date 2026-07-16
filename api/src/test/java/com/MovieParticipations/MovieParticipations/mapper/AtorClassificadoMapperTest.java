@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class AtorClassificadoMapperTest {
-    private static final String LINK_IMAGEM = "https://image.tmdb.org/t/p/w200";
+    private static final String LINK_IMAGEM = "https://image.tmdb.org/t/p/w400";
 
     @Test
     @DisplayName("Deve transformar classificacao e ator em response")

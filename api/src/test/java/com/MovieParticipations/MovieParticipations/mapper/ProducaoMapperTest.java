@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.MovieParticipations.MovieParticipations.factories.domain.FilmeFactory.getMatrixFilmeEntityComId;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.mapper.ProducaoMapper.toResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -27,7 +28,7 @@ public class ProducaoMapperTest {
 
         assertEquals(serie.getId(), response.getId());
         assertEquals(serie.getTitulo(), response.getNome());
-        assertEquals(serie.getImagem(), response.getImagem());
+        assertEquals(normalizar(serie.getImagem()), response.getImagem());
         assertEquals(serie.getGenero(), response.getGenero());
         assertEquals(serie.getOverview(), response.getOverview());
         assertEquals(serie.getAnoPrimeiraTemporada(), response.getAno());
@@ -43,7 +44,7 @@ public class ProducaoMapperTest {
 
         assertEquals(filme.getId(), response.getId());
         assertEquals(filme.getTitulo(), response.getNome());
-        assertEquals(filme.getImagem(), response.getImagem());
+        assertEquals(normalizar(filme.getImagem()), response.getImagem());
         assertEquals(filme.getGenero(), response.getGenero());
         assertEquals(filme.getOverview(), response.getOverview());
         assertEquals(filme.getDataLancamento().getYear(), response.getAno());

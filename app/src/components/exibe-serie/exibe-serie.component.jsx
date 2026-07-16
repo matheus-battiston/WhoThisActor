@@ -1,5 +1,4 @@
 import "./exibe-serie.css";
-import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import PosterSerie from "../poster-serie/poster-serie.component";
 
 export default function ExibeSerie({
@@ -27,7 +26,7 @@ export default function ExibeSerie({
           {providers?.map((provider, index) => (
             <img
               key={index}
-              src={URL_BASE_IMAGEM_TMDB + provider.logo_path}
+              src={provider.logo_path}
               alt={provider.nome}
               className="provider-logo"
             />

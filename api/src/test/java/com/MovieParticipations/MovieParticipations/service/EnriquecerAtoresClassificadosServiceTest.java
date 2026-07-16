@@ -34,7 +34,7 @@ class EnriquecerAtoresClassificadosServiceTest {
     private static final Long ID_ATOR_SEM_IDENTIDADE = 101L;
     private static final String NOME_KEANU_REEVES_NORMALIZADO = "keanu reeves";
     private static final String NOME_KEANU_REEVES = "Keanu Reeves";
-    private static final String IMAGEM_KEANU_REEVES = "https://image.tmdb.org/t/p/w200/keanu.jpg";
+    private static final String IMAGEM_KEANU_REEVES = "https://image.tmdb.org/t/p/w400/keanu.jpg";
     private static final String NOME_ATOR_SEM_ID = "Ator sem ID";
     private static final String NOME_ATOR_SEM_ID_NORMALIZADO = "ator sem id";
     private static final Long ID_TMDB_ATOR_SEM_ID = 123L;

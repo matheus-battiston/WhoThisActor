@@ -6,7 +6,6 @@ import SegmentedControl from "../../../components/segmented-control/segmented-co
 import InputSearch from "../../../components/pesquisa/pesquisa.component";
 import CardAtorBusca from "../../../components/card-ator-busca/card-ator-busca.component";
 import BuscaProducaoCard from "../../../components/busca-producao-card/busca-producao-card.component";
-import { URL_BASE_IMAGEM_TMDB } from "../../../constants/image-tmdb";
 
 const CATEGORIAS = [
   { label: "Pessoas", value: "PESSOAS", Icone: PersonOutlineOutlinedIcon },
@@ -22,7 +21,7 @@ function obterPlaceholder(categoria) {
 }
 
 function montarImagem(path) {
-  return path ? `${URL_BASE_IMAGEM_TMDB}${path}` : undefined;
+  return path || undefined;
 }
 
 export default function BuscarMobileLayout({

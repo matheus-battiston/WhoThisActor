@@ -46,7 +46,7 @@ class FavoritarAtorServiceTest {
     private static final Long ID_ATOR = 99L;
     private static final Long ID_FAVORITO = 1L;
     private static final String ATOR_NAO_EXISTE = "O ator com essa ID nao existe";
-    private static final String URL_IMAGEM_KEANU_REEVES = "https://image.tmdb.org/t/p/w200/keanu.jpg";
+    private static final String URL_IMAGEM_KEANU_REEVES = "https://image.tmdb.org/t/p/w400/keanu.jpg";
     private static final int PRIMEIRO_ATOR = 0;
     private static final int QUANTIDADE_UM_ATOR = 1;
 

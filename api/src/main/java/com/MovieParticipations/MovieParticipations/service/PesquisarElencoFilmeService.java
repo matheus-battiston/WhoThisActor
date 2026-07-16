@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
 import static com.MovieParticipations.MovieParticipations.mapper.DetalhesProducaoComElencoMapper.toResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.springframework.data.domain.PageRequest.of;
 
 @RequiredArgsConstructor
@@ -34,7 +35,10 @@ public class PesquisarElencoFilmeService {
 
         return filmeAtorRepository
                 .findElencoPorIdComPersonagem(id, filtroNome, pageable)
-                .getContent();
+                .getContent()
+                .stream()
+                .map(PesquisarElencoFilmeService::normalizarImagem)
+                .toList();
     }
 
     public DetalhesProducaoComElenco pesquisar(Long idFilme, String personagem, UsuarioAutenticado usuarioAutenticado) {
@@ -49,5 +53,15 @@ public class PesquisarElencoFilmeService {
 
         return toResponse(elenco, filme, providers, estaFavoritado);
 
+    }
+
+    private static OpcaoPesquisaElencoResponse normalizarImagem(OpcaoPesquisaElencoResponse item) {
+        return OpcaoPesquisaElencoResponse.builder()
+                .nome(item.getNome())
+                .urlImagem(normalizar(item.getUrlImagem()))
+                .nomePersonagem(item.getNomePersonagem())
+                .popularity(item.getPopularity())
+                .id(item.getId())
+                .build();
     }
 }

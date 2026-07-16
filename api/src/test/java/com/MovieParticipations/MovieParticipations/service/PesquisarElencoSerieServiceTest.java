@@ -23,6 +23,7 @@ import static com.MovieParticipations.MovieParticipations.factories.response.Opc
 import static com.MovieParticipations.MovieParticipations.factories.tmdb.ProviderDtoFactory.getDisneyPlusProviderDto;
 import static com.MovieParticipations.MovieParticipations.factories.domain.SerieFactory.getBreakingBadSerieEntityComId;
 import static com.MovieParticipations.MovieParticipations.factories.security.UsuarioAutenticadoFactory.getUsuarioAutenticadoDto;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -72,7 +73,8 @@ class PesquisarElencoSerieServiceTest {
 
         List<OpcaoPesquisaElencoResponse> resultado = pesquisarElencoSerieService.pesquisarElenco(ID_SERIE_PESQUISA, null);
 
-        assertThat(resultado).containsExactly(opcao);
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getUrlImagem()).isEqualTo(normalizar(opcao.getUrlImagem()));
         verify(serieAtorRepository).findElencoPorIdComPersonagem(
                 ID_SERIE_PESQUISA,
                 FILTRO_VAZIO,
@@ -123,7 +125,7 @@ class PesquisarElencoSerieServiceTest {
 
         assertThat(resultado.getId()).isEqualTo(ID_SERIE);
         assertThat(resultado.getNome()).isEqualTo(NOME_BREAKING_BAD);
-        assertThat(resultado.getImagem()).isEqualTo(IMAGEM_BREAKING_BAD);
+        assertThat(resultado.getImagem()).isEqualTo(normalizar(IMAGEM_BREAKING_BAD));
         assertThat(resultado.getTipoMidia()).isEqualTo(TV);
         assertThat(resultado.getElenco()).containsExactly(opcao);
         assertThat(resultado.getProviders()).containsExactly(provider);

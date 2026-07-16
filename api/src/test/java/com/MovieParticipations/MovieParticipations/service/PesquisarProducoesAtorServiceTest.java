@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static com.MovieParticipations.MovieParticipations.factories.domain.AtorFactory.getKeanuReevesAtorEntityComId;
 import static com.MovieParticipations.MovieParticipations.factories.response.ProducaoComPersonagemResponseFactory.getBreakingBadProducaoComPersonagemResponse;
 import static com.MovieParticipations.MovieParticipations.factories.response.ProducaoComPersonagemResponseFactory.getMatrixProducaoComPersonagemResponse;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,7 +38,7 @@ class PesquisarProducoesAtorServiceTest {
     private static final String ATOR_NAO_ENCONTRADO = "Ator nao foi encontrado";
     private static final String CONHECIDO_POR_ATUACAO = "Acting";
     private static final String CONHECIDO_POR_DIRECAO = "Directing";
-    private static final String URL_FOTO_KEANU = "https://image.tmdb.org/t/p/w200/keanu.jpg";
+    private static final String URL_FOTO_KEANU = "https://image.tmdb.org/t/p/w400/keanu.jpg";
     private static final int TAMANHO_LISTA = 30;
 
     @Mock
@@ -63,8 +64,10 @@ class PesquisarProducoesAtorServiceTest {
 
         ProducaoAtorResponse resultado = service.pesquisarProducoesDeAtorPorId(ID_ATOR);
 
-        assertThat(resultado.getFilmes()).containsExactly(matrix);
-        assertThat(resultado.getSeries()).containsExactly(breakingBad);
+        assertThat(resultado.getFilmes()).hasSize(1);
+        assertThat(resultado.getFilmes().get(0).getPosterLink()).isEqualTo(normalizar(matrix.getPosterLink()));
+        assertThat(resultado.getSeries()).hasSize(1);
+        assertThat(resultado.getSeries().get(0).getPosterLink()).isEqualTo(normalizar(breakingBad.getPosterLink()));
         verify(filmeAtorRepository).findProducoesResponsePorAtor(ID_ATOR, pageable);
         verify(serieAtorRepository).findProducoesResponsePorAtor(ID_ATOR, pageable);
     }
@@ -167,8 +170,10 @@ class PesquisarProducoesAtorServiceTest {
         assertThat(resultado.getNome()).isEqualTo(keanu.getNome());
         assertThat(resultado.getUrlFoto()).isEqualTo(URL_FOTO_KEANU);
         assertThat(resultado.getFavoritado()).isNull();
-        assertThat(resultado.getProducoes().getFilmes()).containsExactly(matrix);
-        assertThat(resultado.getProducoes().getSeries()).containsExactly(breakingBad);
+        assertThat(resultado.getProducoes().getFilmes()).hasSize(1);
+        assertThat(resultado.getProducoes().getFilmes().get(0).getPosterLink()).isEqualTo(normalizar(matrix.getPosterLink()));
+        assertThat(resultado.getProducoes().getSeries()).hasSize(1);
+        assertThat(resultado.getProducoes().getSeries().get(0).getPosterLink()).isEqualTo(normalizar(breakingBad.getPosterLink()));
     }
 
     private AtorTMDBDtoPesquisaId ator(String nome, String conhecidoPor, Double popularidade) {

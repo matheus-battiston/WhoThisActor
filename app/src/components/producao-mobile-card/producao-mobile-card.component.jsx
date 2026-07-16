@@ -1,14 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import { LoadingImage } from "../loading-image/loading-image.component";
 import "./producao-mobile-card.css";
 
 export default function ProducaoMobileCard({ producao, tipo }) {
   const navigate = useNavigate();
   const tipoMidia = tipo === "FILME" ? "MOVIE" : "TV";
-  const poster = producao.posterLink
-    ? `${URL_BASE_IMAGEM_TMDB}${producao.posterLink}`
-    : undefined;
+  const poster = producao.posterLink || undefined;
 
   return (
     <button

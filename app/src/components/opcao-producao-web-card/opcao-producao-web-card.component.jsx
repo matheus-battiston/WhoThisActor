@@ -1,10 +1,9 @@
-import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import { obterAnoLancamento } from "../../utils/formatar-data-lancamento";
 import { LoadingImage } from "../loading-image/loading-image.component";
 import "./opcao-producao-web-card.css";
 
 function montarImagem(path) {
-  return path ? `${URL_BASE_IMAGEM_TMDB}${path}` : undefined;
+  return path || undefined;
 }
 
 function montarPeriodo(producao, tipoMidia) {

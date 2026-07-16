@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.MOVIE;
 import static com.MovieParticipations.MovieParticipations.domain.TipoMidia.TV;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
 
 public class DetalhesProducaoComElencoMapper {
     public static DetalhesProducaoComElenco toResponse(
@@ -20,8 +21,8 @@ public class DetalhesProducaoComElencoMapper {
         return DetalhesProducaoComElenco.builder()
                 .elenco(elenco)
                 .nome(filme.getTitulo())
-                .imagem(filme.getImagem())
-                .backdropPath(filme.getBackdropPath())
+                .imagem(normalizar(filme.getImagem()))
+                .backdropPath(normalizar(filme.getBackdropPath()))
                 .dataLancamento(filme.getDataLancamento())
                 .genero(filme.getGenero())
                 .overview(filme.getOverview())
@@ -40,8 +41,8 @@ public class DetalhesProducaoComElencoMapper {
         return DetalhesProducaoComElenco.builder()
                 .elenco(elenco)
                 .nome(serie.getTitulo())
-                .imagem(serie.getImagem())
-                .backdropPath(serie.getBackdropPath())
+                .imagem(normalizar(serie.getImagem()))
+                .backdropPath(normalizar(serie.getBackdropPath()))
                 .anoPrimeiraTemporada(serie.getAnoPrimeiraTemporada())
                 .anoUltimaTemporada(serie.getAnoUltimaTemporada())
                 .quantidadeTemporadas(serie.getQuantidadeTemporadas())

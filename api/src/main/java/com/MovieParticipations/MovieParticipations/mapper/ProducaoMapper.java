@@ -4,11 +4,13 @@ import com.MovieParticipations.MovieParticipations.controller.response.ProducaoR
 import com.MovieParticipations.MovieParticipations.domain.Filme;
 import com.MovieParticipations.MovieParticipations.domain.Serie;
 
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
+
 public class ProducaoMapper {
     public static ProducaoResponse toResponse(Serie serie) {
         return ProducaoResponse.builder()
                 .nome(serie.getTitulo())
-                .imagem(serie.getImagem())
+                .imagem(normalizar(serie.getImagem()))
                 .genero(serie.getGenero())
                 .overview(serie.getOverview())
                 .ano(serie.getAnoPrimeiraTemporada())
@@ -19,7 +21,7 @@ public class ProducaoMapper {
     public static ProducaoResponse toResponse(Filme filme) {
         return ProducaoResponse.builder()
                 .nome(filme.getTitulo())
-                .imagem(filme.getImagem())
+                .imagem(normalizar(filme.getImagem()))
                 .genero(filme.getGenero())
                 .overview(filme.getOverview())
                 .ano(obterAnoLancamento(filme))

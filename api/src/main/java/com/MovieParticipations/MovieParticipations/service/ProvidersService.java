@@ -11,6 +11,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.TAMANHO_LOGO_PROVIDER;
 import static org.springframework.http.HttpEntity.EMPTY;
 import static org.springframework.http.HttpMethod.GET;
 
@@ -53,6 +55,7 @@ public class ProvidersService {
                 .stream()
                 .filter(provider -> TERMOS_BLOQUEADOS.stream()
                         .noneMatch(termo -> provider.getNomeProvider().toLowerCase().contains(termo.toLowerCase())))
+                .map(ProvidersService::normalizarLogo)
                 .toList();
     }
 
@@ -62,5 +65,14 @@ public class ProvidersService {
             case MOVIE -> URL_BASE + MOVIE + BARRA + id + PESQUISA + apiKey;
         };
 
+    }
+
+    private static ProviderDto normalizarLogo(ProviderDto provider) {
+        return ProviderDto.builder()
+                .imagemLogo(normalizar(provider.getImagemLogo(), TAMANHO_LOGO_PROVIDER))
+                .idProvider(provider.getIdProvider())
+                .nomeProvider(provider.getNomeProvider())
+                .prioridade(provider.getPrioridade())
+                .build();
     }
 }

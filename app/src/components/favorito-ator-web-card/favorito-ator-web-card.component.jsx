@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { URL_BASE_IMAGEM_TMDB } from "../../constants/image-tmdb";
 import FavoritoIcon from "../favorito-icon/favorito-icon.component";
 import { LoadingImage } from "../loading-image/loading-image.component";
 import "./favorito-ator-web-card.css";
 
 function montarImagem(path) {
-  return path ? `${URL_BASE_IMAGEM_TMDB}${path}` : undefined;
+  return path || undefined;
 }
 
 export default function FavoritoAtorWebCard({

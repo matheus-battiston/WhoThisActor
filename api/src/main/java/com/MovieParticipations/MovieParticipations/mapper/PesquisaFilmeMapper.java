@@ -4,11 +4,13 @@ import com.MovieParticipations.MovieParticipations.controller.response.PesquisaP
 import com.MovieParticipations.MovieParticipations.domain.Filme;
 import com.MovieParticipations.MovieParticipations.domain.TipoMidia;
 
+import static com.MovieParticipations.MovieParticipations.util.TmdbImagemUrl.normalizar;
+
 public class PesquisaFilmeMapper {
     public static PesquisaProducaoInfoResponse toResponse(Filme novoFilme) {
         return PesquisaProducaoInfoResponse.builder()
                 .nome(novoFilme.getTitulo())
-                .imagem(novoFilme.getImagem())
+                .imagem(normalizar(novoFilme.getImagem()))
                 .dataLancamento(novoFilme.getDataLancamento())
                 .overview(novoFilme.getOverview())
                 .genero(novoFilme.getGenero())
