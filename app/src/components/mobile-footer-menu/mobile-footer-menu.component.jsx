@@ -38,8 +38,6 @@ const itensMenu = [
   },
 ];
 
-const BODY_FOOTER_OCULTO_CLASS = "mobile-footer-oculto";
-
 function itemAtivo(item, pathname) {
   if (item.destaque) return false;
   if (item.exact) return pathname === item.path;
@@ -58,14 +56,6 @@ export default function MobileFooterMenu() {
     setOculto(false);
     posicoesScroll.current = new WeakMap();
   }, [pathname]);
-
-  useEffect(() => {
-    document.body.classList.toggle(BODY_FOOTER_OCULTO_CLASS, oculto);
-
-    return () => {
-      document.body.classList.remove(BODY_FOOTER_OCULTO_CLASS);
-    };
-  }, [oculto]);
 
   useEffect(() => {
     function obterDadosScroll(target) {

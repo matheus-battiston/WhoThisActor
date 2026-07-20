@@ -2,27 +2,31 @@
   display: flex;
   width: 100vw;
   height: 100dvh;
-  min-height: 0;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--app-background);
-  -webkit-overflow-scrolling: touch;
 }
 
 .opcoes-producoes-mobile-conteudo {
   display: flex;
+  min-height: 0;
+  flex: 1;
   flex-direction: column;
   gap: 22px;
-  padding: 16px 18px var(--mobile-footer-space, 96px);
+  padding: 16px 18px var(--mobile-footer-space, 112px);
   box-sizing: border-box;
-  transition: padding-bottom 500ms ease;
+  overflow: hidden;
 }
 
 .opcoes-producoes-mobile-lista {
   display: flex;
+  min-height: 0;
+  flex: 1;
   flex-direction: column;
   gap: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 380px) {
