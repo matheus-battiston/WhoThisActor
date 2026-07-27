@@ -11,6 +11,7 @@
   width: 280px;
   height: 280px;
   display: block;
+  pointer-events: none;
   object-fit: contain;
   position: absolute;
   top: 50%;
